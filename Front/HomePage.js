@@ -37,10 +37,46 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Other button handlers
     document.querySelector('.login-button').addEventListener('click', function() {
+        // Place holder
         alert('Login functionality would go here');
     });
     
     document.querySelector('.wishlist').addEventListener('click', function() {
+        // Place holder
         alert('Wishlist would open here');
     });
+
+    // Pet filter functionality
+const searchButton = document.getElementById('search-button');
+if (searchButton) {
+    searchButton.addEventListener('click', function() {
+        // Get filter values
+        const species = document.getElementById('species-select').value;
+        const breed = document.getElementById('breed-select').value;
+        const age = document.getElementById('age-select').value;
+        const size = document.getElementById('size-select').value;
+        const gender = document.getElementById('gender-select').value;
+        const goodWith = document.getElementById('good-with-select').value;
+        const coatLength = document.getElementById('coat-select').value;
+        
+        const filterSummary = `
+            Selected Filters:
+            - Species : ${species || 'Any'}
+            - Breed: ${breed || 'Any'}
+            - Age: ${age || 'Any'}
+            - Size: ${size || 'Any'}
+            - Gender: ${gender || 'Any'}
+            - Good With: ${goodWith || 'Any'}
+            - Coat Length: ${coatLength || 'Any'}
+        `;
+        
+        // Place holder
+        alert(filterSummary);
+        
+        // Place holder
+        console.log('Search filters applied:', {
+            breed, age, size, gender, goodWith, coatLength
+        });
+    });
+}
 });
