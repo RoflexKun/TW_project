@@ -2,13 +2,15 @@ async function extractData(){
     var name = document.getElementById('name').value;
     var species = document.getElementById('species').value;
     var breed = document.getElementById('breed').value;
-    var age = document.getElementById('age').value;
+    var birthday = document.getElementById('birthday').value;
+    var location = document.getElementById('location').value
 
     var newEntry = { 
         name: name,
         species: species, 
         breed: breed, 
-        age: age
+        birthday: birthday,
+        location: location
     };
 
     console.log(newEntry);

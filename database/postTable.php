@@ -16,7 +16,9 @@
                 name VARCHAR2(100),
                 species VARCHAR2(100),
                 breed VARCHAR2(100),
-                age NUMBER)";
+                birthday DATE,
+                age NUMBER,
+                location VARCHAR2(100))";
             $createCommand = oci_parse($conn, $createTable);
             if (!oci_execute($createCommand)) {
                 $e = oci_error($createCommand);
@@ -30,25 +32,33 @@
     checkTablePOSTS($conn);
     $data = json_decode(file_get_contents('php://input'), true);
 
-    $id = rand(1, 100000);
     $name = $data['name'] ?? '';
     $species = $data['species'] ?? '';
     $breed = $data['breed'] ?? '';
-    $age = isset($data['age']) && is_numeric($data['age']) ? (int)$data['age'] : null;
+    $birthday = $data['birthday'] ??'';
+    $location = $data['location'] ??'';
 
     $insertEntry = "
+    DECLARE
+        new_id NUMBER;
+        CURSOR iterate_lines IS SELECT * FROM posts;
     BEGIN
-        INSERT INTO POSTS(id, name, species, breed, age)
-        VALUES(:id, :name, :species, :breed, :age);
+        new_id := 1;
+        for lines in iterate_lines LOOP
+            new_id := new_id + 1;
+        END LOOP;
+        INSERT INTO POSTS(id, name, species, breed, birthday, age, location)
+        VALUES(new_id, :name, :species, :breed, TO_DATE(:birthday, 'YYYY-MM-DD'), TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(:birthday, 'YYYY-MM-DD'))/12), :location);
     END;";
 
     $insertCommand = oci_parse($conn, $insertEntry);
 
-    oci_bind_by_name($insertCommand, ":id", $id);
     oci_bind_by_name($insertCommand, ":name", $name);
     oci_bind_by_name($insertCommand, ":species", $species);
-    oci_bind_by_name($insertCommand, ':breed', $breed);
-    oci_bind_by_name($insertCommand, 'age', $age);
+    oci_bind_by_name($insertCommand, ":breed", $breed);
+    oci_bind_by_name($insertCommand, ":birthday", $birthday);
+    oci_bind_by_name($insertCommand, ":location", $location);
+
 
     if(oci_execute($insertCommand)){
         echo json_encode(["status" => "success"]);   
