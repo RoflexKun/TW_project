@@ -1,24 +1,26 @@
 async function extractData(){
+
+    const formData = new FormData();
     var name = document.getElementById('name').value;
+    formData.append('name', name);
     var species = document.getElementById('species').value;
+    formData.append('species', species);
     var breed = document.getElementById('breed').value;
+    formData.append('breed', breed);
     var birthday = document.getElementById('birthday').value;
-    var location = document.getElementById('location').value
+    formData.append('birthday', birthday);
+    var location = document.getElementById('location').value;
+    formData.append('location', location);
 
-    var newEntry = { 
-        name: name,
-        species: species, 
-        breed: breed, 
-        birthday: birthday,
-        location: location
-    };
+    const files = document.getElementById('media').files;
+    for(let i = 0; i < files.length; i++){
+        formData.append('media[]', files[i]);
+    }
 
-    console.log(newEntry);
     try{
         var response = await fetch("http://localhost/database/postTable.php", {
             method: "POST",
-            headers: { "Content-Type": "application/json"},
-            body: JSON.stringify(newEntry)
+            body: formData
         });
 
         var result = await response.text();
