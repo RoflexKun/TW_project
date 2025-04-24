@@ -1,0 +1,16 @@
+.post-container {
+    width: 400px;
+    border: 2px solid #333;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+.input-group{
+    margin-bottom: 15px;
+    
+    p{
+        margin: 0 0 5px 0;
+    }
+}

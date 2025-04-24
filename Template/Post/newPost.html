@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="newPost.css">
+    <script src="newPost.js"></script>
+    <title>Create a new post</title>
+</head>
+<body>
+    <div class = "post-container">
+        <h2>Information about your pet</h2>
+        <div class = "input-group">
+            <p>Name:</p>
+            <input type="text" id="name" />
+        </div>
+        
+        <div class = "input-group">
+            <p>Species:</p>
+            <input type="text" id="species" />
+        </div>
+        
+        <div class = "input-group">
+            <p>Breed:</p>
+            <input type="text" id="breed" />
+        </div>
+
+        <div class = "input-group">
+            <p>Age:</p>
+            <input type="text" id="age" />
+        </div>
+
+        <button onclick="extractData()">Create post</button>
+    </div>
+</body>
+</html>
