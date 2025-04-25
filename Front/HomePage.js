@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Toggle dropdown menu when "All about pets" button is clicked
+
+    // Toggle dropdown menu
     const petsButton = document.querySelector('.pets-button-container');
     const dropdownMenu = document.querySelector('.dropdown-menu');
     const arrowIcon = document.querySelector('.arrow-icon');
@@ -8,12 +9,10 @@ document.addEventListener('DOMContentLoaded', function () {
         event.stopPropagation();
         dropdownMenu.classList.toggle('active');
         arrowIcon.classList.toggle('active');
-
-        // Log for debugging
         console.log("Dropdown clicked, active status:", dropdownMenu.classList.contains('active'));
     });
 
-    // Close dropdown when clicking outside
+    // Close dropdown
     document.addEventListener('click', function (event) {
         if (!petsButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
             dropdownMenu.classList.remove('active');
@@ -29,98 +28,146 @@ document.addEventListener('DOMContentLoaded', function () {
     // Category click handlers
     document.querySelectorAll('.dropdown-category').forEach(category => {
         category.addEventListener('click', function () {
-            alert('You selected: ' + this.textContent);
-            dropdownMenu.classList.remove('active');
-            arrowIcon.classList.remove('active');
+            // Actions to be added
         });
     });
 
-    // Other button handlers
+    // Login button handler
     document.querySelector('.login-button').addEventListener('click', function () {
-        // Placeholder
-        alert('Login functionality would go here');
+        // Actions to be added
     });
 
+    // Wishlist button handler
     document.querySelector('.wishlist').addEventListener('click', function () {
-        // Placeholder
-        alert('Wishlist would open here');
+        // Actions to be added
     });
 
-     // Species and breed filtering logic
-     const speciesSelect = document.getElementById('species-select');
-     const breedSelect = document.getElementById('breed-select');
-     
-     // Define breeds for each species
-     const breedsBySpecies = {
-         "": [{ value: "", text: "Any" }], // For "Any" species
-         "dog": [
-             { value: "", text: "Any" },
-             { value: "golden-retriever", text: "Golden Retriever" },
-             { value: "german-shepherd", text: "German Shepherd" },
-             { value: "labrador-retriever", text: "Labrador Retriever" },
-             { value: "beagle", text: "Beagle" },
-             { value: "bulldog", text: "Bulldog" },
-             { value: "poodle", text: "Poodle" },
-             { value: "rottweiler", text: "Rottweiler" }
-         ],
-         "cat": [
-             { value: "", text: "Any" },
-             { value: "persian", text: "Persian" },
-             { value: "maine-coon", text: "Maine Coon" },
-             { value: "siamese", text: "Siamese" },
-             { value: "ragdoll", text: "Ragdoll" },
-             { value: "british-shorthair", text: "British Shorthair" },
-             { value: "bengal", text: "Bengal" }
-         ],
-         "rabbit": [
-             { value: "", text: "Any" },
-             { value: "holland-lop", text: "Holland Lop" },
-             { value: "mini-rex", text: "Mini Rex" },
-             { value: "dutch", text: "Dutch" },
-             { value: "lionhead", text: "Lionhead" }
-         ],
-         "dinosaur": [
-             { value: "", text: "Any" },
-             { value: "coleophysis_bauri", text: "Coleophysis bauri" },
-             { value: "plateosaurus_engelhardti", text: "Plateosaurus engelhardti" },
-             { value: "allosaurus_fragilis", text: "Allosaurus fragilis" },
-             { value: "apatosaurus_excelsus", text: "Apatosaurus excelsus" }
-         ]
-     };
-     
-     // Function to update breed options based on selected species
-     function updateBreedOptions(selectedSpecies) {
-         // Clear current options
-         breedSelect.innerHTML = '';
-         
-         // Get breeds for selected species
-         const breeds = breedsBySpecies[selectedSpecies] || breedsBySpecies[""];
-         
-         // Add new options
-         breeds.forEach(breed => {
-             const option = document.createElement('option');
-             option.value = breed.value;
-             option.textContent = breed.text;
-             breedSelect.appendChild(option);
-         });
-         
-         // Enable/disable the breed select based on species selection
-         if (selectedSpecies == "") {
-             breedSelect.disabled = true;
-         } else {
-             breedSelect.disabled = false;
-         }
-     }
-     
-     // Initialize breed options
-     updateBreedOptions(speciesSelect.value);
-     
-     // Add event listener for species change
-     speciesSelect.addEventListener('change', function() {
-         updateBreedOptions(this.value);
-     });
+    // Species and breed filters
+    const speciesSelect = document.getElementById('species-select');
+    const breedSelect = document.getElementById('breed-select');
 
-    // Pet filter functionality
+    // Different breeds for each species
+    const breedsBySpecies = {
+        "": [{ value: "", text: "Any" }], // For all species
+        "dog": [
+            { value: "", text: "Any" },
+            { value: "golden-retriever", text: "Golden Retriever" },
+            { value: "german-shepherd", text: "German Shepherd" },
+            { value: "labrador-retriever", text: "Labrador Retriever" },
+            { value: "beagle", text: "Beagle" },
+            { value: "bulldog", text: "Bulldog" },
+            { value: "poodle", text: "Poodle" },
+            { value: "rottweiler", text: "Rottweiler" }
+        ],
+        "cat": [
+            { value: "", text: "Any" },
+            { value: "persian", text: "Persian" },
+            { value: "maine-coon", text: "Maine Coon" },
+            { value: "siamese", text: "Siamese" },
+            { value: "ragdoll", text: "Ragdoll" },
+            { value: "british-shorthair", text: "British Shorthair" },
+            { value: "bengal", text: "Bengal" }
+        ],
+        "rabbit": [
+            { value: "", text: "Any" },
+            { value: "holland-lop", text: "Holland Lop" },
+            { value: "mini-rex", text: "Mini Rex" },
+            { value: "dutch", text: "Dutch" },
+            { value: "lionhead", text: "Lionhead" }
+        ],
+        "dinosaur": [
+            { value: "", text: "Any" },
+            { value: "coleophysis_bauri", text: "Coleophysis bauri" },
+            { value: "plateosaurus_engelhardti", text: "Plateosaurus engelhardti" },
+            { value: "allosaurus_fragilis", text: "Allosaurus fragilis" },
+            { value: "apatosaurus_excelsus", text: "Apatosaurus excelsus" }
+        ]
+    };
+
+    // Update breed options based on selected species
+    function updateBreedOptions(selectedSpecies) {
+        breedSelect.innerHTML = '';
+
+        const breeds = breedsBySpecies[selectedSpecies] || breedsBySpecies[""];
+
+        // Create breed options for selected species
+        breeds.forEach(breed => {
+            const option = document.createElement('option');
+            option.value = breed.value;
+            option.textContent = breed.text;
+            breedSelect.appendChild(option);
+        });
+
+        if (selectedSpecies == "") {
+            breedSelect.disabled = true;
+        }
+        else {
+            breedSelect.disabled = false;
+        }
+    }
+
+    updateBreedOptions(speciesSelect.value);
+
+    // Event listener for species change
+    speciesSelect.addEventListener('change', function () {
+        updateBreedOptions(this.value);
+    });
+
+    // Location functionality
+    const citiesByCountry = {
+        "": [],
+        "us": ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia"],
+        "ca": ["Toronto", "Montreal", "Vancouver", "Calgary", "Ottawa", "Edmonton"],
+        "uk": ["London", "Manchester", "Birmingham", "Glasgow", "Liverpool", "Edinburgh"],
+        "au": ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide", "Gold Coast"],
+        "ro": ["Bucharest", "Cluj-Napoca", "Timisoara", "Iasi", "Constansa", "Craiova"]
+    };
+
+    const countrySelect = document.getElementById('country-select');
+    const citySelect = document.getElementById('city-select');
+
+    function updateCityOptions(selectedCountry) {
+
+        citySelect.innerHTML = '<option value="">Select City</option>';
+
+        // Add "Any" option
+        if (selectedCountry !== "") {
+            const anyOption = document.createElement('option');
+            anyOption.value = "any";
+            anyOption.textContent = "Any (Whole Country)";
+            citySelect.appendChild(anyOption);
+        }
+
+        // Get cities for selected country
+        const cities = citiesByCountry[selectedCountry] || [];
+
+        // Add city options
+        cities.forEach(city => {
+            const option = document.createElement('option');
+            option.value = city.toLowerCase().replace(/\s+/g, '-');
+            option.textContent = city;
+            citySelect.appendChild(option);
+        });
+
+        // Enable/disable the city select
+        if (selectedCountry === "") {
+            citySelect.disabled = true;
+        }
+        else {
+            citySelect.disabled = false;
+        }
+    }
+
+    updateCityOptions(countrySelect.value);
+
+    countrySelect.addEventListener('change', function () {
+        updateCityOptions(this.value);
+
+        // Reset city selection
+        citySelect.value = "";
+    });
+
+    // Search button functionality
     const searchButton = document.getElementById('search-button');
     if (searchButton) {
         searchButton.addEventListener('click', function () {
@@ -132,6 +179,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const gender = document.getElementById('gender-select').value;
             const goodWith = document.getElementById('good-with-select').value;
             const coatLength = document.getElementById('coat-select').value;
+            const country = document.getElementById('country-select').value;
+            const city = document.getElementById('city-select').value;
 
             const filterSummary = `
                 Selected Filters:
@@ -142,12 +191,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 - Gender: ${gender || 'Any'}
                 - Good With: ${goodWith || 'Any'}
                 - Coat Length: ${coatLength || 'Any'}
+                - Country : ${country || 'Any'}
+                - City : ${city || 'Any'}
             `;
 
-            // Placeholder
             alert(filterSummary);
 
-            // Placeholder
             console.log('Search filters applied:', {
                 species, breed, age, size, gender, goodWith, coatLength
             });

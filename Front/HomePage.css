@@ -6,7 +6,9 @@
 }
 
 body {
-    min-height: 200vh; /* Make the page scrollable for demo */
+    height: 100%;
+    margin: 0;
+    padding: 0;
     background-color: #f0ecf4;
 }
 
@@ -73,7 +75,7 @@ header {
 .arrow-icon.active {
     transform: rotate(180deg);
 }
-/* Dropdown Menu */
+
 .dropdown-menu {
     position: absolute;
     top: 100%;
@@ -277,4 +279,28 @@ p {
 
 .search-button:hover {
     background-color: #333;
+}
+
+.location-row {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* Make each location filter take equal width */
+.location-filter {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* Style for disabled filter elements */
+.filter-select:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.filter-select:focus {
+    border-color: #1a1a1a;
 }

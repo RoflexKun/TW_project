@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,101 +35,129 @@
         <img src="Images/poza_fundal.jpg" class="cropped-image">
         <div class="image-text"> Find your new best friend</div>
     </div>
-        <div class="colored-line"></div>
-    
-        <div class="split-container">
-            <div class="left-section">
-                <div class="filter-container">
-                    <div class="filter-group">
-                        <label for="species-select">SPECIES</label>
+    <div class="colored-line"></div>
+
+    <div class="split-container">
+        <div class="left-section">
+            <div class="filter-container">
+                <div class="filter-group">
+                    <label for="species-select">SPECIES</label>
+                    <div class="select-wrapper">
+                        <select id="species-select" class="filter-select">
+                            <option value="">Any</option>
+                            <option value="dog">Dog</option>
+                            <option value="cat">Cat</option>
+                            <option value="rabbit">Rabbit</option>
+                            <option value="dinosaur">Dinosaur</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label for="breed-select">BREED</label>
+                    <div class="select-wrapper">
+                        <select id="breed-select" class="filter-select">
+                            <option value="">Any</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label for="age-select">AGE</label>
+                    <div class="select-wrapper">
+                        <select id="age-select" class="filter-select">
+                            <option value="">Any</option>
+                            <option value="young">Young</option>
+                            <option value="adult">Adult</option>
+                            <option value="senior">Senior</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label for="size-select">SIZE</label>
+                    <div class="select-wrapper">
+                        <select id="size-select" class="filter-select">
+                            <option value="">Any</option>
+                            <option value="small">Small</option>
+                            <option value="medium">Medium</option>
+                            <option value="large">Large</option>
+                            <option value="xlarge">Extra Large</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label for="gender-select">GENDER</label>
+                    <div class="select-wrapper">
+                        <select id="gender-select" class="filter-select">
+                            <option value="">Any</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label for="good-with-select">GOOD WITH</label>
+                    <div class="select-wrapper">
+                        <select id="good-with-select" class="filter-select">
+                            <option value="">Any</option>
+                            <option value="kids">Kids</option>
+                            <option value="dogs">Dogs</option>
+                            <option value="cats">Cats</option>
+                            <option value="other_animals">Other animals</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label for="coat-select">COAT LENGTH</label>
+                    <div class="select-wrapper">
+                        <select id="coat-select" class="filter-select">
+                            <option value="">Any</option>
+                            <option value="short">Short</option>
+                            <option value="medium">Medium</option>
+                            <option value="long">Long</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="location-row">
+                    <div class="filter-group location-filter">
+                        <label for="country-select">COUNTRY</label>
                         <div class="select-wrapper">
-                            <select id="species-select" class="filter-select">
-                                <option value="">Any</option>
-                                <option value="dog">Dog</option>
-                                <option value="cat">Cat</option>
-                                <option value="rabbit">Rabbit</option>
-                                <option value="dinosaur">Dinosaur</option>
+                            <select id="country-select" class="filter-select">
+                                <option value="">Select Country</option>
+                                <option value="us">United States</option>
+                                <option value="ca">Canada</option>
+                                <option value="uk">United Kingdom</option>
+                                <option value="au">Australia</option>
+                                <option value="ro">Romania</option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="filter-group">
-                        <label for="breed-select">BREED</label>
+                    <div class="filter-group location-filter">
+                        <label for="city-select">CITY</label>
                         <div class="select-wrapper">
-                            <select id="breed-select" class="filter-select">
-                                <option value="">Any</option>
+                            <select id="city-select" class="filter-select" disabled>
+                                <option value="">Select City</option>
                             </select>
                         </div>
                     </div>
-                    
-                    <div class="filter-group">
-                        <label for="age-select">AGE</label>
-                        <div class="select-wrapper">
-                            <select id="age-select" class="filter-select">
-                                <option value="">Any</option>
-                                <option value="young">Young</option>
-                                <option value="adult">Adult</option>
-                                <option value="senior">Senior</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label for="size-select">SIZE</label>
-                        <div class="select-wrapper">
-                            <select id="size-select" class="filter-select">
-                                <option value="">Any</option>
-                                <option value="small">Small</option>
-                                <option value="medium">Medium</option>
-                                <option value="large">Large</option>
-                                <option value="xlarge">Extra Large</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label for="gender-select">GENDER</label>
-                        <div class="select-wrapper">
-                            <select id="gender-select" class="filter-select">
-                                <option value="">Any</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label for="good-with-select">GOOD WITH</label>
-                        <div class="select-wrapper">
-                            <select id="good-with-select" class="filter-select">
-                                <option value="">Any</option>
-                                <option value="kids">Kids</option>
-                                <option value="dogs">Dogs</option>
-                                <option value="cats">Cats</option>
-                                <option value="other_animals">Other animals</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label for="coat-select">COAT LENGTH</label>
-                        <div class="select-wrapper">
-                            <select id="coat-select" class="filter-select">
-                                <option value="">Any</option>
-                                <option value="short">Short</option>
-                                <option value="medium">Medium</option>
-                                <option value="long">Long</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <button id="search-button" class="search-button">Search</button>
                 </div>
-            </div>
-            
-            <div class="right-section">
-                
+
+                <button id="search-button" class="search-button">Search</button>
             </div>
         </div>
+
+        <div class="right-section">
+
+        </div>
+    </div>
+
+
 </body>
+
 </html>
