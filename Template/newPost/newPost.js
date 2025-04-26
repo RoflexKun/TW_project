@@ -18,7 +18,7 @@ async function extractData(){
     }
 
     try{
-        var response = await fetch("http://localhost/database/postTable.php", {
+        var response = await fetch("http://localhost/database/newPostTable.php", {
             method: "POST",
             body: formData
         });

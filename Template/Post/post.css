@@ -1,0 +1,30 @@
+.post-display{
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    gap: 20px;
+    padding: 20px;
+}
+
+.information-section{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 20px;
+}
+
+.photo-section{
+    border: 2px solid black;
+    flex: 1;
+    height: 100%;
+}
+
+.general-section{
+    border: 2px solid black;
+    flex: 25;
+}
+
+.description-section{
+    border: 2px solid black;
+    flex: 75;
+}
