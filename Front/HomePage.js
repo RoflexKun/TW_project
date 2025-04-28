@@ -202,4 +202,63 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
+
+    // Login functionality
+    const loginButton = document.querySelector('.login-button');
+    const loginTab = document.getElementById('login-tab');
+    const closeLoginButton = document.getElementById('close-login');
+    const loginForm = document.getElementById('login-form');
+    const signupLink = document.getElementById('signup-link');
+    const forgotPasswordLink = document.getElementById('forgot-password');
+
+    // Open login tab
+    loginButton.addEventListener('click', function () {
+        loginTab.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+
+    // Close login tab
+    closeLoginButton.addEventListener('click', function () {
+        loginTab.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    // Close tab
+    loginTab.addEventListener('click', function (event) {
+        if (event.target === loginTab) {
+            loginTab.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Handle login data submission
+    loginForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        // Get form values
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const rememberMe = document.getElementById('remember').checked;
+
+        console.log('Login attempted:', { email, password, rememberMe });
+
+        // Send data to server
+        // TODO
+
+        alert('Login successful!');
+        loginTab.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    // Signup link
+    signupLink.addEventListener('click', function (event) {
+        event.preventDefault();
+        alert('Sign up functionality');
+    });
+
+    // Forgot password link
+    forgotPasswordLink.addEventListener('click', function (event) {
+        event.preventDefault();
+        alert('Password recovery functionality');
+    });
 });
