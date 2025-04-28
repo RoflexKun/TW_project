@@ -6,6 +6,33 @@
     padding: 20px;
 }
 
+.gInfo-structure{
+    display: flex;
+    flex-direction: row;
+}
+
+.gInfo-leftSide{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 1px;
+}
+
+.gInfo-rightSide{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-items: flex-start;
+    gap: 1px;
+    
+}
+
+.gInfo-label{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
 .information-section{
     display: flex;
     flex-direction: column;

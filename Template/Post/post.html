@@ -4,20 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="post.css">
+    <script src="post.js"></script>
     <title>Document</title>
 </head>
 <body>
     <div class = "post-display">
         <div class = "photo-section">
-            <p>Photo here</p>
+            <h2>Photos of the pet</h2>
         </div>
         <div class = "information-section">
             <div class = "general-section">
-                <p>general information ig</p>
+                <h2>General information: </h2>
+                <div class = "gInfo-structure">
+                    <div class = "gInfo-leftSide">
+                        <div class = "gInfo-label">
+                            <p>Name: </p>
+                            <p id = "pet-name"></p>
+                        </div>
+                        <div class = "gInfo-label">
+                            <p>Species: </p>
+                            <p id = "pet-species"></p>
+                        </div>
+                        <div class = "gInfo-label">
+                            <p>Breed: </p>
+                            <p id = "pet-breed"></p>
+                        </div>
+                    </div>
+
+                    <div class = "gInfo-rightSide">
+                        <div class = "gInfo-label">
+                            <p>Birthday: </p>
+                            <p id = "pet-birthday"></p>
+                        </div>
+                        <div class = "gInfo-label">
+                            <p>Age: </p>
+                            <p id = "pet-age"></p>
+                        </div>
+                        <div class = "gInfo-label">
+                            <p>Location: </p>
+                            <p id = "pet-location"></p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class = "description-section">
-                <p>description of pet</p>
+                <h2>Description of the pet</h2>
             </div>
         </div>
     </div>
