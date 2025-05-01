@@ -46,6 +46,15 @@
     height: 100%;
 }
 
+.photo-section img, .photo-section video {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px 0;
+    object-fit: cover;
+}
+
 .general-section{
     border: 2px solid black;
     flex: 25;
