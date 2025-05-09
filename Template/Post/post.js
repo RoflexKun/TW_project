@@ -10,9 +10,9 @@ async function extractPostInfo(){
             method: 'POST',
             body: formData
         });
-    
-        var result = await response.text();
-        console.log(result);
+        
+        var text = await response.text();
+        var result = JSON.parse(text);
 
         if(result.error){
             console.log(result.error);
@@ -29,19 +29,21 @@ async function extractPostInfo(){
             const mediaSection = document.querySelector('.photo-section');
             const mediaArray = result.media_array.split(';');
 
-            const photoExt = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            const photoExt = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'jfif'];
             const videoExt = ['mp4', 'webm'];
-
+            
             mediaArray.forEach(file_path => {
+                console.log(file_path);
+                file_path = file_path.trim();
                 const extension = file_path.split('.').pop().toLowerCase();
                 if(photoExt.includes(extension)){
                     const img = document.createElement('img');
-                    img.src = `${file_path}`;
+                    img.src = `/${file_path}`;
                     mediaSection.appendChild(img);
                 }
                 else if(videoExt.includes(extension)){
                     const video = document.createElement('video');
-                    video.src = `${file_path}`;
+                    video.src = `/${file_path}`;
                     mediaSection.appendChild(video);
                 }
             })

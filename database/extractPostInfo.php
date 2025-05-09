@@ -30,7 +30,7 @@
             :location := post.location;
             media_array := varray();
             FOR lines IN media_lines LOOP
-                IF lines.id = post.id THEN
+                IF lines.id_post = post.id THEN
                     count_media := count_media + 1;
                     media_array.EXTEND;
                     media_array(count_media):=lines.file_path;
@@ -70,7 +70,7 @@
     if(oci_execute($extractDataCommand))
     {
         if($error != ""){
-            echo json_encode(["error" => $error]);
+            echo json_encode(["error" => $error, "receivedId" => $id]);
         }
         else {
             echo json_encode([
