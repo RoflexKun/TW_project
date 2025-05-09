@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
         updateBreedOptions(this.value);
     });
 
-    // Location functionality
+    // Location functionality //
     const citiesByCountry = {
         "": [],
         "us": ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia"],
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Login functionality
+    // Login functionality //
     const loginButton = document.querySelector('.login-button');
     const loginTab = document.getElementById('login-tab');
     const closeLoginButton = document.getElementById('close-login');
@@ -235,9 +235,8 @@ document.addEventListener('DOMContentLoaded', function () {
     loginForm.addEventListener('submit', function (event) {
         event.preventDefault();
 
-        // Get form values
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+        const email = loginForm.querySelector('#email').value;
+        const password = loginForm.querySelector('#password').value;
         const rememberMe = document.getElementById('remember').checked;
 
         console.log('Login attempted:', { email, password, rememberMe });
@@ -250,15 +249,67 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.style.overflow = '';
     });
 
-    // Signup link
-    signupLink.addEventListener('click', function (event) {
-        event.preventDefault();
-        alert('Sign up functionality');
-    });
-
     // Forgot password link
     forgotPasswordLink.addEventListener('click', function (event) {
         event.preventDefault();
         alert('Password recovery functionality');
+    });
+
+    // Sign up functionality //
+    const signupTab = document.getElementById('signup-tab');
+    const closeSignupButton = document.getElementById('close-signup');
+    const signupForm = document.getElementById('signup-form');
+    const loginLink = document.getElementById('login-link');
+
+    // Sign up link
+    signupLink.addEventListener('click', function (event) {
+        event.preventDefault();
+        signupTab.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        loginTab.classList.remove('active');
+    });
+
+    // Close signup tab
+    closeSignupButton.addEventListener('click', function () {
+        signupTab.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    // Close tab
+    signupTab.addEventListener('click', function (event) {
+        if (event.target === signupTab) {
+            signupTab.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Handle sign up data submission
+     signupForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        
+        const email = signupForm.querySelector('#email').value;
+        const password = signupForm.querySelector('#password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+        
+        if (password !== confirmPassword) {
+            alert('Passwords do not match!');
+            return;
+        }
+        
+        console.log('Signup attempted:', { email, password });
+        
+        // Send data to server
+        // TODO
+        
+        alert('Signup successful!');
+        signupTab.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    // Login link
+    loginLink.addEventListener('click', function (event) {
+        event.preventDefault();
+        loginTab.classList.add('active');
+        signupTab.classList.remove('active');
     });
 });
