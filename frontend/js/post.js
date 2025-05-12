@@ -6,12 +6,13 @@ async function extractPostInfo(){
     formData.append('id', postId);
     
     try{
-        var response = await fetch('http://localhost/database/extractPostInfo.php', {
+        var response = await fetch('http://localhost/backend/services/postinfoservice.php', {
             method: 'POST',
             body: formData
         });
         
         var text = await response.text();
+        console.log(text);
         var result = JSON.parse(text);
 
         if(result.error){
