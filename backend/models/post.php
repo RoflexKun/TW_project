@@ -47,8 +47,9 @@ class Post
         return $new_id;
     }
 
-    public function postInfo($id) {
-    $extractData = "
+    public function postInfo($id)
+    {
+        $extractData = "
     DECLARE
         id_rec NUMBER := :id;
         found BOOLEAN := false;
@@ -92,43 +93,141 @@ class Post
     END;
     ";
 
-    $extractDataCommand = oci_parse($this->conn, $extractData);
-    oci_bind_by_name($extractDataCommand, ":id", $id);
+        $extractDataCommand = oci_parse($this->conn, $extractData);
+        oci_bind_by_name($extractDataCommand, ":id", $id);
 
-    $name = "";
-    $species = "";
-    $breed = "";
-    $birthday = "";
-    $age = "";
-    $location = "";
-    $media_array = "";
-    $error = "";
+        $name = "";
+        $species = "";
+        $breed = "";
+        $birthday = "";
+        $age = "";
+        $location = "";
+        $media_array = "";
+        $error = "";
 
-    oci_bind_by_name($extractDataCommand, ":name", $name, 50);
-    oci_bind_by_name($extractDataCommand,":species", $species, 50);
-    oci_bind_by_name($extractDataCommand,":breed", $breed, 50);
-    oci_bind_by_name($extractDataCommand, ":birthday", $birthday, 10);
-    oci_bind_by_name($extractDataCommand,":age", $age, 3);
-    oci_bind_by_name($extractDataCommand,":location", $location, 50);
-    oci_bind_by_name($extractDataCommand,":error", $error, 50);
-    oci_bind_by_name($extractDataCommand,":media_array", $media_array, 4000);
+        oci_bind_by_name($extractDataCommand, ":name", $name, 50);
+        oci_bind_by_name($extractDataCommand, ":species", $species, 50);
+        oci_bind_by_name($extractDataCommand, ":breed", $breed, 50);
+        oci_bind_by_name($extractDataCommand, ":birthday", $birthday, 10);
+        oci_bind_by_name($extractDataCommand, ":age", $age, 3);
+        oci_bind_by_name($extractDataCommand, ":location", $location, 50);
+        oci_bind_by_name($extractDataCommand, ":error", $error, 50);
+        oci_bind_by_name($extractDataCommand, ":media_array", $media_array, 4000);
 
-    if(oci_execute($extractDataCommand))
-    {
-        if($error != ""){
-            return["error" => $error, "receivedId" => $id];
-        }
-        else {
-            return [
-            "name" => $name,
-            "species" => $species,
-            "breed" => $breed,
-            "birthday" => $birthday,
-            "age" => $age,
-            "location" => $location,
-            "media_array" => $media_array];
+        if (oci_execute($extractDataCommand)) {
+            if ($error != "") {
+                return ["error" => $error, "receivedId" => $id];
+            } else {
+                return [
+                    "name" => $name,
+                    "species" => $species,
+                    "breed" => $breed,
+                    "birthday" => $birthday,
+                    "age" => $age,
+                    "location" => $location,
+                    "media_array" => $media_array
+                ];
+            }
         }
     }
+
+    public function getPostsFromPage($page){
+        $firstPostIndex = 20 * ($page - 1) + 1;
+        $lastPostIndex = 20 * $page;
+
+        $extractPosts = "
+            DECLARE
+                TYPE varray_name IS VARRAY(20) OF VARCHAR2(255);
+                TYPE varray_age IS VARRAY(20) OF NUMBER;
+                TYPE varray_media IS VARRAY(20) OF VARCHAR2(255);
+                first_post_index NUMBER := :firstPostIndex;
+                last_post_index NUMBER := :lastPostIndex;
+                name_array varray_name := varray_name();
+                age_array varray_age := varray_age();
+                thumbnail_array varray_media := varray_media();
+                name_result VARCHAR2(10000) := '';
+                age_result VARCHAR2(10000) := '';
+                thumbnail_result VARCHAR2(10000) := '';
+                CURSOR post_line IS SELECT * FROM POSTS;
+                counter NUMBER := 1;
+                item_counter NUMBER := 1;
+                temp_path VARCHAR2(255);
+            BEGIN
+                FOR line IN post_line LOOP
+                    IF counter >= first_post_index AND counter <= last_post_index THEN
+                        name_array.EXTEND;
+                        age_array.EXTEND;
+                        thumbnail_array.EXTEND;
+
+                        name_array(item_counter) := line.name;
+                        age_array(item_counter) := line.age;
+
+                        BEGIN
+                            SELECT file_path INTO temp_path FROM media WHERE line.id = id_post AND ROWNUM = 1;
+                        EXCEPTION
+                        WHEN NO_DATA_FOUND THEN
+                            temp_path := NULL;
+                        END;
+
+                        thumbnail_array(item_counter) := temp_path;
+                        item_counter := item_counter + 1;
+                    END IF;
+                    counter := counter + 1;
+                END LOOP;
+
+                FOR i IN 1..name_array.COUNT LOOP
+                    name_result := name_result || name_array(i) || ';';
+                END LOOP;
+
+                FOR i IN 1..age_array.COUNT LOOP
+                    age_result := age_result || TO_CHAR(age_array(i)) || ';';
+                END LOOP;
+
+                FOR i IN 1..thumbnail_array.COUNT LOOP
+                    thumbnail_result := thumbnail_result || thumbnail_array(i) || ';';
+                END LOOP;
+
+                :name_array := name_result;
+                :age_array := age_result;
+                :thumbnail_array := thumbnail_result;
+            END;
+        ";
+      
+        $nameArray = '';
+        $ageArray = '';
+        $thumbnailArray = '';
+
+        $extractPostsCommand = oci_parse($this->conn, $extractPosts);
+        oci_bind_by_name($extractPostsCommand, ":firstPostIndex", $firstPostIndex);
+        oci_bind_by_name($extractPostsCommand, ":lastPostIndex", $lastPostIndex);
+
+        oci_bind_by_name($extractPostsCommand, ":name_array", $nameArray, 3000);
+        oci_bind_by_name($extractPostsCommand, ":age_array", $ageArray, 3000);
+        oci_bind_by_name($extractPostsCommand, ":thumbnail_array", $thumbnailArray, 3000);
+
+        oci_execute($extractPostsCommand);
+
+        return ["names" => rtrim($nameArray, ";"), "ages" => rtrim($ageArray, ";"), "thumbnails" => rtrim($thumbnailArray, ";")];
+
+    }
+
+    public function getPostCount(){
+        $postsCount = "
+        BEGIN
+            SELECT COUNT(*) INTO :number_posts from posts;
+        END;
+        ";
+        $postsCountCommand = oci_parse($this->conn, $postsCount);
+        $count = 0;
+        oci_bind_by_name($postsCountCommand, ":number_posts", $count, 3);
+        if (oci_execute($postsCountCommand)) {
+                return [
+                    "count" => $count
+                ];
+            } else{
+                $error = oci_error($postsCountCommand);
+                return ["error" => $error['message']];
+            }
     }
 
     public function verifyTable()

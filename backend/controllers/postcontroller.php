@@ -20,5 +20,16 @@
             $postModel = new Post();
             return $postModel->postInfo($id);
         }
+
+        public function getPostsFromPage($data){
+            $page = $data['page'] ?? '';
+            $postModel = new Post();
+            return $postModel->getPostsFromPage($page);
+        }
+
+        public function getPostCount(){
+            $postModel = new Post();
+            return $postModel->getPostCount();
+        }
     }
 ?>

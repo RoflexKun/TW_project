@@ -21,7 +21,7 @@ class Media {
                 VALUES(:id_post, :file_path);
             END;";
             $insertCommandMedia = oci_parse($this->conn, $insertEntryMedia);
-            oci_bind_by_name($insertCommandMedia, ":id_post", $new_id);
+            oci_bind_by_name($insertCommandMedia, ":id_post", $newId);
             oci_bind_by_name($insertCommandMedia, ":file_path", $path);
 
             oci_execute($insertCommandMedia);
