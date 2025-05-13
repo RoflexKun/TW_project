@@ -140,14 +140,17 @@ class Post
                 TYPE varray_name IS VARRAY(20) OF VARCHAR2(255);
                 TYPE varray_age IS VARRAY(20) OF NUMBER;
                 TYPE varray_media IS VARRAY(20) OF VARCHAR2(255);
+                TYPE varray_id IS VARRAY(20) OF NUMBER;
                 first_post_index NUMBER := :firstPostIndex;
                 last_post_index NUMBER := :lastPostIndex;
                 name_array varray_name := varray_name();
                 age_array varray_age := varray_age();
                 thumbnail_array varray_media := varray_media();
+                id_array varray_id := varray_id();
                 name_result VARCHAR2(10000) := '';
                 age_result VARCHAR2(10000) := '';
                 thumbnail_result VARCHAR2(10000) := '';
+                id_result VARCHAR2(10000) := '';
                 CURSOR post_line IS SELECT * FROM POSTS;
                 counter NUMBER := 1;
                 item_counter NUMBER := 1;
@@ -158,9 +161,11 @@ class Post
                         name_array.EXTEND;
                         age_array.EXTEND;
                         thumbnail_array.EXTEND;
+                        id_array.EXTEND;
 
                         name_array(item_counter) := line.name;
                         age_array(item_counter) := line.age;
+                        id_array(item_counter) := line.id;
 
                         BEGIN
                             SELECT file_path INTO temp_path FROM media WHERE line.id = id_post AND ROWNUM = 1;
@@ -187,15 +192,21 @@ class Post
                     thumbnail_result := thumbnail_result || thumbnail_array(i) || ';';
                 END LOOP;
 
+                FOR i in 1..id_array.COUNT LOOP
+                    id_result := id_result || TO_CHAR(id_array(i)) || ';';
+                END LOOP;
+
                 :name_array := name_result;
                 :age_array := age_result;
                 :thumbnail_array := thumbnail_result;
+                :id_array := id_result;
             END;
         ";
       
         $nameArray = '';
         $ageArray = '';
         $thumbnailArray = '';
+        $idArray = '';
 
         $extractPostsCommand = oci_parse($this->conn, $extractPosts);
         oci_bind_by_name($extractPostsCommand, ":firstPostIndex", $firstPostIndex);
@@ -204,10 +215,11 @@ class Post
         oci_bind_by_name($extractPostsCommand, ":name_array", $nameArray, 3000);
         oci_bind_by_name($extractPostsCommand, ":age_array", $ageArray, 3000);
         oci_bind_by_name($extractPostsCommand, ":thumbnail_array", $thumbnailArray, 3000);
+        oci_bind_by_name($extractPostsCommand, ":id_array", $idArray, 3000);
 
         oci_execute($extractPostsCommand);
 
-        return ["names" => rtrim($nameArray, ";"), "ages" => rtrim($ageArray, ";"), "thumbnails" => rtrim($thumbnailArray, ";")];
+        return ["names" => rtrim($nameArray, ";"), "ages" => rtrim($ageArray, ";"), "thumbnails" => rtrim($thumbnailArray, ";"), "ids" => rtrim($idArray, ";")];
 
     }
 

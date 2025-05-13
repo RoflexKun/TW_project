@@ -10,7 +10,7 @@ class Media {
 
     public function saveMediaFiles($newId, $files){
         self::verifyTable();
-        $uploadDir = __DIR__.'/../uploads/';
+        $uploadDir = __DIR__.'/../../uploads/';
 
     for($i = 0; $i < count($files['name']); $i++){
         if(move_uploaded_file($files['tmp_name'][$i], $uploadDir.$newId.'_'.basename($files['name'][$i]))){

@@ -51,15 +51,19 @@ async function getPostList() {
         const names = posts.names.split(";");
         const ages = posts.ages.split(";");
         const thumbnails = posts.thumbnails.split(";");
+        const ids = posts.ids.split(";");
 
         const container = document.getElementById("post-list");
         container.innerHTML = "";
 
         for(let i = 0; i < names.length; i++){
-            
-
+        
             const card = document.createElement("div");
             card.className = "post-card";
+            card.style.cursor = "pointer";
+            card.addEventListener("click", () => {
+                window.location.href = `/frontend/pages/post.html?id=${ids[i]}`;
+            })
 
             const image = document.createElement("img");
             image.src = thumbnails[i] ? `/${thumbnails[i]}` : "/frontend/assets/No_Image_Available.jpg";
@@ -73,8 +77,6 @@ async function getPostList() {
             container.appendChild(card);
         }
             
-
-        
     }catch(error){
         console.log(error);
     }
