@@ -284,26 +284,51 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Handle sign up data submission
-     signupForm.addEventListener('submit', function (event) {
+    signupForm.addEventListener('submit', async function (event) {
         event.preventDefault();
-        
+
         const email = signupForm.querySelector('#email').value;
         const password = signupForm.querySelector('#password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
-        
+
         if (password !== confirmPassword) {
             alert('Passwords do not match!');
             return;
         }
+
+        if(password.length < 6)
+        {
+            alert('The password must be at least 6 characters long!');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('confirm-password', confirmPassword);
         
-        console.log('Signup attempted:', { email, password });
-        
-        // Send data to server
-        // TODO
-        
-        alert('Signup successful!');
-        signupTab.classList.remove('active');
-        document.body.style.overflow = '';
+        try {
+            const response = await fetch("http://localhost/backend/services/register.php", {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                alert('Registration successful! You can now log in.');
+                
+                document.getElementById('signup-tab').classList.remove('active');
+                document.getElementById('login-tab').classList.add('active');
+                
+                signupForm.reset();
+            } else {
+                alert('Registration failed!');
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+        }
+
     });
 
     // Login link
