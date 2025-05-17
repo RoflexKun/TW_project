@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,40 +8,103 @@
     <script src="../js/newPost.js"></script>
     <title>Create a new post</title>
 </head>
+
 <body>
-    <div class = "post-container">
-        <h2>Information about your pet</h2>
-        <div class = "input-group">
-            <p>Name:</p>
-            <input type="text" id="name" />
-        </div>
-        
-        <div class = "input-group">
-            <p>Species:</p>
-            <input type="text" id="species" />
-        </div>
-        
-        <div class = "input-group">
-            <p>Breed:</p>
-            <input type="text" id="breed" />
+    <div class="general-information-container">
+        <div class="headerGeneral" onclick="toggleGeneralInformation()">
+            <span id="toggleIconGeneral" class="toggle-icon-general">+</span>
+            <span>1. General information</span>
         </div>
 
-        <div class = "input-group">
-            <p>Birthday:</p>
-            <input type="date" id="birthday" />
+        <div class="post-general-information" id="postGeneralInformation" style="display:none">
+            <div class="input-group">
+                <p>Name:</p>
+                <input type="text" id="name" />
+            </div>
+
+            <div class="input-group">
+                <p>Species:</p>
+                <select id="species">
+                    <option value="">-- Select species --</option>
+                </select> 
+            </div>
+
+            <div class="input-group">
+                <p>Breed:</p>
+                <select id="breed" disabled>
+                    <option value="">-- Select breed --</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <p>Birthday:</p>
+                <input type="date" id="birthday" />
+            </div>
+
+            <div class="input-group">
+                <p>Location:</p>
+                <select id="location">
+                    <option value="">-- Select location --</option>
+                </select>
+            </div>
+
+        </div>
+    </div>
+    <div class="description-and-other-container">
+        <div class="headerGeneral" onclick="toggleDescriptionInformation()">
+            <span id="toggleIconDescription" class="toggle-icon-description">+</span>
+            <span>2. Description and other information</span>
+        </div>
+        <div class="post-description-information" id="postDescriptionInformation" style="display:none">
+            <div class="input-group">
+                <p>Tell us about the pet:</p>
+                <textarea id="description" rows="5" class="description"
+                    placeholder="Describe your pet in detail so it will find a home faster!"></textarea>
+            </div>
+            <div class="input-group">
+                <p>Medical problems:</p>
+                <input type="text" id="medicalInput" placeholder="Broken bones, allergies, etc.">
+                <div id="medicalList" class="tag-container"></div>
+            </div>
+
+            <div class="input-group">
+                <p>Food it likes:</p>
+                <input type="text" id="foodLikeInput" placeholder="Chicken, Rice, etc." />
+                <div id="foodLikeList" class="tag-container"></div>
+            </div>
+
+            <div class="input-group">
+                <p>Food it doesn't like:</p>
+                <input type="text" id="foodDislikeInput" placeholder="Vegetables, chocolate, etc." />
+                <div id="foodDislikeList" class="tag-container"></div>
+            </div>
+
+        </div>
+    </div>
+    <div class="media">
+        <div class="media-header" onclick="toggleMedia()">
+            <span id="toggleIconMedia" class="media-toggle-icon">+</span>
+            <span>3. Media</span>
         </div>
 
-        <div class = "input-group">
-            <p>Location:</p>
-            <input type="text" id="location" />
-        </div>
+        <div class="media-body" id="postMedia" style="display:none">
+            <div class="media-section">
+                <p>Main Thumbnail:</p>
+                <div id="thumbBox" class="upload-box large">
+                    <span class="upload-text">+</span>
+                    <input type="file" accept="image/*" class="file-input" id="thumbInput">
+                </div>
+            </div>
 
-        <div class = "input-group">
-            <p>Photos & Videos:</p>
-            <input type="file" id="media" multiple="image/*, video/*" />
+            <div class="media-section">
+                <p>Other Photos & Videos:</p>
+                <div id="mediaGrid" class="media-grid"></div>
+            </div>
         </div>
-
+    </div>
+    <div class="submit-post">
         <button onclick="extractData()">Create post</button>
     </div>
 </body>
+
 </html>

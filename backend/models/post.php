@@ -18,6 +18,7 @@ class Post
         $breed = $data['breed'] ?? '';
         $birthday = $data['birthday'] ?? '';
         $location = $data['location'] ?? '';
+        $description = $data['description'] ?? '';
 
         $insertEntry = "
     DECLARE
@@ -28,8 +29,8 @@ class Post
         for lines in iterate_lines LOOP
             new_id := new_id + 1;
         END LOOP;
-        INSERT INTO POSTS(id, name, species, breed, birthday, age, location)
-        VALUES(new_id, :name, :species, :breed, TO_DATE(:birthday, 'YYYY-MM-DD'), TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(:birthday, 'YYYY-MM-DD'))/12), :location);
+        INSERT INTO POSTS(id, name, species, breed, birthday, age, location, description)
+        VALUES(new_id, :name, :species, :breed, TO_DATE(:birthday, 'YYYY-MM-DD'), TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(:birthday, 'YYYY-MM-DD'))/12), :location, :description);
 
         :new_id := new_id;
     END;";
@@ -41,6 +42,7 @@ class Post
         oci_bind_by_name($insertCommand, ":breed", $breed);
         oci_bind_by_name($insertCommand, ":birthday", $birthday);
         oci_bind_by_name($insertCommand, ":location", $location);
+        oci_bind_by_name($insertCommand, ":description", $description);
         oci_bind_by_name($insertCommand, ":new_id", $new_id, 8);
 
         oci_execute($insertCommand);
@@ -262,7 +264,8 @@ class Post
                 breed VARCHAR2(100),
                 birthday DATE,
                 age NUMBER,
-                location VARCHAR2(100))";
+                location VARCHAR2(100),
+                description VARCHAR2(4000))";
             $createCommand = oci_parse($this->conn, $createTable);
             if (!oci_execute($createCommand)) {
                 $e = oci_error($createCommand);
