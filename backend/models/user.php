@@ -70,6 +70,10 @@ class User
     
     public function login($data)
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         $email = $data['email'] ?? '';
         $password = $data['password'] ?? '';
         
@@ -105,10 +109,27 @@ class User
         oci_execute($getUserCommand);
         
         if ($user_found == 1 && password_verify($password, $pwd_hash)) {
+            // Session variables
+            $_SESSION['user_id'] = $user_id;
+            $_SESSION['email'] = $email;
+            $_SESSION['logged_in'] = true;
+    
             return ["status" => "success", "message" => "Login successful", "user_id" => $user_id];
-        } else {
+        }
+        else {
             return ["status" => "error", "message" => "Invalid email or password"];
         }
+    }
+
+    public function logout() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    
+        session_unset();
+        session_destroy();
+    
+        return ["status" => "success", "message" => "Logged out successfully"];
     }
     
     public function verifyTable()

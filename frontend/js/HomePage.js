@@ -32,11 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Login button handler
-    document.querySelector('.login-button').addEventListener('click', function () {
-        // Actions to be added
-    });
-
     // Wishlist button handler
     document.querySelector('.wishlist').addEventListener('click', function () {
         // Actions to be added
@@ -210,6 +205,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('login-form');
     const signupLink = document.getElementById('signup-link');
     const forgotPasswordLink = document.getElementById('forgot-password');
+    const profileButton = document.getElementById('logged-in-button');
+    const profileMenu = document.querySelector('.profile-menu');
+    var isLoggedIn = false;
 
     // Open login tab
     loginButton.addEventListener('click', function () {
@@ -232,27 +230,92 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Handle login data submission
-    loginForm.addEventListener('submit', function (event) {
+    loginForm.addEventListener('submit', async function (event) {
         event.preventDefault();
 
         const email = loginForm.querySelector('#email').value;
         const password = loginForm.querySelector('#password').value;
         const rememberMe = document.getElementById('remember').checked;
 
-        console.log('Login attempted:', { email, password, rememberMe });
+        const formData = new FormData();
+        formData.append('email', email);
+        formData.append('password', password);
 
-        // Send data to server
-        // TODO
+        try {
+            const response = await fetch("http://localhost/backend/services/login.php", {
+                method: 'POST',
+                body: formData
+            });
 
-        alert('Login successful!');
-        loginTab.classList.remove('active');
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                alert('Login successful!');
+
+                loginTab.classList.remove('active');
+                isLoggedIn = true;
+                loginButton.style.display = 'none';
+                profileButton.style.display = 'block';
+
+            } else {
+                alert('Login failed!');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+        }
+
+
         document.body.style.overflow = '';
+    });
+
+    // Open profile menu
+    profileButton.addEventListener('click', function () {
+        if (!profileMenu.classList.contains('active'))
+            profileMenu.classList.add('active');
+        else
+            profileMenu.classList.remove('active');
+    });
+
+    // Close profile menu
+    document.addEventListener('click', function (event) {
+        if (!profileMenu.contains(event.target) && event.target !== profileButton) {
+            profileMenu.classList.remove('active');
+        }
     });
 
     // Forgot password link
     forgotPasswordLink.addEventListener('click', function (event) {
         event.preventDefault();
         alert('Password recovery functionality');
+    });
+
+    // Logout funcionality
+    const logoutButton = document.getElementById('logout-button');
+    logoutButton.addEventListener('click', async function () {
+
+        try {
+            const response = await fetch("http://localhost/backend/services/logout.php", {
+                method: 'POST'
+            });
+
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                alert('Logged out successfully!');
+
+                isLoggedIn = false;
+                loginButton.style.display = 'block';
+                profileButton.style.display = 'none';
+                profileMenu.classList.remove('active');
+
+            } 
+            else {
+                alert('Logout failed: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Logout error:', error);
+            alert('An error occurred during logout.');
+        }
     });
 
     // Sign up functionality //
@@ -296,8 +359,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        if(password.length < 6)
-        {
+        if (password.length < 6) {
             alert('The password must be at least 6 characters long!');
             return;
         }
@@ -306,21 +368,21 @@ document.addEventListener('DOMContentLoaded', function () {
         formData.append('email', email);
         formData.append('password', password);
         formData.append('confirm-password', confirmPassword);
-        
+
         try {
             const response = await fetch("http://localhost/backend/services/register.php", {
                 method: 'POST',
                 body: formData
             });
-            
+
             const result = await response.json();
-            
+
             if (result.status === 'success') {
                 alert('Registration successful! You can now log in.');
-                
+
                 document.getElementById('signup-tab').classList.remove('active');
                 document.getElementById('login-tab').classList.add('active');
-                
+
                 signupForm.reset();
             } else {
                 alert('Registration failed!');

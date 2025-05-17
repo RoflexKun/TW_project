@@ -15,5 +15,10 @@ class UserController {
     public function login($data) {
         return $this->userModel->login($data);
     }
+
+    
+    public function logout() {
+        return $this->userModel->logout();
+    }
 }
 ?>
