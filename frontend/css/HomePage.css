@@ -496,8 +496,8 @@ p {
     text-decoration: underline;
 }
 
-/* Profile menu */
-.profile-menu {
+/* Account menu */
+.account-menu {
     position: absolute;
     top: 100%;
     width: 200px; 
@@ -509,12 +509,12 @@ p {
     margin-top: 5px;
 }
 
-.profile-menu.active {
+.account-menu.active {
     display: flex;
     flex-direction: column;
 }
 
-.profile-menu-category {
+.account-menu-category {
     padding: 15px 20px;
     color: #333;
     font-size: 14px;
@@ -524,11 +524,11 @@ p {
     border-bottom: 1px solid #eee;
 }
 
-.profile-menu-category:last-child {
+.account-menu-category:last-child {
     border-bottom: none;
 }
 
-.profile-menu-category:hover {
+.account-menu-category:hover {
     background-color: #f5f5f5;
     color: #1a1a1a;
 }
@@ -539,4 +539,42 @@ p {
 
 #logout-button:hover {
     background-color: #fff0f0; 
+}
+
+/* Profile tab */
+.profile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.profile-overlay.active {
+    display: flex;
+}
+
+.profile-tab {
+    background-color: #fff0db;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 800px;
+    height: 700px;
+    max-width: 90%;
+}
+
+.form-control-email {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background-color:#b3b3b3;
+    font-size: 16px;
 }

@@ -148,6 +148,11 @@ class User
             CREATE TABLE users (
                 id NUMBER PRIMARY KEY,
                 email VARCHAR2(255) UNIQUE,
+                first_name VARCHAR2(255),
+                last_name VARCHAR2(255),
+                latitude NUMBER,
+                longitude NUMBER,
+                date_of_birth DATE,
                 password_hash VARCHAR2(255) NOT NULL
             )";
             $createCommand = oci_parse($this->conn, $createTable);
