@@ -25,6 +25,11 @@
             return ["status" => "succes"];
         }
 
+        public function getSearchResults($searchInput){
+            $postModel = new Post();
+            return $postModel->getSearchResults($searchInput);
+        }
+
         public function getPostInfo($data){
             $id = $data['id'] ?? '';
             $postModel = new Post();

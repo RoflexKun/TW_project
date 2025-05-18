@@ -244,6 +244,198 @@ class Post
             }
     }
 
+    public function getSearchResults($searchInput){
+        $searchPosts = "
+        DECLARE
+
+            CURSOR posts_cursor IS SELECT * FROM posts;
+            CURSOR medical_cursor IS SELECT p.id, p.name, p.age, m.medical_problem FROM posts p JOIN medical m ON p.id = m.id_post;
+            CURSOR food_like_cursor IS SELECT p.id, p.name, p.age, fl.food_name FROM posts p JOIN food_like fl ON p.id = fl.id_post;
+            CURSOR food_dislike_cursor IS SELECT p.id, p.name, p.age, fd.food_name FROM posts p JOIN food_dislike fd ON p.id = fd.id_post;
+            TYPE name_varray IS VARRAY(1000) OF VARCHAR2(255);
+            TYPE id_varray IS VARRAY(1000) OF NUMBER;
+            TYPE age_varray IS VARRAY(1000) OF NUMBER;
+            TYPE id_seen_type IS TABLE OF BOOLEAN INDEX BY PLS_INTEGER;
+            
+            name_array name_varray := name_varray();
+            id_array id_varray := id_varray();
+            age_array age_varray := age_varray();
+            id_seen id_seen_type;
+
+            search_input VARCHAR2(255) := :search_input;
+            counter NUMBER := 0;
+            name_string VARCHAR2(10000);
+            id_string VARCHAR2(10000);
+            age_string VARCHAR2(10000);
+            found_match BOOLEAN;
+            id_exists BOOLEAN;
+
+            no_match_exception exception;
+            PRAGMA EXCEPTION_INIT(no_match_exception, -20001);
+        BEGIN
+            FOR line_posts IN posts_cursor LOOP
+                found_match := FALSE;
+                IF line_posts.name LIKE '%' || search_input || '%' THEN
+                    found_match := TRUE;
+                ELSIF line_posts.age LIKE '%' || search_input || '%' THEN
+                    found_match := TRUE;
+                ELSIF line_posts.species LIKE '%' || search_input || '%' THEN
+                    found_match := TRUE;
+                ELSIF line_posts.breed LIKE '%' || search_input || '%' THEN
+                    found_match := TRUE;
+                ELSIF line_posts.location LIKE '%' || search_input || '%' THEN
+                    found_match := TRUE;
+                ELSIF line_posts.description LIKE '%' || search_input || '%' THEN
+                    found_match := TRUE;
+                END IF;
+
+                IF found_match = TRUE THEN
+                    IF NOT id_seen.EXISTS(line_posts.id) THEN
+                        id_seen(line_posts.id) := TRUE;
+
+                        name_array.EXTEND;
+                        id_array.EXTEND;
+                        age_array.EXTEND;
+
+                        counter := counter + 1;
+                        name_array(counter) := line_posts.name;
+                        id_array(counter) := line_posts.id;
+                        age_array(counter) := line_posts.age;
+                    END IF;
+                END IF;
+            END LOOP;
+
+            FOR line_medical IN medical_cursor LOOP
+                found_match := FALSE;
+                IF line_medical.medical_problem LIKE '%' || search_input || '%' THEN
+                    found_match := TRUE;
+                END IF;
+
+                IF found_match = TRUE THEN
+                    IF NOT id_seen.EXISTS(line_medical.id) THEN
+                        id_seen(line_medical.id) := TRUE;
+
+                        name_array.EXTEND;
+                        id_array.EXTEND;
+                        age_array.EXTEND;
+
+                        counter := counter + 1;
+                        name_array(counter) := line_medical.name;
+                        id_array(counter) := line_medical.id;
+                        age_array(counter) := line_medical.age;
+                    END IF;
+                END IF;
+            END LOOP;
+
+            FOR line_food_like IN food_like_cursor LOOP
+                found_match := FALSE;
+                IF line_food_like.food_name LIKE '%' || search_input || '%' THEN
+                    found_match := TRUE;
+                END IF;
+
+                IF found_match = TRUE THEN
+                    IF NOT id_seen.EXISTS(line_food_like.id) THEN
+                        id_seen(line_food_like.id) := TRUE;
+
+                        name_array.EXTEND;
+                        id_array.EXTEND;
+                        age_array.EXTEND;
+
+                        counter := counter + 1;
+                        name_array(counter) := line_food_like.name;
+                        id_array(counter) := line_food_like.id;
+                        age_array(counter) := line_food_like.age;
+                    END IF;
+                END IF;
+            END LOOP;
+
+            FOR line_food_dislike in food_dislike_cursor LOOP
+                found_match := FALSE;
+                IF line_food_dislike.food_name LIKE '%' || search_input || '%' THEN
+                    found_match := TRUE;
+                END IF;
+
+                IF found_match = TRUE THEN
+                    IF NOT id_seen.EXISTS(line_food_dislike.id) THEN
+                        id_seen(line_food_dislike.id) := TRUE;
+
+                        name_array.EXTEND;
+                        id_array.EXTEND;
+                        age_array.EXTEND;
+
+                        counter := counter + 1;
+                        name_array(counter) := line_food_dislike.name;
+                        id_array(counter) := line_food_dislike.id;
+                        age_array(counter) := line_food_dislike.age;
+                    END IF;
+                END IF;
+            END LOOP;
+
+            IF counter = 0 THEN
+                RAISE no_match_exception;
+            ELSE
+                FOR i in 1..name_array.COUNT LOOP
+                    name_string := name_string || name_array(i) || ';';
+                    id_string := id_string || id_array(i) || ';';
+                    age_string := age_string || age_array(i) || ';';
+                END LOOP;
+
+                :name_array := name_string;
+                :id_array := id_string;
+                :age_array := age_string;
+                :counter := counter;
+            END IF;
+        EXCEPTION
+        WHEN no_match_exception THEN
+            name_string := '';
+            id_string := '';
+            age_string := '';
+
+            :name_array := name_string;
+            :id_array := id_string;
+            :age_array := age_string;
+            :counter := counter;
+        END;
+            ";
+        
+        $counter = 0;
+        $nameArray = '';
+        $idArray = '';
+        $ageArray = '';
+
+        $searchPostsCommand = oci_parse($this->conn, $searchPosts);
+
+        oci_bind_by_name($searchPostsCommand, ":search_input", $searchInput);
+
+        oci_bind_by_name($searchPostsCommand, ":name_array", $nameArray, 10000);
+        oci_bind_by_name($searchPostsCommand, ":id_array", $idArray, 10000);
+        oci_bind_by_name($searchPostsCommand, ":age_array", $ageArray, 10000);
+        oci_bind_by_name($searchPostsCommand, ":counter", $counter, 10);
+
+        if (oci_execute($searchPostsCommand)) {
+                if($counter == 0){
+                    return [
+                        "counter" => $counter,
+                        "name" => $nameArray,
+                        "id" => $idArray,
+                        "age" => $ageArray
+                    ];
+                }
+                else{
+                    return [
+                    "counter" => $counter,
+                    "name" => rtrim($nameArray, ';'),
+                    "id" => rtrim($idArray, ';'),
+                    "age" => rtrim($ageArray, ';')
+                ];
+                }
+                
+            } else{
+                $error = oci_error($searchPostsCommand);
+                return ["error" => $error['message']];
+            }
+    }
+
     public function verifyTable()
     {
         $checkTable = "
