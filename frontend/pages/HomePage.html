@@ -23,12 +23,12 @@
         <div class="header-right-section">
             <div class="wishlist">★</div>
             <button class="login-button" id="login-button">Login</button>
-            <button class="logged-in-button" id="logged-in-button">Profile</button>
+            <button class="logged-in-button" id="logged-in-button">Account</button>
 
-            <div class="profile-menu">
-                <div class="profile-menu-category" id="settings-button"> Settings </div>
-                <div class="profile-menu-category" id="post-button"> Post </div>
-                <div class="profile-menu-category" id="logout-button"> Logout </div>
+            <div class="account-menu">
+                <div class="account-menu-category" id="profile-button"> Profile </div>
+                <div class="account-menu-category" id="post-button"> Post </div>
+                <div class="account-menu-category" id="logout-button"> Logout </div>
             </div>
         </div>
         <div class="dropdown-menu">
@@ -218,6 +218,35 @@
             <div class="signup-alternative">
                 <p>Already have an account? <a href="#" id="login-link">Login</a></p>
             </div>
+        </div>
+    </div>
+
+    <!-- Profile tab -->
+    <div class="profile-overlay" id="profile-tab">
+        <div class="profile-tab">
+            <div class="tab-header">
+                <div class="logo">Logo</div>
+                <button class="close-button" id="close-profile"><img src="../assets/bone-shaped-dog-biscuit.png"/></button>
+            </div>
+            <form id="profile-form">
+                <div class="form-group">
+                    <label for="user-first-name">First Name</label>
+                    <input type="text" id="user-first-name" name="user-first-name" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="user-last-name">Last Name</label>
+                    <input type="text" id="user-last-name" name="user-last-name" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="user-email">Email</label>
+                    <div class="form-control-email" id="user-email"></div>
+                </div>
+                <div class="form-group">
+                    <label for="user-date-of-birth">Date of Birth (mm-dd-yyyy)</label>
+                    <input type="date" id="user-date-of-birth" name="user-date-of-birth" class="form-control">
+                </div>
+                <button type="submit" class="save-profile">Save</button>
+            </form>
         </div>
     </div>
     

@@ -20,19 +20,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Prevent dropdown from closing when clicking inside
     dropdownMenu.addEventListener('click', function (event) {
         event.stopPropagation();
     });
 
-    // Category click handlers
     document.querySelectorAll('.dropdown-category').forEach(category => {
         category.addEventListener('click', function () {
             // Actions to be added
         });
     });
 
-    // Wishlist button handler
+    // Wishlist button
     document.querySelector('.wishlist').addEventListener('click', function () {
         // Actions to be added
     });
@@ -43,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Different breeds for each species
     const breedsBySpecies = {
-        "": [{ value: "", text: "Any" }], // For all species
+        "": [{ value: "", text: "Any" }],
         "dog": [
             { value: "", text: "Any" },
             { value: "golden-retriever", text: "Golden Retriever" },
@@ -79,13 +77,13 @@ document.addEventListener('DOMContentLoaded', function () {
         ]
     };
 
-    // Update breed options based on selected species
+    // Update breed options
     function updateBreedOptions(selectedSpecies) {
         breedSelect.innerHTML = '';
 
         const breeds = breedsBySpecies[selectedSpecies] || breedsBySpecies[""];
 
-        // Create breed options for selected species
+        // Create breed options
         breeds.forEach(breed => {
             const option = document.createElement('option');
             option.value = breed.value;
@@ -125,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         citySelect.innerHTML = '<option value="">Select City</option>';
 
-        // Add "Any" option
         if (selectedCountry !== "") {
             const anyOption = document.createElement('option');
             anyOption.value = "any";
@@ -133,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
             citySelect.appendChild(anyOption);
         }
 
-        // Get cities for selected country
+        // Get cities
         const cities = citiesByCountry[selectedCountry] || [];
 
         // Add city options
@@ -166,7 +163,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const searchButton = document.getElementById('search-button');
     if (searchButton) {
         searchButton.addEventListener('click', function () {
-            // Get filter values
             const species = document.getElementById('species-select').value;
             const breed = document.getElementById('breed-select').value;
             const age = document.getElementById('age-select').value;
@@ -176,25 +172,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const coatLength = document.getElementById('coat-select').value;
             const country = document.getElementById('country-select').value;
             const city = document.getElementById('city-select').value;
-
-            const filterSummary = `
-                Selected Filters:
-                - Species: ${species || 'Any'}
-                - Breed: ${breed || 'Any'}
-                - Age: ${age || 'Any'}
-                - Size: ${size || 'Any'}
-                - Gender: ${gender || 'Any'}
-                - Good With: ${goodWith || 'Any'}
-                - Coat Length: ${coatLength || 'Any'}
-                - Country : ${country || 'Any'}
-                - City : ${city || 'Any'}
-            `;
-
-            alert(filterSummary);
-
-            console.log('Search filters applied:', {
-                species, breed, age, size, gender, goodWith, coatLength
-            });
         });
     }
 
@@ -205,8 +182,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('login-form');
     const signupLink = document.getElementById('signup-link');
     const forgotPasswordLink = document.getElementById('forgot-password');
-    const profileButton = document.getElementById('logged-in-button');
-    const profileMenu = document.querySelector('.profile-menu');
+    const accountButton = document.getElementById('logged-in-button');
+    const accountMenu = document.querySelector('.account-menu');
     var isLoggedIn = false;
 
     // Open login tab
@@ -255,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 loginTab.classList.remove('active');
                 isLoggedIn = true;
                 loginButton.style.display = 'none';
-                profileButton.style.display = 'block';
+                accountButton.style.display = 'block';
 
             } else {
                 alert('Login failed!');
@@ -268,18 +245,18 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.style.overflow = '';
     });
 
-    // Open profile menu
-    profileButton.addEventListener('click', function () {
-        if (!profileMenu.classList.contains('active'))
-            profileMenu.classList.add('active');
+    // Open account menu
+    accountButton.addEventListener('click', function () {
+        if (!accountMenu.classList.contains('active'))
+            accountMenu.classList.add('active');
         else
-            profileMenu.classList.remove('active');
+            accountMenu.classList.remove('active');
     });
 
-    // Close profile menu
+    // Close account menu
     document.addEventListener('click', function (event) {
-        if (!profileMenu.contains(event.target) && event.target !== profileButton) {
-            profileMenu.classList.remove('active');
+        if (!accountMenu.contains(event.target) && event.target !== accountButton) {
+            accountMenu.classList.remove('active');
         }
     });
 
@@ -305,10 +282,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 isLoggedIn = false;
                 loginButton.style.display = 'block';
-                profileButton.style.display = 'none';
-                profileMenu.classList.remove('active');
+                accountButton.style.display = 'none';
+                accountMenu.classList.remove('active');
 
-            } 
+            }
             else {
                 alert('Logout failed: ' + result.message);
             }
@@ -399,4 +376,136 @@ document.addEventListener('DOMContentLoaded', function () {
         loginTab.classList.add('active');
         signupTab.classList.remove('active');
     });
+
+    // Profile tab //
+    const profileButton = document.getElementById('profile-button');
+    const profileTab = document.getElementById('profile-tab');
+    const closeProfileButton = document.getElementById('close-profile');
+    const profileForm = document.getElementById('profile-form');
+
+    let userData = {
+        first_name: '',
+        last_name: '',
+        email: '',
+        date_of_birth: ''
+    };
+
+    // Open profile tab
+    profileButton.addEventListener('click', function () {
+        fetchUserProfile();
+        profileTab.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+
+    // Close profile tab
+    closeProfileButton.addEventListener('click', function () {
+        profileTab.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    // Close tab
+    profileTab.addEventListener('click', function (event) {
+        if (event.target === profileTab) {
+            profileTab.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+
+    // Format date for database (DD-MM-YYYY)
+    function formatDateForDatabase(dateString) {
+        if (!dateString) return '';
+
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+
+        return `${day}-${month}-${year}`;
+    }
+
+    // Format date for input field (YYYY-MM-DD)
+    function formatDateForInput(dateString) {
+        if (!dateString) return '';
+
+        const parts = dateString.split('-');
+        if (parts.length !== 3) return '';
+
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    }
+
+    // Get user data from DB
+    async function fetchUserProfile() {
+        try {
+            const response = await fetch("http://localhost/backend/services/getprofile.php");
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                userData = result.data;
+
+                const firstNameInput = document.getElementById('user-first-name');
+                const lastNameInput = document.getElementById('user-last-name');
+                const emailDisplay = document.getElementById('user-email');
+                const dateOfBirthInput = document.getElementById('user-date-of-birth');
+
+                if (firstNameInput)
+                    firstNameInput.value = userData.first_name || '';
+                if (lastNameInput)
+                    lastNameInput.value = userData.last_name || '';
+                if (emailDisplay)
+                    emailDisplay.textContent = userData.email || '';
+                if (dateOfBirthInput && userData.date_of_birth)
+                dateOfBirthInput.value = formatDateForInput(userData.date_of_birth);
+
+            }
+            else {
+                console.error('Failed to fetch profile data:', result.message);
+            }
+        } catch (error) {
+            console.error('Error fetching profile data:', error);
+        }
+    }
+
+    // Profile data submision
+    profileForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const firstName = document.getElementById('user-first-name').value;
+        const lastName = document.getElementById('user-last-name').value;
+        const dateOfBirth = document.getElementById('user-date-of-birth').value;
+        const formattedDate = formatDateForDatabase(dateOfBirth);
+
+        const formData = new FormData();
+        formData.append('first_name', firstName);
+        formData.append('last_name', lastName);
+        formData.append('date_of_birth', formattedDate);
+
+        try {
+            const response = await fetch("http://localhost/backend/services/updateprofile.php", {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                alert('Profile updated successfully!');
+                userData = {
+                    ...userData,
+                    first_name: firstName,
+                    last_name: lastName,
+                    date_of_birth: dateOfBirth
+                };
+                profileTab.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            else {
+                alert('Failed to update profile: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            alert('An error occurred while updating your profile.');
+        }
+    });
+
 });
