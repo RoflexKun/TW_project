@@ -38,8 +38,9 @@
 
         public function getPostsFromPage($data){
             $page = $data['page'] ?? '';
+            $limit = $data['limit'] ?? '';
             $postModel = new Post();
-            return $postModel->getPostsFromPage($page);
+            return $postModel->getPostsFromPage($page, $limit);
         }
 
         public function getPostCount(){

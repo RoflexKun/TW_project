@@ -133,16 +133,16 @@ class Post
         }
     }
 
-    public function getPostsFromPage($page){
-        $firstPostIndex = 20 * ($page - 1) + 1;
-        $lastPostIndex = 20 * $page;
+    public function getPostsFromPage($page, $limit){
+        $firstPostIndex = $limit * ($page - 1) + 1;
+        $lastPostIndex = $limit * $page;
 
         $extractPosts = "
             DECLARE
-                TYPE varray_name IS VARRAY(20) OF VARCHAR2(255);
-                TYPE varray_age IS VARRAY(20) OF NUMBER;
-                TYPE varray_media IS VARRAY(20) OF VARCHAR2(255);
-                TYPE varray_id IS VARRAY(20) OF NUMBER;
+                TYPE varray_name IS VARRAY(10000) OF VARCHAR2(255);
+                TYPE varray_age IS VARRAY(10000) OF NUMBER;
+                TYPE varray_media IS VARRAY(10000) OF VARCHAR2(255);
+                TYPE varray_id IS VARRAY(10000) OF NUMBER;
                 first_post_index NUMBER := :firstPostIndex;
                 last_post_index NUMBER := :lastPostIndex;
                 name_array varray_name := varray_name();
@@ -253,6 +253,7 @@ class Post
             CURSOR food_like_cursor IS SELECT p.id, p.name, p.age, fl.food_name FROM posts p JOIN food_like fl ON p.id = fl.id_post;
             CURSOR food_dislike_cursor IS SELECT p.id, p.name, p.age, fd.food_name FROM posts p JOIN food_dislike fd ON p.id = fd.id_post;
             TYPE name_varray IS VARRAY(1000) OF VARCHAR2(255);
+            TYPE thumbnail_varray IS VARRAY(1000) OF VARCHAR2(255);
             TYPE id_varray IS VARRAY(1000) OF NUMBER;
             TYPE age_varray IS VARRAY(1000) OF NUMBER;
             TYPE id_seen_type IS TABLE OF BOOLEAN INDEX BY PLS_INTEGER;
@@ -260,6 +261,7 @@ class Post
             name_array name_varray := name_varray();
             id_array id_varray := id_varray();
             age_array age_varray := age_varray();
+            thumbnail_array thumbnail_varray := thumbnail_varray();
             id_seen id_seen_type;
 
             search_input VARCHAR2(255) := :search_input;
@@ -267,6 +269,7 @@ class Post
             name_string VARCHAR2(10000);
             id_string VARCHAR2(10000);
             age_string VARCHAR2(10000);
+            thumbnail_string VARCHAR2(10000);
             found_match BOOLEAN;
             id_exists BOOLEAN;
 
@@ -296,11 +299,13 @@ class Post
                         name_array.EXTEND;
                         id_array.EXTEND;
                         age_array.EXTEND;
+                        thumbnail_array.EXTEND;
 
                         counter := counter + 1;
                         name_array(counter) := line_posts.name;
                         id_array(counter) := line_posts.id;
                         age_array(counter) := line_posts.age;
+                        SELECT thumbnail_path INTO thumbnail_array(counter) FROM thumbnail WHERE thumbnail.id_post = line_posts.id;
                     END IF;
                 END IF;
             END LOOP;
@@ -318,11 +323,13 @@ class Post
                         name_array.EXTEND;
                         id_array.EXTEND;
                         age_array.EXTEND;
+                        thumbnail_array.EXTEND;
 
                         counter := counter + 1;
                         name_array(counter) := line_medical.name;
                         id_array(counter) := line_medical.id;
                         age_array(counter) := line_medical.age;
+                        SELECT thumbnail_path INTO thumbnail_array(counter) FROM thumbnail WHERE thumbnail.id_post = line_medical.id;
                     END IF;
                 END IF;
             END LOOP;
@@ -340,11 +347,13 @@ class Post
                         name_array.EXTEND;
                         id_array.EXTEND;
                         age_array.EXTEND;
+                        thumbnail_array.EXTEND;
 
                         counter := counter + 1;
                         name_array(counter) := line_food_like.name;
                         id_array(counter) := line_food_like.id;
                         age_array(counter) := line_food_like.age;
+                        SELECT thumbnail_path INTO thumbnail_array(counter) FROM thumbnail WHERE thumbnail.id_post = line_food_like.id;
                     END IF;
                 END IF;
             END LOOP;
@@ -362,11 +371,13 @@ class Post
                         name_array.EXTEND;
                         id_array.EXTEND;
                         age_array.EXTEND;
+                        thumbnail_array.EXTEND;
 
                         counter := counter + 1;
                         name_array(counter) := line_food_dislike.name;
                         id_array(counter) := line_food_dislike.id;
                         age_array(counter) := line_food_dislike.age;
+                        SELECT thumbnail_path INTO thumbnail_array(counter) FROM thumbnail WHERE thumbnail.id_post = line_food_dislike.id;
                     END IF;
                 END IF;
             END LOOP;
@@ -378,23 +389,27 @@ class Post
                     name_string := name_string || name_array(i) || ';';
                     id_string := id_string || id_array(i) || ';';
                     age_string := age_string || age_array(i) || ';';
+                    thumbnail_string := thumbnail_string || thumbnail_array(i) || ';';
                 END LOOP;
 
                 :name_array := name_string;
                 :id_array := id_string;
                 :age_array := age_string;
                 :counter := counter;
+                :thumbnail_array := thumbnail_string;
             END IF;
         EXCEPTION
         WHEN no_match_exception THEN
             name_string := '';
             id_string := '';
             age_string := '';
+            thumbnail_string := '';
 
             :name_array := name_string;
             :id_array := id_string;
             :age_array := age_string;
             :counter := counter;
+            :thumbnail_array := thumbnail_string;
         END;
             ";
         
@@ -402,6 +417,7 @@ class Post
         $nameArray = '';
         $idArray = '';
         $ageArray = '';
+        $thumbnailArray = '';
 
         $searchPostsCommand = oci_parse($this->conn, $searchPosts);
 
@@ -411,6 +427,7 @@ class Post
         oci_bind_by_name($searchPostsCommand, ":id_array", $idArray, 10000);
         oci_bind_by_name($searchPostsCommand, ":age_array", $ageArray, 10000);
         oci_bind_by_name($searchPostsCommand, ":counter", $counter, 10);
+        oci_bind_by_name($searchPostsCommand, ":thumbnail_array", $thumbnailArray, 10000);
 
         if (oci_execute($searchPostsCommand)) {
                 if($counter == 0){
@@ -418,7 +435,8 @@ class Post
                         "counter" => $counter,
                         "name" => $nameArray,
                         "id" => $idArray,
-                        "age" => $ageArray
+                        "age" => $ageArray,
+                        "thumbnail" => $thumbnailArray
                     ];
                 }
                 else{
@@ -426,7 +444,8 @@ class Post
                     "counter" => $counter,
                     "name" => rtrim($nameArray, ';'),
                     "id" => rtrim($idArray, ';'),
-                    "age" => rtrim($ageArray, ';')
+                    "age" => rtrim($ageArray, ';'),
+                    "thumbnail" => rtrim($thumbnailArray, ';')
                 ];
                 }
                 

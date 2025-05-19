@@ -19,9 +19,18 @@
         </div>
         <div class="posts-part">
             <div class="filters">
-
+                <div class="posts-per-page">
+                    <label for="posts-limit">Posts per page:</label>
+                    <select id="posts-limit">
+                        <option value="10">10</option>
+                        <option value="20" selected>20</option>
+                        <option value="50">50</option>
+                        <option value="all">All posts</option>
+                    </select>
+                </div>
             </div>
             <div class="post-list-section">
+                <div id="search-message"></div>
                 <div class="post-list" id="post-list">
 
                 </div>
