@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,51 +8,99 @@
     <script src="../js/post.js"></script>
     <title>Document</title>
 </head>
+
 <body>
-    <div class = "post-display">
-        <div class = "photo-section">
-            <h2>Photos of the pet</h2>
+    <div class="post-display">
+        <div class="photo-section">
+            <div class="media-display" id="main-media"></div>
+            <div class="media-thumbnails" id="media-thumbnails"></div>
+
+            <div class="adopt-section">
+            <button class="adopt-button">Adopt me!</button>
+            <div class="post-actions">
+                <div class="favourite-button" id="favourite-button">❤️</div>
+                <div class="report-button" id="report-button">⚠️</div>
+            </div>
         </div>
-        <div class = "information-section">
-            <div class = "general-section">
+        </div>
+        
+        <div class="information-section">
+            <div class="general-section">
                 <h2>General information: </h2>
-                <div class = "gInfo-structure">
-                    <div class = "gInfo-leftSide">
-                        <div class = "gInfo-label">
-                            <p>Name: </p>
-                            <p id = "pet-name"></p>
+                <div class="gInfo-structure">
+                    <div class="gInfo-leftSide">
+                        <div class="gInfo-label">
+                            <span class="gInfo-label-title">Name:</span>
+                            <span id="pet-name"></span>
                         </div>
-                        <div class = "gInfo-label">
-                            <p>Species: </p>
-                            <p id = "pet-species"></p>
+                        <div class="gInfo-label">
+                            <span class="gInfo-label-title">Species:</span>
+                            <span id="pet-species"></span>
                         </div>
-                        <div class = "gInfo-label">
-                            <p>Breed: </p>
-                            <p id = "pet-breed"></p>
+                        <div class="gInfo-label">
+                            <span class="gInfo-label-title">Breed:</span>
+                            <span id="pet-breed"></span>
                         </div>
                     </div>
 
-                    <div class = "gInfo-rightSide">
-                        <div class = "gInfo-label">
-                            <p>Birthday: </p>
-                            <p id = "pet-birthday"></p>
+                    <div class="gInfo-rightSide">
+                        <div class="gInfo-label">
+                            <span class="gInfo-label-title">Birthday:</span>
+                            <span id="pet-birthday"></span>
                         </div>
-                        <div class = "gInfo-label">
-                            <p>Age: </p>
-                            <p id = "pet-age"></p>
+                        <div class="gInfo-label">
+                            <span class="gInfo-label-title">Age:</span>
+                            <span id="pet-age"></span>
                         </div>
-                        <div class = "gInfo-label">
-                            <p>Location: </p>
-                            <p id = "pet-location"></p>
+                        <div class="gInfo-label">
+                            <span class="gInfo-label-title">Location:</span>
+                            <span id="pet-location"></span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class = "description-section">
+            <div class="description-section">
                 <h2>Description of the pet</h2>
+                <div class="desc-label">
+                    <h3>Description</h3>
+                    <p id="pet-description"></p>
+                </div>
+                <div class="desc-label">
+                    <h3>Medical History</h3>
+                    <p id="pet-medical"></p>
+                </div>
+                <div class="desc-label">
+                    <h3>Foods that it likes</h3>
+                    <p id="pet-food-like"></p>
+                </div>
+                <div class="desc-label">
+                    <h3>Foods that it doesn't like</h3>
+                    <p id="pet-food-dislike"></p>
+                </div>
             </div>
         </div>
     </div>
+
+    <div id="report-modal-bg" class="hidden">
+        <div id="report-modal">
+            <img src="/frontend/assets/bone-shaped-dog-biscuit.png" id="close-report" alt="Close" role="button" tabindex="0"/>
+            <h2>Report the post</h2>
+            <form id="report-form">
+                <div class="report-options">
+                    <label><input type="radio" name="reason" value="Inappropriate content">Inappropriate content</label><br>
+                    <label><input type="radio" name="reason" value="Scam">Scam</label><br>
+                    <label><input type="radio" name="reason" value="Fake post">Fake post</label><br>
+                    <label><input type="radio" name="reason" value="Animal abuse">Animal abuse</label><br>
+                    <label><input type="radio" name="reason" value="Other">Other</label><br>
+                </div>
+                <textarea name="comments" placeholder="Other comments..." rows="5"></textarea>
+                <div class="report-action">
+                    <button type="submit">Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
+
 </html>

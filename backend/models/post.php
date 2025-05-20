@@ -53,16 +53,26 @@ class Post
     {
         $extractData = "
     DECLARE
+        post_not_found EXCEPTION;
+        PRAGMA EXCEPTION_INIT(post_not_found, -20001);
         id_rec NUMBER := :id;
         found BOOLEAN := false;
         post posts%ROWTYPE; 
         TYPE varray IS VARRAY (15) OF VARCHAR2(255);
         media_array varray;
         temp_media_array VARCHAR2(4000) := '';
+        thumbnail_string VARCHAR2(255) := '';
+        medical_string VARCHAR2(4000) := '';
+        food_like_string VARCHAR2(4000) := '';
+        food_dislike_string VARCHAR2(4000) := ''; 
         CURSOR posts_lines IS SELECT * FROM posts;
         CURSOR media_lines IS SELECT * FROM media;
+        CURSOR medical_lines IS SELECT * FROM medical;
+        CURSOR food_like_lines IS SELECT * FROM food_like;
+        CURSOR food_dislike_lines IS SELECT * FROM food_dislike;
         count_media NUMBER := 0;
     BEGIN
+        SELECT thumbnail_path INTO thumbnail_string FROM thumbnail WHERE id_post = id_rec;
         FOR lines IN posts_lines LOOP
             IF lines.id = id_rec THEN
                 post := lines;
@@ -77,6 +87,7 @@ class Post
             :birthday := post.birthday;
             :age := post.age;
             :location := post.location;
+            :description := post.description;
             media_array := varray();
             FOR lines IN media_lines LOOP
                 IF lines.id_post = post.id THEN
@@ -85,13 +96,39 @@ class Post
                     media_array(count_media):=lines.file_path;
                 END IF;
             END LOOP;
-            FOR i in 1..media_array.COUNT LOOP
+            FOR i IN 1..media_array.COUNT LOOP
                 temp_media_array := temp_media_array || media_array(i) || ';';
             END LOOP;
+
+            FOR lines IN medical_lines LOOP
+                IF lines.id_post = post.id THEN 
+                    medical_string := medical_string || lines.medical_problem || ';';
+                END IF;
+            END LOOP;
+
+            FOR lines IN food_like_lines LOOP
+                IF lines.id_post = post.id THEN
+                    food_like_string := food_like_string || lines.food_name || ';';
+                END IF;
+            END LOOP;
+
+            FOR lines IN food_dislike_lines LOOP
+                IF lines.id_post = post.id THEN
+                    food_dislike_string := food_dislike_string || lines.food_name || ';';
+                END IF;
+            END LOOP;
+
             :media_array := temp_media_array;
+            :medical_array := medical_string;
+            :food_like_array := food_like_string;
+            :food_dislike_array := food_dislike_string;
+            :thumbnail := thumbnail_string;
         ELSE 
-            :error := 'Invalid ID';
+            RAISE post_not_found;
         END IF;
+    EXCEPTION
+    WHEN post_not_found THEN
+        :error := 'Invalid ID';
     END;
     ";
 
@@ -104,7 +141,12 @@ class Post
         $birthday = "";
         $age = "";
         $location = "";
-        $media_array = "";
+        $thumbnail = "";
+        $description = "";
+        $mediaArray = "";
+        $medicalArray = "";
+        $foodLikeArray = "";
+        $foodDislikeArray = "";
         $error = "";
 
         oci_bind_by_name($extractDataCommand, ":name", $name, 50);
@@ -113,8 +155,13 @@ class Post
         oci_bind_by_name($extractDataCommand, ":birthday", $birthday, 10);
         oci_bind_by_name($extractDataCommand, ":age", $age, 3);
         oci_bind_by_name($extractDataCommand, ":location", $location, 50);
+        oci_bind_by_name($extractDataCommand, ":thumbnail", $thumbnail, 255);
+        oci_bind_by_name($extractDataCommand, ":description", $description, 1000);
         oci_bind_by_name($extractDataCommand, ":error", $error, 50);
-        oci_bind_by_name($extractDataCommand, ":media_array", $media_array, 4000);
+        oci_bind_by_name($extractDataCommand, ":media_array", $mediaArray, 4000);
+        oci_bind_by_name($extractDataCommand, ":medical_array", $medicalArray, 4000);
+        oci_bind_by_name($extractDataCommand, ":food_like_array", $foodLikeArray, 4000);
+        oci_bind_by_name($extractDataCommand, ":food_dislike_array", $foodDislikeArray, 4000);
 
         if (oci_execute($extractDataCommand)) {
             if ($error != "") {
@@ -127,7 +174,12 @@ class Post
                     "birthday" => $birthday,
                     "age" => $age,
                     "location" => $location,
-                    "media_array" => $media_array
+                    "thumbnail" => $thumbnail,
+                    "description" => $description,
+                    "media_array" => rtrim($mediaArray, ';'),
+                    "medical_array" => rtrim($medicalArray, ';'),
+                    "food_like_array" => rtrim($foodLikeArray, ';'),
+                    "food_dislike_array" => rtrim($foodDislikeArray, ';')
                 ];
             }
         }
