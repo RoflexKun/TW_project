@@ -15,10 +15,17 @@ class UserController {
     public function login($data) {
         return $this->userModel->login($data);
     }
-
     
     public function logout() {
         return $this->userModel->logout();
+    }
+    
+    public function getProfile() {
+        return $this->userModel->getProfile();
+    }
+    
+    public function updateProfile($data) {
+        return $this->userModel->updateProfile($data);
     }
 }
 ?>
