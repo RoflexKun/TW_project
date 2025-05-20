@@ -387,7 +387,8 @@ document.addEventListener('DOMContentLoaded', function () {
         first_name: '',
         last_name: '',
         email: '',
-        date_of_birth: ''
+        date_of_birth: '',
+        id: ' '
     };
 
     // Open profile tab
@@ -456,6 +457,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     emailDisplay.textContent = userData.email || '';
                 if (dateOfBirthInput && userData.date_of_birth)
                 dateOfBirthInput.value = formatDateForInput(userData.date_of_birth);
+
+                console.log(userData.id);
 
             }
             else {

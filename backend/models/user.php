@@ -132,6 +132,154 @@ class User
         return ["status" => "success", "message" => "Logged out successfully"];
     }
     
+    public function getProfile()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['user_id']) || !$_SESSION['logged_in']) {
+            return ['status' => 'error', 'message' => 'User not logged in'];
+        }
+
+        $user_id = $_SESSION['user_id'];
+
+        $getUserData = "
+        DECLARE
+            user_first_name VARCHAR2(255);
+            user_last_name VARCHAR2(255);
+            user_email VARCHAR2(255);
+            user_date_of_birth DATE;
+            user_found NUMBER := 0;
+        BEGIN
+            SELECT 
+                first_name, 
+                last_name, 
+                email, 
+                date_of_birth
+            INTO 
+                user_first_name, 
+                user_last_name, 
+                user_email, 
+                user_date_of_birth
+            FROM users WHERE id = :user_id;
+            
+            :first_name := user_first_name;
+            :last_name := user_last_name;
+            :email := user_email;
+            :date_of_birth := user_date_of_birth;
+            :found := 1;
+            
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                :found := 0;
+        END;";
+
+        $first_name = null;
+        $last_name = null;
+        $email = null;
+        $date_of_birth = null;
+        $found = 0;
+
+        $stmt = oci_parse($this->conn, $getUserData);
+        oci_bind_by_name($stmt, ":user_id", $user_id);
+        oci_bind_by_name($stmt, ":first_name", $first_name, 255);
+        oci_bind_by_name($stmt, ":last_name", $last_name, 255);
+        oci_bind_by_name($stmt, ":email", $email, 255);
+        oci_bind_by_name($stmt, ":date_of_birth", $date_of_birth, 255);
+        oci_bind_by_name($stmt, ":found", $found);
+
+        oci_execute($stmt);
+
+        // Format time
+        $formatted_date = null;
+        if ($date_of_birth) {
+            $date = strtotime($date_of_birth);
+            $formatted_date = date('d-m-Y', $date);
+        }
+
+        // Return user profile data
+        if ($found) {
+            return [
+                'status' => 'success',
+                'data' => [
+                    'first_name' => $first_name,
+                    'last_name' => $last_name,
+                    'email' => $email,
+                    'date_of_birth' => $formatted_date,
+                    'id'=> $user_id
+                ]
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => 'User profile not found'
+            ];
+        }
+    }
+
+    public function updateProfile($data)
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['user_id']) || !$_SESSION['logged_in']) {
+            return ['status' => 'error', 'message' => 'User not logged in'];
+        }
+
+        $user_id = $_SESSION['user_id'];
+        $first_name = $data['first_name'] ?? null;
+        $last_name = $data['last_name'] ?? null;
+        $date_of_birth = $data['date_of_birth'] ?? null;
+
+        $updateProfileSQL = "
+        BEGIN
+            UPDATE users
+            SET 
+                first_name = :first_name,
+                last_name = :last_name,
+                date_of_birth = TO_DATE(:date_of_birth, 'DD-MM-YYYY')
+            WHERE id = :user_id;
+            
+            :rows_updated := SQL%ROWCOUNT;
+        END;";
+
+        $rows_updated = 0;
+
+        $stmt = oci_parse($this->conn, $updateProfileSQL);
+        oci_bind_by_name($stmt, ":user_id", $user_id);
+        oci_bind_by_name($stmt, ":first_name", $first_name);
+        oci_bind_by_name($stmt, ":last_name", $last_name);
+        oci_bind_by_name($stmt, ":date_of_birth", $date_of_birth);
+        oci_bind_by_name($stmt, ":rows_updated", $rows_updated);
+
+        if (oci_execute($stmt)) {
+            if ($rows_updated > 0) {
+                return [
+                    'status' => 'success',
+                    'message' => 'Profile updated successfully',
+                    'data' => [
+                        'first_name' => $first_name,
+                        'last_name' => $last_name,
+                        'date_of_birth' => $date_of_birth
+                    ]
+                ];
+            } else {
+                return [
+                    'status' => 'error',
+                    'message' => 'No changes made to profile'
+                ];
+            }
+        } else {
+            $e = oci_error($stmt);
+            return [
+                'status' => 'error',
+                'message' => 'Failed to update profile: ' . $e['message']
+            ];
+        }
+    }
+    
     public function verifyTable()
     {
         $checkTable = "
