@@ -52,10 +52,6 @@
                     <div class="select-wrapper">
                         <select id="species-select" class="filter-select">
                             <option value="">Any</option>
-                            <option value="dog">Dog</option>
-                            <option value="cat">Cat</option>
-                            <option value="rabbit">Rabbit</option>
-                            <option value="dinosaur">Dinosaur</option>
                         </select>
                     </div>
                 </div>
@@ -70,14 +66,13 @@
                 </div>
 
                 <div class="filter-group">
-                    <label for="age-select">AGE</label>
-                    <div class="select-wrapper">
-                        <select id="age-select" class="filter-select">
-                            <option value="">Any</option>
-                            <option value="young">Young</option>
-                            <option value="adult">Adult</option>
-                            <option value="senior">Senior</option>
-                        </select>
+                    <label for="age-range">AGE</label>
+                    <div class="range-slider">
+                        <input type="range" id="age-min" min="0" max="20" value="0">
+                        <input type="range" id="age-max" min="0" max="20" value="20">
+                        <div class="age-values">
+                            <span id="age-min-val">0</span> - <span id="age-max-val">20</span> years
+                        </div>
                     </div>
                 </div>
 
@@ -104,56 +99,17 @@
                         </select>
                     </div>
                 </div>
-
+                
                 <div class="filter-group">
-                    <label for="good-with-select">GOOD WITH</label>
+                    <label for="city-select">CITY</label>
                     <div class="select-wrapper">
-                        <select id="good-with-select" class="filter-select">
+                        <select id="city-select" class="filter-select" disabled>
                             <option value="">Any</option>
-                            <option value="kids">Kids</option>
-                            <option value="dogs">Dogs</option>
-                            <option value="cats">Cats</option>
-                            <option value="other_animals">Other animals</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="filter-group">
-                    <label for="coat-select">COAT LENGTH</label>
-                    <div class="select-wrapper">
-                        <select id="coat-select" class="filter-select">
-                            <option value="">Any</option>
-                            <option value="short">Short</option>
-                            <option value="medium">Medium</option>
-                            <option value="long">Long</option>
-                        </select>
-                    </div>
-                </div>
 
-                <div class="location-row">
-                    <div class="filter-group location-filter">
-                        <label for="country-select">COUNTRY</label>
-                        <div class="select-wrapper">
-                            <select id="country-select" class="filter-select">
-                                <option value="">Select Country</option>
-                                <option value="us">United States</option>
-                                <option value="ca">Canada</option>
-                                <option value="uk">United Kingdom</option>
-                                <option value="au">Australia</option>
-                                <option value="ro">Romania</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="filter-group location-filter">
-                        <label for="city-select">CITY</label>
-                        <div class="select-wrapper">
-                            <select id="city-select" class="filter-select" disabled>
-                                <option value="">Select City</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
 
                 <button id="search-button" class="search-button">Search</button>
             </div>
@@ -169,7 +125,8 @@
         <div class="login-tab">
             <div class="tab-header">
                 <div class="logo">Logo</div>
-                <button class="close-button" id="close-login"><img src="../assets/bone-shaped-dog-biscuit.png"/></button>
+                <button class="close-button" id="close-login"><img
+                        src="../assets/bone-shaped-dog-biscuit.png" /></button>
             </div>
             <form id="login-form">
                 <div class="form-group">
@@ -198,7 +155,8 @@
         <div class="signup-tab">
             <div class="tab-header">
                 <div class="logo">Logo</div>
-                <button class="close-button" id="close-signup"><img src="../assets/bone-shaped-dog-biscuit.png"/></button>
+                <button class="close-button" id="close-signup"><img
+                        src="../assets/bone-shaped-dog-biscuit.png" /></button>
             </div>
             <form id="signup-form">
                 <div class="form-group">
@@ -226,7 +184,8 @@
         <div class="profile-tab">
             <div class="tab-header">
                 <div class="logo">Logo</div>
-                <button class="close-button" id="close-profile"><img src="../assets/bone-shaped-dog-biscuit.png"/></button>
+                <button class="close-button" id="close-profile"><img
+                        src="../assets/bone-shaped-dog-biscuit.png" /></button>
             </div>
             <form id="profile-form">
                 <div class="form-group">
@@ -249,7 +208,7 @@
             </form>
         </div>
     </div>
-    
+
 </body>
 
 </html>

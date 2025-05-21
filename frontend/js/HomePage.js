@@ -1,4 +1,13 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
+
+    const speciesIdMap = {};
+    const speciesSelect = document.getElementById('species-select');
+    const breedSelect = document.getElementById('breed-select');
+    const citySelect = document.getElementById('city-select');
+    const ageMin = document.getElementById('age-min');
+    const ageMax = document.getElementById('age-max');
+    const ageMinVal = document.getElementById('age-min-val');
+    const ageMaxVal = document.getElementById('age-max-val');
 
     // Toggle dropdown menu
     const petsButton = document.querySelector('.pets-button-container');
@@ -35,129 +44,134 @@ document.addEventListener('DOMContentLoaded', function () {
         // Actions to be added
     });
 
-    // Species and breed filters
-    const speciesSelect = document.getElementById('species-select');
-    const breedSelect = document.getElementById('breed-select');
+    async function fetchCityOptions() {
+        citySelect.innerHTML = '<option value="">Any</option>';
 
-    // Different breeds for each species
-    const breedsBySpecies = {
-        "": [{ value: "", text: "Any" }],
-        "dog": [
-            { value: "", text: "Any" },
-            { value: "golden-retriever", text: "Golden Retriever" },
-            { value: "german-shepherd", text: "German Shepherd" },
-            { value: "labrador-retriever", text: "Labrador Retriever" },
-            { value: "beagle", text: "Beagle" },
-            { value: "bulldog", text: "Bulldog" },
-            { value: "poodle", text: "Poodle" },
-            { value: "rottweiler", text: "Rottweiler" }
-        ],
-        "cat": [
-            { value: "", text: "Any" },
-            { value: "persian", text: "Persian" },
-            { value: "maine-coon", text: "Maine Coon" },
-            { value: "siamese", text: "Siamese" },
-            { value: "ragdoll", text: "Ragdoll" },
-            { value: "british-shorthair", text: "British Shorthair" },
-            { value: "bengal", text: "Bengal" }
-        ],
-        "rabbit": [
-            { value: "", text: "Any" },
-            { value: "holland-lop", text: "Holland Lop" },
-            { value: "mini-rex", text: "Mini Rex" },
-            { value: "dutch", text: "Dutch" },
-            { value: "lionhead", text: "Lionhead" }
-        ],
-        "dinosaur": [
-            { value: "", text: "Any" },
-            { value: "coleophysis_bauri", text: "Coleophysis bauri" },
-            { value: "plateosaurus_engelhardti", text: "Plateosaurus engelhardti" },
-            { value: "allosaurus_fragilis", text: "Allosaurus fragilis" },
-            { value: "apatosaurus_excelsus", text: "Apatosaurus excelsus" }
-        ]
-    };
+        const formData = new FormData();
+        formData.append("action", "location");
 
-    // Update breed options
-    function updateBreedOptions(selectedSpecies) {
-        breedSelect.innerHTML = '';
+        try {
+            const response = await fetch("http://localhost/backend/services/newpostinfoservice.php", {
+                method: "POST",
+                body: formData
+            });
 
-        const breeds = breedsBySpecies[selectedSpecies] || breedsBySpecies[""];
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
 
-        // Create breed options
-        breeds.forEach(breed => {
-            const option = document.createElement('option');
-            option.value = breed.value;
-            option.textContent = breed.text;
-            breedSelect.appendChild(option);
-        });
+            const textResponse = await response.text();
+            const cities = JSON.parse(textResponse);
 
-        if (selectedSpecies == "") {
-            breedSelect.disabled = true;
-        }
-        else {
-            breedSelect.disabled = false;
-        }
-    }
-
-    updateBreedOptions(speciesSelect.value);
-
-    // Event listener for species change
-    speciesSelect.addEventListener('change', function () {
-        updateBreedOptions(this.value);
-    });
-
-    // Location functionality //
-    const citiesByCountry = {
-        "": [],
-        "us": ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia"],
-        "ca": ["Toronto", "Montreal", "Vancouver", "Calgary", "Ottawa", "Edmonton"],
-        "uk": ["London", "Manchester", "Birmingham", "Glasgow", "Liverpool", "Edinburgh"],
-        "au": ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide", "Gold Coast"],
-        "ro": ["Bucharest", "Cluj-Napoca", "Timisoara", "Iasi", "Constansa", "Craiova"]
-    };
-
-    const countrySelect = document.getElementById('country-select');
-    const citySelect = document.getElementById('city-select');
-
-    function updateCityOptions(selectedCountry) {
-
-        citySelect.innerHTML = '<option value="">Select City</option>';
-
-        if (selectedCountry !== "") {
-            const anyOption = document.createElement('option');
-            anyOption.value = "any";
-            anyOption.textContent = "Any (Whole Country)";
-            citySelect.appendChild(anyOption);
-        }
-
-        // Get cities
-        const cities = citiesByCountry[selectedCountry] || [];
-
-        // Add city options
-        cities.forEach(city => {
-            const option = document.createElement('option');
-            option.value = city.toLowerCase().replace(/\s+/g, '-');
-            option.textContent = city;
-            citySelect.appendChild(option);
-        });
-
-        // Enable/disable the city select
-        if (selectedCountry === "") {
+            if (cities && cities.length > 0) {
+                citySelect.disabled = false;
+                citySelect.innerHTML = '<option value="Any">Any</option>';
+                cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.text = city;
+                    citySelect.appendChild(option);
+                });
+            } else {
+                citySelect.disabled = true;
+                citySelect.innerHTML = '<option value="">No cities available</option>';
+            }
+        } catch (error) {
+            console.error("Failed to fetch cities:", error);
             citySelect.disabled = true;
-        }
-        else {
-            citySelect.disabled = false;
+            citySelect.innerHTML = '<option value="">No cities available</option>';
         }
     }
 
-    updateCityOptions(countrySelect.value);
 
-    countrySelect.addEventListener('change', function () {
-        updateCityOptions(this.value);
+    async function fetchSpeciesOptions() {
+        const formData = new FormData();
+        formData.append("action", "species");
 
-        // Reset city selection
-        citySelect.value = "";
+        try {
+            const response = await fetch("http://localhost/backend/services/newpostinfoservice.php", {
+                method: "POST",
+                body: formData
+            });
+
+            const { names, ids } = await response.json();
+            speciesSelect.innerHTML = '<option value="">Any</option>';
+
+            names.forEach((speciesName, index) => {
+                const option = document.createElement("option");
+                option.textContent = speciesName;
+                option.value = speciesName;
+                speciesIdMap[speciesName] = ids[index];
+                speciesSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Failed to load species:", error);
+        }
+    }
+
+    // Fetch breeds based on selected species
+    async function fetchBreedsBySpecies(speciesName) {
+        breedSelect.innerHTML = '<option value="">Any</option>';
+
+        if (!speciesName || speciesName === "") {
+            breedSelect.disabled = true;
+            return;
+        }
+
+        const speciesId = speciesIdMap[speciesName];
+        if (!speciesId) {
+            console.error(`No species ID found for species name: ${speciesName}`);
+            breedSelect.disabled = true;
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('action', 'breed');
+        formData.append('species_id', speciesId);
+
+        try {
+            const response = await fetch('http://localhost/backend/services/newpostinfoservice.php', {
+                method: "POST",
+                body: formData
+            });
+
+            const textResponse = await response.text();
+
+            if (textResponse.trim().startsWith('<br') || textResponse.trim().startsWith('<html')) {
+                breedSelect.disabled = true;
+                breedSelect.innerHTML = '<option value="Any">Any</option>';
+                return;
+            }
+            const breeds = JSON.parse(textResponse);
+
+            if (breeds && breeds.length > 0) {
+                breedSelect.disabled = false;
+                breedSelect.innerHTML = '<option value="">Any</option>';
+                breeds.forEach(breed => {
+                    const option = document.createElement('option');
+                    option.value = breed;
+                    option.text = breed;
+                    breedSelect.appendChild(option);
+                });
+            } else {
+                breedSelect.disabled = true;
+                breedSelect.innerHTML = '<option value="Any">Any</option>';
+            }
+        } catch (error) {
+            breedSelect.disabled = true;
+            breedSelect.innerHTML = '<option value="Any">Any</option>';
+        }
+    }
+
+    speciesSelect.addEventListener('change', function () {
+        const selectedSpecies = this.value;
+        console.log("Selected species:", selectedSpecies);
+        fetchBreedsBySpecies(selectedSpecies);
     });
+
+    await fetchSpeciesOptions();
+    await fetchCityOptions();
+    fetchBreedsBySpecies(speciesSelect.value);
 
     // Search button functionality
     const searchButton = document.getElementById('search-button');
@@ -170,8 +184,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const gender = document.getElementById('gender-select').value;
             const goodWith = document.getElementById('good-with-select').value;
             const coatLength = document.getElementById('coat-select').value;
-            const country = document.getElementById('country-select').value;
-            const city = document.getElementById('city-select').value;
         });
     }
 
@@ -456,7 +468,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (emailDisplay)
                     emailDisplay.textContent = userData.email || '';
                 if (dateOfBirthInput && userData.date_of_birth)
-                dateOfBirthInput.value = formatDateForInput(userData.date_of_birth);
+                    dateOfBirthInput.value = formatDateForInput(userData.date_of_birth);
 
                 console.log(userData.id);
 
@@ -510,5 +522,26 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('An error occurred while updating your profile.');
         }
     });
+
+    // This updates the values in the age slider in the filters menu
+    ageMin.addEventListener('input', () => updateAgeDisplay("min"));
+    ageMax.addEventListener('input', () => updateAgeDisplay("max"));
+
+    function updateAgeDisplay(changed) {
+        let min = parseInt(ageMin.value);
+        let max = parseInt(ageMax.value);
+
+        if (changed === "min" && min > max) {
+            max = min;
+            ageMax.value = max;
+        } else if (changed === "max" && max < min) {
+            min = max;
+            ageMin.value = min;
+        }
+
+        ageMinVal.textContent = min;
+        ageMaxVal.textContent = max;
+    }
+    updateAgeDisplay("min");
 
 });
