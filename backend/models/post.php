@@ -10,6 +10,255 @@ class Post
         $this->conn = Database::getDbInstance()->getConnection();
     }
 
+    public function getPostsBySpecies($species)
+    {
+        $findQuery = "
+            DECLARE
+                species VARCHAR2(255) := :species;
+                CURSOR posts_cursor IS SELECT * FROM posts;
+                id_result VARCHAR2(1000) := '';
+            BEGIN
+                FOR lines IN posts_cursor LOOP
+                    IF lines.species = species THEN
+                        id_result := id_result || lines.id || ';';
+                    END IF;
+                END LOOP;
+                :id_result := id_result;
+            END;
+        ";
+        $idResult = '';
+        $findQueryCommand = oci_parse($this->conn, $findQuery);
+        oci_bind_by_name($findQueryCommand, ":species", $species);
+        oci_bind_by_name($findQueryCommand, ":id_result", $idResult, 1000);
+
+        if (oci_execute($findQueryCommand)) {
+            if ($idResult) {
+                return ['id' => rtrim($idResult, ';')];
+            } else {
+                return ['id' => ''];
+            }
+        } else {
+            $error = oci_error($findQueryCommand);
+            return ["error" => $error['message']];
+        }
+    }
+
+    public function getPostsByBreed($breed)
+    {
+        $findQuery = "
+            DECLARE
+                breed VARCHAR2(255) := :breed;
+                CURSOR posts_cursor IS SELECT * FROM posts;
+                id_result VARCHAR2(1000) := '';
+            BEGIN
+                FOR lines IN posts_cursor LOOP
+                    IF lines.breed = breed THEN
+                        id_result := id_result || lines.id || ';';
+                    END IF;
+                END LOOP;
+                :id_result := id_result;
+            END;
+        ";
+        $idResult = '';
+        $findQueryCommand = oci_parse($this->conn, $findQuery);
+        oci_bind_by_name($findQueryCommand, ":breed", $breed);
+        oci_bind_by_name($findQueryCommand, ":id_result", $idResult, 1000);
+
+        if (oci_execute($findQueryCommand)) {
+            if ($idResult) {
+                return ['id' => rtrim($idResult, ';')];
+            } else {
+                return ['id' => ''];
+            }
+        } else {
+            $error = oci_error($findQueryCommand);
+            return ["error" => $error['message']];
+        }
+    }
+
+    public function getPostsBySize($animal_size)
+    {
+        $findQuery = "
+            DECLARE
+                animal_size VARCHAR2(255) := :animal_size;
+                CURSOR posts_cursor IS SELECT * FROM posts;
+                id_result VARCHAR2(1000) := '';
+            BEGIN
+                FOR lines IN posts_cursor LOOP
+                    IF lines.animal_size = animal_size THEN
+                        id_result := id_result || lines.id || ';';
+                    END IF;
+                END LOOP;
+                :id_result := id_result;
+            END;
+        ";
+        $idResult = '';
+        $findQueryCommand = oci_parse($this->conn, $findQuery);
+        oci_bind_by_name($findQueryCommand, ":animal_size", $animal_size);
+        oci_bind_by_name($findQueryCommand, ":id_result", $idResult, 1000);
+
+        if (oci_execute($findQueryCommand)) {
+            if ($idResult) {
+                return ['id' => rtrim($idResult, ';')];
+            } else {
+                return ['id' => ''];
+            }
+        } else {
+            $error = oci_error($findQueryCommand);
+            return ["error" => $error['message']];
+        }
+    }
+
+    public function getPostsByGender($gender)
+    {
+        $findQuery = "
+            DECLARE
+                gender VARCHAR2(255) := :gender;
+                CURSOR posts_cursor IS SELECT * FROM posts;
+                id_result VARCHAR2(1000) := '';
+            BEGIN
+                FOR lines IN posts_cursor LOOP
+                    IF lines.gender = gender THEN
+                        id_result := id_result || lines.id || ';';
+                    END IF;
+                END LOOP;
+                :id_result := id_result;
+            END;
+        ";
+        $idResult = '';
+        $findQueryCommand = oci_parse($this->conn, $findQuery);
+        oci_bind_by_name($findQueryCommand, ":gender", $gender);
+        oci_bind_by_name($findQueryCommand, ":id_result", $idResult, 1000);
+
+        if (oci_execute($findQueryCommand)) {
+            if ($idResult) {
+                return ['id' => rtrim($idResult, ';')];
+            } else {
+                return ['id' => ''];
+            }
+        } else {
+            $error = oci_error($findQueryCommand);
+            return ["error" => $error['message']];
+        }
+    }
+
+    public function getPostsByCity($location)
+    {
+        $findQuery = "
+            DECLARE
+                location VARCHAR2(255) := :location;
+                CURSOR posts_cursor IS SELECT * FROM posts;
+                id_result VARCHAR2(1000) := '';
+            BEGIN
+                FOR lines IN posts_cursor LOOP
+                    IF lines.location = location THEN
+                        id_result := id_result || lines.id || ';';
+                    END IF;
+                END LOOP;
+                :id_result := id_result;
+            END;
+        ";
+        $idResult = '';
+        $findQueryCommand = oci_parse($this->conn, $findQuery);
+        oci_bind_by_name($findQueryCommand, ":location", $location);
+        oci_bind_by_name($findQueryCommand, ":id_result", $idResult, 1000);
+
+        if (oci_execute($findQueryCommand)) {
+            if ($idResult) {
+                return ['id' => rtrim($idResult, ';')];
+            } else {
+                return ['id' => ''];
+            }
+        } else {
+            $error = oci_error($findQueryCommand);
+            return ["error" => $error['message']];
+        }
+    }
+
+    public function getPostsByAge($ageMin, $ageMax)
+    {
+        $findQuery = "
+            DECLARE
+                age_min NUMBER := :age_min;
+                age_max NUMBER := :age_max;
+                CURSOR posts_cursor IS SELECT * FROM posts;
+                id_result VARCHAR2(1000) := '';
+            BEGIN
+                FOR lines IN posts_cursor LOOP
+                    IF lines.age BETWEEN age_min AND age_max THEN
+                        id_result := id_result || lines.id || ';';
+                    END IF;
+                END LOOP;
+                :id_result := id_result;
+            END;
+        ";
+        $idResult = '';
+        $findQueryCommand = oci_parse($this->conn, $findQuery);
+        oci_bind_by_name($findQueryCommand, ":age_min", $ageMin);
+        oci_bind_by_name($findQueryCommand, ":age_max", $ageMax);
+        oci_bind_by_name($findQueryCommand, ":id_result", $idResult, 1000);
+
+        if (oci_execute($findQueryCommand)) {
+            if ($idResult) {
+                return ['id' => rtrim($idResult, ';')];
+            } else {
+                return ['id' => ''];
+            }
+        } else {
+            $error = oci_error($findQueryCommand);
+            return ["error" => $error['message']];
+        }
+    }
+
+    public function getPostsById($idArray){
+        $nameResult = [];
+        $idResult = [];
+        $ageResult = [];
+        $thumbnailResult = [];
+        foreach($idArray as $id){
+            $findPost = "
+                DECLARE
+                    temp_id NUMBER := :id;
+                    name_result VARCHAR2(255) := '';
+                    age_result VARCHAR2(255) := '';
+                    thumbnail VARCHAR2(255) := '';
+                BEGIN
+                    SELECT name, age INTO name_result, age_result FROM posts WHERE posts.id = temp_id;
+                    SELECT thumbnail_path INTO thumbnail FROM thumbnail WHERE id_post = temp_id;
+                    :name := name_result;
+                    :age := age_result;
+                    :thumbnail := thumbnail;
+                END;
+                ";
+                $name = '';
+                $age = '';
+                $thumbnail = '';
+
+                $findPostCommand = oci_parse($this->conn, $findPost);
+                oci_bind_by_name($findPostCommand, ":id", $id);
+                oci_bind_by_name($findPostCommand, ":name", $name, 255);
+                oci_bind_by_name($findPostCommand, ":age", $age, 255);
+                oci_bind_by_name($findPostCommand, ":thumbnail", $thumbnail, 255);
+
+                if(oci_execute($findPostCommand)){
+                    $nameResult[] = $name;
+                    $ageResult[] = $age;
+                    $idResult[] = $id;
+                    $thumbnailResult[] = $thumbnail;
+                } else {
+                    $error = oci_error($findPostCommand);
+                    return ["error" => $error['message']];
+                }
+        }
+
+        return [
+            "name" => $nameResult,
+            "age" => $ageResult,
+            "id" => $idResult,
+            "thumbnail" => $thumbnailResult
+        ];
+    }
+
     public function insertPost($data)
     {
         self::verifyTable();
@@ -19,6 +268,8 @@ class Post
         $birthday = $data['birthday'] ?? '';
         $location = $data['location'] ?? '';
         $description = $data['description'] ?? '';
+        $animal_size = $data['size'] ?? '';
+        $gender = $data['gender'] ?? '';
 
         $insertEntry = "
     DECLARE
@@ -29,8 +280,8 @@ class Post
         for lines in iterate_lines LOOP
             new_id := new_id + 1;
         END LOOP;
-        INSERT INTO POSTS(id, name, species, breed, birthday, age, location, description)
-        VALUES(new_id, :name, :species, :breed, TO_DATE(:birthday, 'YYYY-MM-DD'), TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(:birthday, 'YYYY-MM-DD'))/12), :location, :description);
+        INSERT INTO POSTS(id, name, species, breed, birthday, age, location, description, animal_size, gender)
+        VALUES(new_id, :name, :species, :breed, TO_DATE(:birthday, 'YYYY-MM-DD'), TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(:birthday, 'YYYY-MM-DD'))/12), :location, :description, :animal_size, :gender);
 
         :new_id := new_id;
     END;";
@@ -43,6 +294,8 @@ class Post
         oci_bind_by_name($insertCommand, ":birthday", $birthday);
         oci_bind_by_name($insertCommand, ":location", $location);
         oci_bind_by_name($insertCommand, ":description", $description);
+        oci_bind_by_name($insertCommand, ":animal_size", $animal_size);
+        oci_bind_by_name($insertCommand, ":gender", $gender);
         oci_bind_by_name($insertCommand, ":new_id", $new_id, 8);
 
         oci_execute($insertCommand);
@@ -88,6 +341,8 @@ class Post
             :age := post.age;
             :location := post.location;
             :description := post.description;
+            :animal_size := post.animal_size;
+            :gender := post.gender;
             media_array := varray();
             FOR lines IN media_lines LOOP
                 IF lines.id_post = post.id THEN
@@ -143,6 +398,8 @@ class Post
         $location = "";
         $thumbnail = "";
         $description = "";
+        $animal_size = "";
+        $gender = "";
         $mediaArray = "";
         $medicalArray = "";
         $foodLikeArray = "";
@@ -157,6 +414,8 @@ class Post
         oci_bind_by_name($extractDataCommand, ":location", $location, 50);
         oci_bind_by_name($extractDataCommand, ":thumbnail", $thumbnail, 255);
         oci_bind_by_name($extractDataCommand, ":description", $description, 1000);
+        oci_bind_by_name($extractDataCommand, ":animal_size", $animal_size, 255);
+        oci_bind_by_name($extractDataCommand, ":gender", $gender, 255);
         oci_bind_by_name($extractDataCommand, ":error", $error, 50);
         oci_bind_by_name($extractDataCommand, ":media_array", $mediaArray, 4000);
         oci_bind_by_name($extractDataCommand, ":medical_array", $medicalArray, 4000);
@@ -176,6 +435,8 @@ class Post
                     "location" => $location,
                     "thumbnail" => $thumbnail,
                     "description" => $description,
+                    "animal_size" => $animal_size,
+                    "gender" => $gender,
                     "media_array" => rtrim($mediaArray, ';'),
                     "medical_array" => rtrim($medicalArray, ';'),
                     "food_like_array" => rtrim($foodLikeArray, ';'),
@@ -185,7 +446,8 @@ class Post
         }
     }
 
-    public function getPostsFromPage($page, $limit){
+    public function getPostsFromPage($page, $limit)
+    {
         $firstPostIndex = $limit * ($page - 1) + 1;
         $lastPostIndex = $limit * $page;
 
@@ -256,7 +518,7 @@ class Post
                 :id_array := id_result;
             END;
         ";
-      
+
         $nameArray = '';
         $ageArray = '';
         $thumbnailArray = '';
@@ -274,10 +536,10 @@ class Post
         oci_execute($extractPostsCommand);
 
         return ["names" => rtrim($nameArray, ";"), "ages" => rtrim($ageArray, ";"), "thumbnails" => rtrim($thumbnailArray, ";"), "ids" => rtrim($idArray, ";")];
-
     }
 
-    public function getPostCount(){
+    public function getPostCount()
+    {
         $postsCount = "
         BEGIN
             SELECT COUNT(*) INTO :number_posts from posts;
@@ -287,16 +549,17 @@ class Post
         $count = 0;
         oci_bind_by_name($postsCountCommand, ":number_posts", $count, 3);
         if (oci_execute($postsCountCommand)) {
-                return [
-                    "count" => $count
-                ];
-            } else{
-                $error = oci_error($postsCountCommand);
-                return ["error" => $error['message']];
-            }
+            return [
+                "count" => $count
+            ];
+        } else {
+            $error = oci_error($postsCountCommand);
+            return ["error" => $error['message']];
+        }
     }
 
-    public function getSearchResults($searchInput){
+    public function getSearchResults($searchInput)
+    {
         $searchPosts = "
         DECLARE
 
@@ -330,17 +593,21 @@ class Post
         BEGIN
             FOR line_posts IN posts_cursor LOOP
                 found_match := FALSE;
-                IF line_posts.name LIKE '%' || search_input || '%' THEN
+                IF LOWER(line_posts.name) LIKE '%' || LOWER(search_input) || '%' THEN
                     found_match := TRUE;
-                ELSIF line_posts.age LIKE '%' || search_input || '%' THEN
+                ELSIF LOWER(line_posts.age) LIKE '%' || LOWER(search_input) || '%' THEN
                     found_match := TRUE;
-                ELSIF line_posts.species LIKE '%' || search_input || '%' THEN
+                ELSIF LOWER(line_posts.species) LIKE '%' || LOWER(search_input) || '%' THEN
                     found_match := TRUE;
-                ELSIF line_posts.breed LIKE '%' || search_input || '%' THEN
+                ELSIF LOWER(line_posts.breed) LIKE '%' || LOWER(search_input) || '%' THEN
                     found_match := TRUE;
-                ELSIF line_posts.location LIKE '%' || search_input || '%' THEN
+                ELSIF LOWER(line_posts.location) LIKE '%' || LOWER(search_input) || '%' THEN
                     found_match := TRUE;
-                ELSIF line_posts.description LIKE '%' || search_input || '%' THEN
+                ELSIF LOWER(line_posts.description) LIKE '%' || LOWER(search_input) || '%' THEN
+                    found_match := TRUE;
+                ELSIF LOWER(line_posts.animal_size) LIKE '%' || LOWER(search_input) || '%' THEN
+                    found_match := TRUE;
+                ELSIF LOWER(line_posts.gender) LIKE '%' || LOWER(search_input) || '%' THEN
                     found_match := TRUE;
                 END IF;
 
@@ -464,7 +731,7 @@ class Post
             :thumbnail_array := thumbnail_string;
         END;
             ";
-        
+
         $counter = 0;
         $nameArray = '';
         $idArray = '';
@@ -482,29 +749,27 @@ class Post
         oci_bind_by_name($searchPostsCommand, ":thumbnail_array", $thumbnailArray, 10000);
 
         if (oci_execute($searchPostsCommand)) {
-                if($counter == 0){
-                    return [
-                        "counter" => $counter,
-                        "name" => $nameArray,
-                        "id" => $idArray,
-                        "age" => $ageArray,
-                        "thumbnail" => $thumbnailArray
-                    ];
-                }
-                else{
-                    return [
+            if ($counter == 0) {
+                return [
+                    "counter" => $counter,
+                    "name" => $nameArray,
+                    "id" => $idArray,
+                    "age" => $ageArray,
+                    "thumbnail" => $thumbnailArray
+                ];
+            } else {
+                return [
                     "counter" => $counter,
                     "name" => rtrim($nameArray, ';'),
                     "id" => rtrim($idArray, ';'),
                     "age" => rtrim($ageArray, ';'),
                     "thumbnail" => rtrim($thumbnailArray, ';')
                 ];
-                }
-                
-            } else{
-                $error = oci_error($searchPostsCommand);
-                return ["error" => $error['message']];
             }
+        } else {
+            $error = oci_error($searchPostsCommand);
+            return ["error" => $error['message']];
+        }
     }
 
     public function verifyTable()
@@ -528,7 +793,9 @@ class Post
                 birthday DATE,
                 age NUMBER,
                 location VARCHAR2(100),
-                description VARCHAR2(4000))";
+                description VARCHAR2(4000),
+                animal_size VARCHAR2(255),
+                gender VARCHAR2(255))";
             $createCommand = oci_parse($this->conn, $createTable);
             if (!oci_execute($createCommand)) {
                 $e = oci_error($createCommand);

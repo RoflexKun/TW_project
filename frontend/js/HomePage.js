@@ -44,8 +44,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         // Actions to be added
     });
 
+    //Brings locations/cities from the backend
     async function fetchCityOptions() {
-        citySelect.innerHTML = '<option value="">Any</option>';
+        citySelect.innerHTML = '<option value="Any">Any</option>';
 
         const formData = new FormData();
         formData.append("action", "location");
@@ -83,7 +84,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 
-
+    //Bring species from the backend
     async function fetchSpeciesOptions() {
         const formData = new FormData();
         formData.append("action", "species");
@@ -95,7 +96,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             });
 
             const { names, ids } = await response.json();
-            speciesSelect.innerHTML = '<option value="">Any</option>';
+            speciesSelect.innerHTML = '<option value="Any">Any</option>';
 
             names.forEach((speciesName, index) => {
                 const option = document.createElement("option");
@@ -173,19 +174,153 @@ document.addEventListener('DOMContentLoaded', async function () {
     await fetchCityOptions();
     fetchBreedsBySpecies(speciesSelect.value);
 
+    //Filter results
+    let names = [];
+    let ids = [];
+    let ages = [];
+    let thumbnails = [];
+
+    //Function to display posts
+    function displayPosts(page = 1) {
+        const wrapper = document.querySelector('.post-wrapper');
+        const noResults = document.getElementById('no-results');
+        const pagination = document.getElementById('pagination');
+
+        wrapper.innerHTML = "";
+        pagination.innerHTML = "";
+        noResults.classList.add('hidden');
+
+        const start = (page - 1) * 8;
+        const end = start + 8;
+
+        if (names.length === 0) {
+            noResults.classList.remove('hidden');
+            return;
+        }
+
+        for (let i = start; i < end && i < names.length; i++) {
+            const post = document.createElement('div');
+            post.classList.add('post-card');
+            post.innerHTML = `
+            <img src="/${thumbnails[i]}" class="post-img" />
+            <p class="post-text"><strong>${names[i]}, ${ages[i]}</strong></p>
+        `;
+
+            post.addEventListener('click', () => {
+                window.location.href = `../pages/post.html?id=${ids[i]}`;
+            });
+            wrapper.appendChild(post);
+        }
+
+        renderPagination(page);
+    }
+
+    //Create pagination similar to the one in the post list
+    function renderPagination(currentPage) {
+        const pagination = document.getElementById('pagination');
+        const totalPages = Math.ceil(names.length / 8);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const btn = document.createElement('button');
+            btn.textContent = i;
+            btn.className = 'page-button' + (i === currentPage ? ' active' : '');
+            btn.addEventListener('click', () => displayPosts(i));
+            pagination.appendChild(btn);
+        }
+    }
+
+
     // Search button functionality
     const searchButton = document.getElementById('search-button');
     if (searchButton) {
-        searchButton.addEventListener('click', function () {
-            const species = document.getElementById('species-select').value;
-            const breed = document.getElementById('breed-select').value;
-            const age = document.getElementById('age-select').value;
-            const size = document.getElementById('size-select').value;
-            const gender = document.getElementById('gender-select').value;
-            const goodWith = document.getElementById('good-with-select').value;
-            const coatLength = document.getElementById('coat-select').value;
-        });
+        searchButton.addEventListener('click', async function () {
+
+            const filters = {
+                species: document.getElementById('species-select').value,
+                breed: document.getElementById('breed-select').value,
+                age_min: document.getElementById('age-min').value,
+                age_max: document.getElementById('age-max').value,
+                size: document.getElementById('size-select').value,
+                gender: document.getElementById('gender-select').value,
+                city: document.getElementById('city-select').value
+            };
+            console.log(filters.species, filters.city, filters.size, filters.gender, filters.age_min, filters.age_max);
+            const allAny = (filters.species === "Any" && filters.size === "Any" &&
+                filters.gender === "Any" && filters.city === "Any" &&
+                parseInt(filters.age_min) === 0 && parseInt(filters.age_max) === 20);
+
+            if (allAny) {
+                document.getElementById('suggestion-popup').style.display = 'flex';
+                return;
+            }
+
+            const formData = new FormData();
+            const searchParams = {};
+
+            searchParams.species = filters.species || "Any";
+            formData.append('species', searchParams.species);
+            searchParams.breed = filters.breed || "Any";
+            formData.append('breed', searchParams.breed);
+            searchParams.size = filters.size || "Any";
+            formData.append('size', searchParams.size);
+            searchParams.gender = filters.gender || "Any";
+            formData.append('gender', searchParams.gender);
+            searchParams.city = filters.city || "Any";
+            formData.append('city', searchParams.city);
+            searchParams.age_min = parseInt(filters.age_min);
+            formData.append('age_min', searchParams.age_min);
+            searchParams.age_max = parseInt(filters.age_max);
+            formData.append('age_max', searchParams.age_max);
+
+            console.log("Search Parameters:", searchParams);
+
+            try {
+                const response = await fetch("http://localhost/backend/services/filtersearchservice.php", {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const rawText = await response.text();
+                console.log(rawText);
+                const result = JSON.parse(rawText);
+                console.log(result);
+
+                if (result.data && Array.isArray(result.data.name) && result.data.name.length > 0) {
+                    names = result.data.name;
+                    ids = result.data.id;
+                    ages = result.data.age;
+                    thumbnails = result.data.thumbnail;
+                    displayPosts(1);
+                } else {
+                    names = [];
+                    ids = [];
+                    ages = [];
+                    thumbnails = [];
+                    displayPosts(1);
+                }
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        );
     }
+
+    // Close popup button 
+    document.getElementById('popup-close').addEventListener('click', function () {
+        document.getElementById('suggestion-popup').style.display = 'none';
+    });
+
+    //Redirect button
+    document.getElementById('popup-redirect').addEventListener('click', function () {
+        window.location.href = '../pages/postlist.html';
+    });
+
+    // Redirect from no-results section
+    document.getElementById('no-results-redirect').addEventListener('click', () => {
+        window.location.href = '../pages/postlist.html';
+    });
 
     // Login functionality //
     const loginButton = document.querySelector('.login-button');

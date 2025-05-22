@@ -102,6 +102,8 @@ async function extractPostInfo() {
             document.getElementById('pet-birthday').textContent = result.birthday;
             document.getElementById('pet-age').textContent = result.age;
             document.getElementById('pet-location').textContent = result.location;
+            document.getElementById('pet-size').textContent = result.animal_size;
+            document.getElementById('pet-gender').textContent = result.gender;
             document.getElementById('pet-description').textContent = result.description || 'Description unavailable';
 
             displayList('pet-medical', result.medical_array);

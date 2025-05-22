@@ -51,7 +51,6 @@
                     <label for="species-select">SPECIES</label>
                     <div class="select-wrapper">
                         <select id="species-select" class="filter-select">
-                            <option value="">Any</option>
                         </select>
                     </div>
                 </div>
@@ -60,7 +59,6 @@
                     <label for="breed-select">BREED</label>
                     <div class="select-wrapper">
                         <select id="breed-select" class="filter-select">
-                            <option value="">Any</option>
                         </select>
                     </div>
                 </div>
@@ -80,11 +78,11 @@
                     <label for="size-select">SIZE</label>
                     <div class="select-wrapper">
                         <select id="size-select" class="filter-select">
-                            <option value="">Any</option>
-                            <option value="small">Small</option>
-                            <option value="medium">Medium</option>
-                            <option value="large">Large</option>
-                            <option value="xlarge">Extra Large</option>
+                            <option value="Any">Any</option>
+                            <option value="Small">Small</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Large">Large</option>
+                            <option value="Xlarge">Extra Large</option>
                         </select>
                     </div>
                 </div>
@@ -93,18 +91,18 @@
                     <label for="gender-select">GENDER</label>
                     <div class="select-wrapper">
                         <select id="gender-select" class="filter-select">
-                            <option value="">Any</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
+                            <option value="Any">Any</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="filter-group">
                     <label for="city-select">CITY</label>
                     <div class="select-wrapper">
                         <select id="city-select" class="filter-select" disabled>
-                            <option value="">Any</option>
+                            <option value="Any">Any</option>
                         </select>
                     </div>
                 </div>
@@ -115,8 +113,27 @@
             </div>
         </div>
 
-        <div class="right-section">
+        <div class="popup-overlay" id="suggestion-popup" style="display: none;">
+            <div class="popup-box">
+                <button class="popup-close" id="popup-close">
+                    <img src="../assets/bone-shaped-dog-biscuit.png" alt="Close" />
+                </button>
+                <p class="popup-message">
+                    If you don't know what you're looking for,<br>
+                    check out all our adorable pets!
+                </p>
+                <button class="popup-redirect" id="popup-redirect">Take me there!</button>
+            </div>
+        </div>
 
+        <div class="right-section">
+            <div class="post-wrapper"></div>
+            <div id="pagination" class="pagination"></div>
+            <div class="no-results hidden" id="no-results">
+                <h2>No results found</h2>
+                <p>...but we still have a lot of animals that you should check out</p>
+                <button class="popup-redirect" id="no-results-redirect">Take me there!</button>
+            </div>
         </div>
     </div>
 

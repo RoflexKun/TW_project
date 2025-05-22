@@ -28,6 +28,8 @@ async function extractData() {
     const inputBirthday = document.getElementById('birthday');
     const selectLocation = document.getElementById('location');
     const textDescription = document.getElementById('description');
+    const selectSize = document.getElementById('size');
+    const selectGender = document.getElementById('gender');
 
     if (!inputName.value.trim()) {
         showInputError(inputName, "Name is required.");
@@ -53,6 +55,14 @@ async function extractData() {
         showInputError(textDescription, "Please provide a description.");
         isFormInvalid = true;
     }
+    if(!selectSize.value.trim()){
+        showInputError(selectSize, "Please provide the size of your pet");
+        isFormInvalid = true;
+    }
+    if(!selectGender.value.trim()){
+        showInputError(selectGender, "Please provide the gender of your pet");
+        isFormInvalid = true;
+    }
 
     if (!mainThumbnailFile) {
         showInputError(document.getElementById('thumbBox'), "A main thumbnail is required.");
@@ -73,6 +83,8 @@ async function extractData() {
     formData.append('birthday', inputBirthday.value.trim());
     formData.append('location', selectLocation.value.trim());
     formData.append('description', textDescription.value.trim());
+    formData.append('size', selectSize.value.trim());
+    formData.append('gender', selectGender.value.trim());
 
     formData.append('medical_tags', JSON.stringify(tagsMedical));
     formData.append('food_like_tags', JSON.stringify(tagsFoodLikes));
