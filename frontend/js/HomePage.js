@@ -1,3 +1,18 @@
+// Helper to get JWT token from localStorage
+function getToken() {
+    return localStorage.getItem('token');
+}
+
+// Helper to set JWT token in localStorage
+function setToken(token) {
+    localStorage.setItem('token', token);
+}
+
+// Helper to remove JWT token from localStorage
+function removeToken() {
+    localStorage.removeItem('token');
+}
+
 document.addEventListener('DOMContentLoaded', async function () {
 
     const speciesIdMap = {};
@@ -361,19 +376,24 @@ document.addEventListener('DOMContentLoaded', async function () {
         const password = loginForm.querySelector('#password').value;
         const rememberMe = document.getElementById('remember').checked;
 
-        const formData = new FormData();
+        const formData = new URLSearchParams();
         formData.append('email', email);
         formData.append('password', password);
 
         try {
             const response = await fetch("http://localhost/backend/services/login.php", {
                 method: 'POST',
-                body: formData
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData.toString()
             });
 
             const result = await response.json();
 
-            if (result.status === 'success') {
+            if (result && result.token) {
+                setToken(result.token);
+
+                // Store user data in localStorage
+                localStorage.setItem('user', JSON.stringify(result.user));
                 alert('Login successful!');
 
                 loginTab.classList.remove('active');
@@ -424,7 +444,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             const result = await response.json();
 
-            if (result.status === 'success') {
+            if (result.success) {
+                removeToken();
+                localStorage.removeItem('user');
                 alert('Logged out successfully!');
 
                 isLoggedIn = false;
@@ -488,7 +510,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             return;
         }
 
-        const formData = new FormData();
+        const formData = new URLSearchParams();
         formData.append('email', email);
         formData.append('password', password);
         formData.append('confirm-password', confirmPassword);
@@ -496,12 +518,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         try {
             const response = await fetch("http://localhost/backend/services/register.php", {
                 method: 'POST',
-                body: formData
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData.toString()
             });
 
             const result = await response.json();
 
-            if (result.status === 'success') {
+            if (result && result.token) {
                 alert('Registration successful! You can now log in.');
 
                 document.getElementById('signup-tab').classList.remove('active');
@@ -540,6 +563,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Open profile tab
     profileButton.addEventListener('click', function () {
+        if (getToken()) {
+            fetchUserProfile();
+        }
         fetchUserProfile();
         profileTab.classList.add('active');
         document.body.style.overflow = 'hidden';
@@ -585,11 +611,16 @@ document.addEventListener('DOMContentLoaded', async function () {
     // Get user data from DB
     async function fetchUserProfile() {
         try {
-            const response = await fetch("http://localhost/backend/services/getprofile.php");
+            const token = getToken();
+            const response = await fetch("http://localhost/backend/services/getprofile.php", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
             const result = await response.json();
 
-            if (result.status === 'success') {
-                userData = result.data;
+            if (result && result.user) {
+                userData = result.user;
 
                 const firstNameInput = document.getElementById('user-first-name');
                 const lastNameInput = document.getElementById('user-last-name');
@@ -602,8 +633,13 @@ document.addEventListener('DOMContentLoaded', async function () {
                     lastNameInput.value = userData.last_name || '';
                 if (emailDisplay)
                     emailDisplay.textContent = userData.email || '';
-                if (dateOfBirthInput && userData.date_of_birth)
-                    dateOfBirthInput.value = formatDateForInput(userData.date_of_birth);
+                if (dateOfBirthInput) {
+                    if (userData.date_of_birth) {
+                        dateOfBirthInput.value = formatDateForInput(userData.date_of_birth);
+                    } else {
+                        dateOfBirthInput.value = '';
+                    }
+                }
 
                 console.log(userData.id);
 
@@ -620,12 +656,13 @@ document.addEventListener('DOMContentLoaded', async function () {
     profileForm.addEventListener('submit', async function (event) {
         event.preventDefault();
 
+        const token = getToken();
         const firstName = document.getElementById('user-first-name').value;
         const lastName = document.getElementById('user-last-name').value;
         const dateOfBirth = document.getElementById('user-date-of-birth').value;
         const formattedDate = formatDateForDatabase(dateOfBirth);
 
-        const formData = new FormData();
+        const formData = new URLSearchParams();
         formData.append('first_name', firstName);
         formData.append('last_name', lastName);
         formData.append('date_of_birth', formattedDate);
@@ -633,12 +670,16 @@ document.addEventListener('DOMContentLoaded', async function () {
         try {
             const response = await fetch("http://localhost/backend/services/updateprofile.php", {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: formData.toString()
             });
 
             const result = await response.json();
 
-            if (result.status === 'success') {
+            if (result && result.user) {
                 alert('Profile updated successfully!');
                 userData = {
                     ...userData,

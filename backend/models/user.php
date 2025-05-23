@@ -32,7 +32,7 @@ class User
         oci_execute($checkUserCommand);
         
         if ($user_exists > 0) {
-            return ["status" => "error", "message" => "Email already registered"];
+            return false;
         }
         
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -61,19 +61,15 @@ class User
         oci_bind_by_name($insertCommand, ":new_id", $new_id, 8);
         
         if (oci_execute($insertCommand)) {
-            return ["status" => "success", "message" => "Registration successful", "user_id" => $new_id];
+            return ["id" => $new_id, "email" => $email];
         } else {
             $error = oci_error($insertCommand);
-            return ["status" => "error", "message" => "Registration failed: " . $error['message']];
+            return false;
         }
     }
     
     public function login($data)
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
         $email = $data['email'] ?? '';
         $password = $data['password'] ?? '';
         
@@ -109,41 +105,15 @@ class User
         oci_execute($getUserCommand);
         
         if ($user_found == 1 && password_verify($password, $pwd_hash)) {
-            // Session variables
-            $_SESSION['user_id'] = $user_id;
-            $_SESSION['email'] = $email;
-            $_SESSION['logged_in'] = true;
-    
-            return ["status" => "success", "message" => "Login successful", "user_id" => $user_id];
+            return ["id" => $user_id, "email" => $email];
         }
         else {
-            return ["status" => "error", "message" => "Invalid email or password"];
+            return false;
         }
     }
-
-    public function logout() {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
     
-        session_unset();
-        session_destroy();
-    
-        return ["status" => "success", "message" => "Logged out successfully"];
-    }
-    
-    public function getProfile()
+    public function getProfile($user_id)
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        if (!isset($_SESSION['user_id']) || !$_SESSION['logged_in']) {
-            return ['status' => 'error', 'message' => 'User not logged in'];
-        }
-
-        $user_id = $_SESSION['user_id'];
-
         $getUserData = "
         DECLARE
             user_first_name VARCHAR2(255);
@@ -201,8 +171,7 @@ class User
         // Return user profile data
         if ($found) {
             return [
-                'status' => 'success',
-                'data' => [
+                'user' => [
                     'first_name' => $first_name,
                     'last_name' => $last_name,
                     'email' => $email,
@@ -211,24 +180,12 @@ class User
                 ]
             ];
         } else {
-            return [
-                'status' => 'error',
-                'message' => 'User profile not found'
-            ];
+            return false;
         }
     }
 
-    public function updateProfile($data)
+    public function updateProfile($user_id,$data)
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        if (!isset($_SESSION['user_id']) || !$_SESSION['logged_in']) {
-            return ['status' => 'error', 'message' => 'User not logged in'];
-        }
-
-        $user_id = $_SESSION['user_id'];
         $first_name = $data['first_name'] ?? null;
         $last_name = $data['last_name'] ?? null;
         $date_of_birth = $data['date_of_birth'] ?? null;
@@ -257,19 +214,14 @@ class User
         if (oci_execute($stmt)) {
             if ($rows_updated > 0) {
                 return [
-                    'status' => 'success',
-                    'message' => 'Profile updated successfully',
-                    'data' => [
+                    'user' => [
                         'first_name' => $first_name,
                         'last_name' => $last_name,
                         'date_of_birth' => $date_of_birth
                     ]
                 ];
             } else {
-                return [
-                    'status' => 'error',
-                    'message' => 'No changes made to profile'
-                ];
+                return false;
             }
         } else {
             $e = oci_error($stmt);
