@@ -1,0 +1,79 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #fdf6e3; 
+    color: #333;
+}
+
+.wishlist-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.wishlist-header h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #5a4c3d;
+}
+
+.wishlist-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.sort-button {
+    background-color: #fff3d4;
+    border: 1px solid #d1bfa3;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    color: #5a4c3d;
+    transition: background-color 0.2s;
+}
+
+.sort-button:hover {
+    background-color: #f6e9c9;
+}
+
+.wishlist-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.empty-message {
+    text-align: center;
+    margin-top: 100px;
+    color: #5A4A42;
+}
+
+.empty-message h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.empty-message p {
+    font-size: 18px;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+.popup-redirect {
+    background-color: #F5EBDD; 
+    color: #5A4A42;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.popup-redirect:hover {
+    background-color: #EADCC2;
+}

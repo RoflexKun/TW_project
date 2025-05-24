@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist</title>
+    <link rel="stylesheet" href="../css/wishlist.css">
+    <script src="../js/wishlist.js"></script>
+</head>
+
+<body>
+    <div class="wishlist-container">
+        <header class="wishlist-header">
+            <h1><span id="userName"></span>'s Wishlist</h1>
+        </header>
+
+        <div class="wishlist-controls">
+            <button id="sortToggle" class="sort-button">
+                Sort: <span id="sortLabel">New to Old</span> <span id="sortArrow">↓</span>
+            </button>
+        </div>
+
+        <section id="wishlistPosts" class="wishlist-posts">
+            <div id="emptyMessage" class="empty-message" style="display: none;">
+                <h2>No posts in this wishlist</h2>
+                <p><em>Check out our adorable pets here and wishlist who you want</em></p>
+                <button class="popup-redirect" id="popup-redirect">Take me there!</button>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>

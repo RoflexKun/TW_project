@@ -6,6 +6,7 @@ require_once(__DIR__ . "/../models/food.php");
 require_once(__DIR__ . "/../models/breed.php");
 require_once(__DIR__ . "/../models/species.php");
 require_once(__DIR__ . "/../models/location.php");
+require_once(__DIR__ . "/../models/wishlist.php");
 
 class PostController
 {
@@ -149,5 +150,13 @@ class PostController
         $result = $postModel->getPostsById($idArray);
 
         return $result;
+    }
+
+    public function getWishlistPosts($userId){
+        $postModel = new Post();
+        $wishlistModel = new Wishlist();
+
+        $idArray = $wishlistModel->getWishlistPosts($userId);
+        return $postModel->getPostsById($idArray);
     }
 }
