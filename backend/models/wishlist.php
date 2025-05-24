@@ -10,7 +10,8 @@ class Wishlist
         $this->conn = Database::getDbInstance()->getConnection();
     }
 
-    public function getWishlistPosts($userId){
+    public function getWishlistPosts($userId)
+    {
         self::verifyTable();
         $findPostsQuery = "
             DECLARE
@@ -28,23 +29,73 @@ class Wishlist
                 ";
         $idArray = '';
         $findPostsQueryCommand = oci_parse($this->conn, $findPostsQuery);
-        
+
         oci_bind_by_name($findPostsQueryCommand, ":user_id", $userId);
         oci_bind_by_name($findPostsQueryCommand, ":id_result", $idArray, 255);
 
-        if(oci_execute($findPostsQueryCommand)){
+        if (oci_execute($findPostsQueryCommand)) {
             $result = array_filter(explode(';', rtrim($idArray ?? '', ';')));
             return $result;
-        }
-        else {
+        } else {
             $error = oci_error($findPostsQueryCommand);
             return ["error" => $error['message']];
         }
+    }
 
+    public function addWishlistPost($postId, $userId)
+    {
+        $insertQuery = "
+        INSERT INTO WISHLIST(id_user, id_post) VALUES(:id_user, :id_post)";
+        $insertQueryCommand = oci_parse($this->conn, $insertQuery);
+        oci_bind_by_name($insertQueryCommand, ":id_post", $postId);
+        oci_bind_by_name($insertQueryCommand, ":id_user", $userId);
+
+        oci_execute($insertQueryCommand);
+    }
+
+    public function removeWishlistPost($postId, $userId)
+    {
+        $deleteQuery = " 
+        DELETE FROM wishlist WHERE id_user = :id_user AND id_post = :id_post";
+
+        $deleteQueryCommand = oci_parse($this->conn, $deleteQuery);
+
+        oci_bind_by_name($deleteQueryCommand, ":id_user", $userId);
+        oci_bind_by_name($deleteQueryCommand, ":id_post", $postId);
+
+        oci_execute($deleteQueryCommand);
+    }
+
+    public function checkDuplicate($postId, $userid) {
+        $checkQuery = "
+            DECLARE
+                count_post NUMBER;
+            BEGIN
+                SELECT COUNT(*) INTO count_post FROM wishlist WHERE id_user = :id_user AND id_post = :id_post;
+                IF count_post = 0 THEN
+                    :duplicate := 0;
+                ELSE
+                    :duplicate := 1;
+                END IF;
+            END;
+        ";
+        $duplicate = 0;
+        $checkQueryCommand = oci_parse($this->conn, $checkQuery);
+        oci_bind_by_name($checkQueryCommand, ":id_post", $postId);
+        oci_bind_by_name($checkQueryCommand, ":id_user", $userid);
+        oci_bind_by_name($checkQueryCommand, ":duplicate", $duplicate, 10);
+
+        if(oci_execute($checkQueryCommand)){
+            if($duplicate == 0)
+                return false;
+            else 
+                return true;
+        }
         
     }
 
-    public function verifyTable(){
+    public function verifyTable()
+    {
         $checkTable = "
         SELECT table_name
         FROM user_tables

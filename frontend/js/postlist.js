@@ -10,7 +10,7 @@ getPostList();
 
 
 
-function showOnlySearchResults(searchText, page = 1) {
+async function showOnlySearchResults(searchText, page = 1) {
     const postList = document.getElementById("post-list");
     const pagination = document.getElementById("pagination");
     const searchMessage = document.getElementById("search-message");
@@ -47,6 +47,7 @@ function showOnlySearchResults(searchText, page = 1) {
     for (let i = 0; i < namesToShow.length; i++) {
         const card = document.createElement("div");
         card.className = "post-card";
+        card.style.position = "relative";
         card.style.cursor = "pointer";
         card.addEventListener("click", () => {
             window.location.href = `/frontend/pages/post.html?id=${idsToShow[i]}`;
@@ -61,7 +62,63 @@ function showOnlySearchResults(searchText, page = 1) {
         nameAge.textContent = `${namesToShow[i]}, ${agesToShow[i]}`;
         card.appendChild(nameAge);
 
+        const heartButton = document.createElement("button");
+        heartButton.className = "heart-button";
+        heartButton.innerText = "🤍";
+        card.appendChild(heartButton);
+
         postList.appendChild(card);
+
+        const formData = new FormData();
+        formData.append("action", "duplicate");
+        formData.append("postId", idsToShow[i]);
+        const token = getToken();
+
+        try {
+            const response = await fetch("http://localhost/backend/services/operationwishlistservice.php", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.text();
+            console.log(result);
+            if (result.trim() === "true") {
+                heartButton.classList.add("active");
+                heartButton.innerText = "❤️";
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+        heartButton.addEventListener("click", async (event) => {
+            event.stopPropagation();
+
+            const isActive = heartButton.classList.toggle("active");
+            heartButton.innerText = isActive ? "❤️" : "🤍";
+
+            const formData = new FormData();
+            formData.append("action", isActive ? "add" : "remove");
+            formData.append("postId", idsToShow[i]);
+
+            try {
+                const response = await fetch("http://localhost/backend/services/operationwishlistservice.php", {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.text();
+                console.log(result);
+
+            } catch (error) {
+                console.log(error);
+            }
+        });
     }
 
     if (limitValue !== "all") {
@@ -243,24 +300,79 @@ async function getPostList() {
         container.innerHTML = "";
 
         for (let i = 0; i < names.length; i++) {
-
             const card = document.createElement("div");
             card.className = "post-card";
+            card.style.position = "relative";
             card.style.cursor = "pointer";
             card.addEventListener("click", () => {
                 window.location.href = `/frontend/pages/post.html?id=${ids[i]}`;
-            })
+            });
 
             const image = document.createElement("img");
             image.src = thumbnails[i] ? `/${thumbnails[i]}` : "/frontend/assets/No_Image_Available.jpg";
-            image.alt = names[i]
+            image.alt = names[i];
             card.appendChild(image);
 
             const nameAge = document.createElement("h3");
             nameAge.textContent = `${names[i]}, ${ages[i]}`;
             card.appendChild(nameAge);
 
+            const heartButton = document.createElement("button");
+            heartButton.className = "heart-button";
+            heartButton.innerText = "🤍";
+            card.appendChild(heartButton);
+
             container.appendChild(card);
+
+            const formData = new FormData();
+            formData.append("action", "duplicate");
+            formData.append("postId", ids[i]);
+            const token = getToken();
+
+            try {
+                const response = await fetch("http://localhost/backend/services/operationwishlistservice.php", {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.text();
+                console.log(result);
+                if (result.trim() === "true") {
+                    heartButton.classList.add("active");
+                    heartButton.innerText = "❤️";
+                }
+            } catch (error) {
+                console.log(error);
+            }
+
+            heartButton.addEventListener("click", async (event) => {
+                event.stopPropagation();
+
+                const isActive = heartButton.classList.toggle("active");
+                heartButton.innerText = isActive ? "❤️" : "🤍";
+
+                const formData = new FormData();
+                formData.append("action", isActive ? "add" : "remove");
+                formData.append("postId", ids[i]);
+
+                try {
+                    const response = await fetch("http://localhost/backend/services/operationwishlistservice.php", {
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.text();
+                    console.log(result);
+                } catch (error) {
+                    console.log(error);
+                }
+            });
         }
 
     } catch (error) {

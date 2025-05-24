@@ -145,18 +145,40 @@ class PostController
         return $result;
     }
 
-    public function getPostsById($idArray){
+    public function getPostsById($idArray)
+    {
         $postModel = new Post();
         $result = $postModel->getPostsById($idArray);
 
         return $result;
     }
 
-    public function getWishlistPosts($userId){
+    public function getWishlistPosts($userId)
+    {
         $postModel = new Post();
         $wishlistModel = new Wishlist();
 
         $idArray = $wishlistModel->getWishlistPosts($userId);
         return $postModel->getPostsById($idArray);
+    }
+
+    public function addWishlistPost($postId, $userId)
+    {
+        $wishlistModel = new Wishlist();
+        $wishlistModel->addWishlistPost($postId, $userId);
+        return ["status" => "succes"];
+    }
+
+    public function removeWishlistPost($postId, $userId)
+    {
+        $wishlistModel = new Wishlist();
+        $wishlistModel->removeWishlistPost($postId, $userId);
+        return ["status" => "succes"];
+    }
+
+    public function checkDuplicatePost($postId, $userId)
+    {
+        $wishlistModel = new Wishlist();
+        return $wishlistModel->checkDuplicate($postId, $userId);
     }
 }
