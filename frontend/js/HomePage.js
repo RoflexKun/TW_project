@@ -348,6 +348,52 @@ document.addEventListener('DOMContentLoaded', async function () {
     const accountMenu = document.querySelector('.account-menu');
     var isLoggedIn = false;
 
+    function setLoggedInUI() {
+        loginButton.style.display = 'none';
+        accountButton.style.display = 'block';
+        loginTab.classList.remove('active');
+        isLoggedIn = true;
+    }
+
+    function setLoggedOutUI() {
+        loginButton.style.display = 'block';
+        accountButton.style.display = 'none';
+        accountMenu.classList.remove('active');
+        isLoggedIn = false;
+    }
+
+    // Auto login after ctrl+f5
+    const token = getToken();
+    if (token) {
+        try {
+            const response = await fetch("http://localhost/backend/services/getprofile.php", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+
+            const result = await response.json();
+
+            if (result && result.user) {
+                setLoggedInUI();
+                localStorage.setItem('user', JSON.stringify(result.user));
+            }
+            else {
+                setLoggedOutUI();
+                removeToken();
+                localStorage.removeItem('user');
+            }
+        }
+        catch (error) {
+            setLoggedOutUI();
+            removeToken();
+            localStorage.removeItem('user');
+        }
+    }
+    else {
+        setLoggedOutUI();
+    }
+
     // Open login tab
     loginButton.addEventListener('click', function () {
         loginTab.classList.add('active');
@@ -396,10 +442,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 localStorage.setItem('user', JSON.stringify(result.user));
                 alert('Login successful!');
 
-                loginTab.classList.remove('active');
-                isLoggedIn = true;
-                loginButton.style.display = 'none';
-                accountButton.style.display = 'block';
+                setLoggedInUI();
 
             } else {
                 alert('Login failed!');
@@ -449,10 +492,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 localStorage.removeItem('user');
                 alert('Logged out successfully!');
 
-                isLoggedIn = false;
-                loginButton.style.display = 'block';
-                accountButton.style.display = 'none';
-                accountMenu.classList.remove('active');
+                setLoggedOutUI();
 
             }
             else {
