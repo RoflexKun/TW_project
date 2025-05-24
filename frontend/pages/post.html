@@ -10,6 +10,35 @@
 </head>
 
 <body>
+    <body>
+    <header>
+        <div class="header-left-section">
+            <div class="pets-button-container">
+                <button class="pets-button">All about pets</button>
+                <span class="arrow-icon">▼</span>
+            </div>
+        </div>
+        <div class="header-center-section">
+            <div class="logo">Logo</div>
+        </div>
+        <div class="header-right-section">
+            <div class="wishlist">★</div>
+            <button class="logged-in-button" id="logged-in-button">Account</button>
+
+            <div class="account-menu">
+                <div class="account-menu-category" id="profile-button"> Profile </div>
+                <div class="account-menu-category" id="post-button"> Post </div>
+                <div class="account-menu-category" id="your-posts-button"> Your Posts </div>
+                <div class="account-menu-category" id="logout-button"> Logout </div>
+            </div>
+        </div>
+        <div class="dropdown-menu">
+            <div class="dropdown-category">Dogs & Puppies</div>
+            <div class="dropdown-category">Cats & Kittens</div>
+            <div class="dropdown-category">Other Pets</div>
+        </div>
+    </header>
+
     <div class="post-display">
         <div class="photo-section">
             <div class="media-display" id="main-media"></div>
@@ -109,6 +138,35 @@
             </form>
         </div>
     </div>
+    
+    <!-- Profile tab -->
+    <div class="profile-overlay" id="profile-tab">
+        <div class="profile-tab">
+            <div class="tab-header">
+                <div class="logo">Logo</div>
+                <button class="close-button" id="close-profile"><img
+                        src="../assets/bone-shaped-dog-biscuit.png" /></button>
+            </div>
+            <form id="profile-form">
+                <div class="form-group">
+                    <label for="user-first-name">First Name</label>
+                    <input type="text" id="user-first-name" name="user-first-name" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="user-last-name">Last Name</label>
+                    <input type="text" id="user-last-name" name="user-last-name" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="user-email">Email</label>
+                    <div class="form-control-email" id="user-email"></div>
+                </div>
+                <div class="form-group">
+                    <label for="user-date-of-birth">Date of Birth (mm-dd-yyyy)</label>
+                    <input type="date" id="user-date-of-birth" name="user-date-of-birth" class="form-control">
+                </div>
+                <button type="submit" class="save-profile">Save</button>
+            </form>
+        </div>
+    </div>
 </body>
-
 </html>

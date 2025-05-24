@@ -15,6 +15,12 @@ function removeToken() {
 
 document.addEventListener('DOMContentLoaded', async function () {
 
+    // Redirect to Home Page
+    const logo = document.querySelector('.logo');
+    logo.addEventListener('click', function () {
+        window.location.href = '../pages/HomePage.html';
+    });
+    
     const speciesIdMap = {};
     const speciesSelect = document.getElementById('species-select');
     const breedSelect = document.getElementById('breed-select');
@@ -348,6 +354,52 @@ document.addEventListener('DOMContentLoaded', async function () {
     const accountMenu = document.querySelector('.account-menu');
     var isLoggedIn = false;
 
+    function setLoggedInUI() {
+        loginButton.style.display = 'none';
+        accountButton.style.display = 'block';
+        loginTab.classList.remove('active');
+        isLoggedIn = true;
+    }
+
+    function setLoggedOutUI() {
+        loginButton.style.display = 'block';
+        accountButton.style.display = 'none';
+        accountMenu.classList.remove('active');
+        isLoggedIn = false;
+    }
+
+    // Auto login after ctrl+f5
+    const token = getToken();
+    if (token) {
+        try {
+            const response = await fetch("http://localhost/backend/services/getprofile.php", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+
+            const result = await response.json();
+
+            if (result && result.user) {
+                setLoggedInUI();
+                localStorage.setItem('user', JSON.stringify(result.user));
+            }
+            else {
+                setLoggedOutUI();
+                removeToken();
+                localStorage.removeItem('user');
+            }
+        }
+        catch (error) {
+            setLoggedOutUI();
+            removeToken();
+            localStorage.removeItem('user');
+        }
+    }
+    else {
+        setLoggedOutUI();
+    }
+
     // Open login tab
     loginButton.addEventListener('click', function () {
         loginTab.classList.add('active');
@@ -396,10 +448,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 localStorage.setItem('user', JSON.stringify(result.user));
                 alert('Login successful!');
 
-                loginTab.classList.remove('active');
-                isLoggedIn = true;
-                loginButton.style.display = 'none';
-                accountButton.style.display = 'block';
+                setLoggedInUI();
 
             } else {
                 alert('Login failed!');
@@ -427,6 +476,18 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     });
 
+    // Post button redirect to new post page
+    const postButton = document.getElementById('post-button');
+    postButton.addEventListener('click', function () {
+        window.location.href = '../pages/newPost.html';
+    });
+
+    // Your Posts button redirect to new your posts page
+    const yourPostsButton = document.getElementById('your-posts-button');
+    yourPostsButton.addEventListener('click', function () {
+        window.location.href = '../pages/postlist.html';
+    });
+
     // Forgot password link
     forgotPasswordLink.addEventListener('click', function (event) {
         event.preventDefault();
@@ -449,10 +510,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 localStorage.removeItem('user');
                 alert('Logged out successfully!');
 
-                isLoggedIn = false;
-                loginButton.style.display = 'block';
-                accountButton.style.display = 'none';
-                accountMenu.classList.remove('active');
+                setLoggedOutUI();
 
             }
             else {
