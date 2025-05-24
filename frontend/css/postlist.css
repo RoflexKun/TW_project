@@ -122,16 +122,14 @@
 }
 
 .post-list {
-    flex: 1;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
-    align-content: flex-start;
+    padding: 20px;
 }
 
 
 .post-card {
-    width: 240px;
     height: 320px;
     border: none;
     border-radius: 16px;

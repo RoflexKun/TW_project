@@ -46,5 +46,13 @@ class UserController {
         }
         return false;
     }
+
+    public function getUserId($token) {
+        $payload = validate_jwt($token);
+        if($payload){
+            return $payload->user_id;
+        }
+        return false;
+    }
 }
 ?>

@@ -9,14 +9,14 @@ require_once(__DIR__ . "/../models/location.php");
 
 class PostController
 {
-    public function createPost($data, $thumbnail, $media, $medicalTags, $foodLikeTags, $foodDislikeTags)
+    public function createPost($data, $thumbnail, $media, $medicalTags, $foodLikeTags, $foodDislikeTags, $userId)
     {
         $postModel = new Post();
         $mediaModel = new Media();
         $medicalModel = new Medical();
         $foodModel = new Food();
 
-        $newId = $postModel->insertPost($data);
+        $newId = $postModel->insertPost($data, $userId);
         if (!$newId)
             return ["status" => "error", "message" => "Failed to create a new post"];
 

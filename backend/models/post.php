@@ -259,7 +259,7 @@ class Post
         ];
     }
 
-    public function insertPost($data)
+    public function insertPost($data, $userId)
     {
         self::verifyTable();
         $name = $data['name'] ?? '';
@@ -280,8 +280,8 @@ class Post
         for lines in iterate_lines LOOP
             new_id := new_id + 1;
         END LOOP;
-        INSERT INTO POSTS(id, name, species, breed, birthday, age, location, description, animal_size, gender)
-        VALUES(new_id, :name, :species, :breed, TO_DATE(:birthday, 'YYYY-MM-DD'), TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(:birthday, 'YYYY-MM-DD'))/12), :location, :description, :animal_size, :gender);
+        INSERT INTO POSTS(id, name, species, breed, birthday, age, location, description, animal_size, gender, owner_id)
+        VALUES(new_id, :name, :species, :breed, TO_DATE(:birthday, 'YYYY-MM-DD'), TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(:birthday, 'YYYY-MM-DD'))/12), :location, :description, :animal_size, :gender, :owner_id);
 
         :new_id := new_id;
     END;";
@@ -296,6 +296,7 @@ class Post
         oci_bind_by_name($insertCommand, ":description", $description);
         oci_bind_by_name($insertCommand, ":animal_size", $animal_size);
         oci_bind_by_name($insertCommand, ":gender", $gender);
+        oci_bind_by_name($insertCommand, ":owner_id", $userId);
         oci_bind_by_name($insertCommand, ":new_id", $new_id, 8);
 
         oci_execute($insertCommand);
@@ -437,10 +438,10 @@ class Post
                     "description" => $description,
                     "animal_size" => $animal_size,
                     "gender" => $gender,
-                    "media_array" => rtrim($mediaArray, ';'),
-                    "medical_array" => rtrim($medicalArray, ';'),
-                    "food_like_array" => rtrim($foodLikeArray, ';'),
-                    "food_dislike_array" => rtrim($foodDislikeArray, ';')
+                    "media_array" => rtrim($mediaArray ?? '', ';'),
+                    "medical_array" => rtrim($medicalArray ?? '', ';'),
+                    "food_like_array" => rtrim($foodLikeArray ?? '', ';'),
+                    "food_dislike_array" => rtrim($foodDislikeArray ?? '', ';')
                 ];
             }
         }
@@ -484,7 +485,7 @@ class Post
                         id_array(item_counter) := line.id;
 
                         BEGIN
-                            SELECT file_path INTO temp_path FROM media WHERE line.id = id_post AND ROWNUM = 1;
+                            SELECT thumbnail_path INTO temp_path FROM thumbnail WHERE line.id = id_post AND ROWNUM = 1;
                         EXCEPTION
                         WHEN NO_DATA_FOUND THEN
                             temp_path := NULL;
@@ -795,7 +796,10 @@ class Post
                 location VARCHAR2(100),
                 description VARCHAR2(4000),
                 animal_size VARCHAR2(255),
-                gender VARCHAR2(255))";
+                gender VARCHAR2(255),
+                owner_id NUMBER,
+                CONSTRAINT fk_owner_id FOREIGN KEY (owner_id) REFERENCES users(id))
+                ";
             $createCommand = oci_parse($this->conn, $createTable);
             if (!oci_execute($createCommand)) {
                 $e = oci_error($createCommand);

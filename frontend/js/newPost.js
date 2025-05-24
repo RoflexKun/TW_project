@@ -16,6 +16,11 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchLocationOptions();
 });
 
+// Helper to get JWT token from localStorage, stolen from homepage.js
+function getToken() {
+    return localStorage.getItem('token');
+}
+
 async function extractData() {
     clearFormErrors();
 
@@ -55,11 +60,11 @@ async function extractData() {
         showInputError(textDescription, "Please provide a description.");
         isFormInvalid = true;
     }
-    if(!selectSize.value.trim()){
+    if (!selectSize.value.trim()) {
         showInputError(selectSize, "Please provide the size of your pet");
         isFormInvalid = true;
     }
-    if(!selectGender.value.trim()){
+    if (!selectGender.value.trim()) {
         showInputError(selectGender, "Please provide the gender of your pet");
         isFormInvalid = true;
     }
@@ -90,13 +95,28 @@ async function extractData() {
     formData.append('food_like_tags', JSON.stringify(tagsFoodLikes));
     formData.append('food_dislike_tags', JSON.stringify(tagsFoodDislikes));
 
+    const token = getToken();
     try {
         const response = await fetch("http://localhost/backend/services/createpostservice.php", {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
             method: "POST",
             body: formData
         });
         const serverResponse = await response.text();
         console.log(serverResponse);
+        const serverResponseJSON = JSON.parse(serverResponse);
+
+        if (serverResponseJSON.status === "succes") {
+            const msgDiv = document.getElementById("postMessage");
+            msgDiv.textContent = "You successfully created a post.";
+            msgDiv.style.color = "green";
+        } else {
+            const msgDiv = document.getElementById("postMessage");
+            msgDiv.textContent = "Failed to create post. Please try again.";
+            msgDiv.style.color = "red";
+        }
     } catch (error) {
         console.error(error);
     }
