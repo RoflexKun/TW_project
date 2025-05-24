@@ -15,6 +15,12 @@ function removeToken() {
 
 document.addEventListener('DOMContentLoaded', async function () {
 
+    // Redirect to Home Page
+    const logo = document.querySelector('.logo');
+    logo.addEventListener('click', function () {
+        window.location.href = '../pages/HomePage.html';
+    });
+    
     const speciesIdMap = {};
     const speciesSelect = document.getElementById('species-select');
     const breedSelect = document.getElementById('breed-select');
@@ -468,6 +474,18 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (!accountMenu.contains(event.target) && event.target !== accountButton) {
             accountMenu.classList.remove('active');
         }
+    });
+
+    // Post button redirect to new post page
+    const postButton = document.getElementById('post-button');
+    postButton.addEventListener('click', function () {
+        window.location.href = '../pages/newPost.html';
+    });
+
+    // Your Posts button redirect to new your posts page
+    const yourPostsButton = document.getElementById('your-posts-button');
+    yourPostsButton.addEventListener('click', function () {
+        window.location.href = '../pages/postlist.html';
     });
 
     // Forgot password link

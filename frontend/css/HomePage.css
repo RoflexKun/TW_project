@@ -126,6 +126,10 @@ header {
     border-radius: 2px;
 }
 
+.logo:hover {
+    cursor: pointer;
+}
+
 .wishlist {
     color: #ff0000;
     font-size: 24px;
