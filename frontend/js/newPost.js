@@ -459,9 +459,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         window.location.href = '../pages/newPost.html';
     });
 
-    // Your Posts button redirect to new your posts page
-    const yourPostsButton = document.getElementById('your-posts-button');
-    yourPostsButton.addEventListener('click', function () {
+    // Other pets button redirect to new your posts page
+    const otherPetsButton = document.getElementById('other-pets');
+    otherPetsButton.addEventListener('click', function () {
         window.location.href = '../pages/postlist.html';
     });
 

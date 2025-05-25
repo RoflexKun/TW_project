@@ -95,12 +95,12 @@ async function showOnlySearchResults(searchText, page = 1) {
 
         heartButton.addEventListener("click", async (event) => {
             event.stopPropagation();
-                const token = getToken();
-                if (!token) {
-                    const popup = document.getElementById("wishlist-popup");
-                    if (popup) popup.style.display = "flex";
-                    return;
-                }
+            const token = getToken();
+            if (!token) {
+                const popup = document.getElementById("wishlist-popup");
+                if (popup) popup.style.display = "flex";
+                return;
+            }
 
             const isActive = heartButton.classList.toggle("active");
             heartButton.innerText = isActive ? "❤️" : "🤍";
@@ -469,11 +469,29 @@ document.addEventListener('DOMContentLoaded', async function () {
         // Actions to be added
     });
 
+    // Login functionality //
+    const loginButton = document.querySelector('.login-button');
+    const loginTab = document.getElementById('login-tab');
+    const closeLoginButton = document.getElementById('close-login');
+    const loginForm = document.getElementById('login-form');
+    const signupLink = document.getElementById('signup-link');
+    const forgotPasswordLink = document.getElementById('forgot-password');
     const accountButton = document.getElementById('logged-in-button');
     const accountMenu = document.querySelector('.account-menu');
+    var isLoggedIn = false;
 
     function setLoggedInUI() {
+        loginButton.style.display = 'none';
         accountButton.style.display = 'block';
+        loginTab.classList.remove('active');
+        isLoggedIn = true;
+    }
+
+    function setLoggedOutUI() {
+        loginButton.style.display = 'block';
+        accountButton.style.display = 'none';
+        accountMenu.classList.remove('active');
+        isLoggedIn = false;
     }
 
     // Auto login after ctrl+f5
@@ -493,17 +511,81 @@ document.addEventListener('DOMContentLoaded', async function () {
                 localStorage.setItem('user', JSON.stringify(result.user));
             }
             else {
+                setLoggedOutUI();
                 removeToken();
                 localStorage.removeItem('user');
             }
         }
         catch (error) {
+            setLoggedOutUI();
             removeToken();
             localStorage.removeItem('user');
         }
     }
     else {
+        setLoggedOutUI();
     }
+
+    // Open login tab
+    loginButton.addEventListener('click', function () {
+        loginTab.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+
+    // Close login tab
+    closeLoginButton.addEventListener('click', function () {
+        loginTab.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    // Close tab
+    loginTab.addEventListener('click', function (event) {
+        if (event.target === loginTab) {
+            loginTab.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Handle login data submission
+    loginForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const email = loginForm.querySelector('#email').value;
+        const password = loginForm.querySelector('#password').value;
+        const rememberMe = document.getElementById('remember').checked;
+
+        const formData = new URLSearchParams();
+        formData.append('email', email);
+        formData.append('password', password);
+
+        try {
+            const response = await fetch("http://localhost/backend/services/login.php", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData.toString()
+            });
+
+            const result = await response.json();
+
+            if (result && result.token) {
+                setToken(result.token);
+
+                // Store user data in localStorage
+                localStorage.setItem('user', JSON.stringify(result.user));
+                alert('Login successful!');
+
+                setLoggedInUI();
+
+            } else {
+                alert('Login failed!');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+        }
+
+
+        document.body.style.overflow = '';
+    });
 
     // Open account menu
     accountButton.addEventListener('click', function () {
@@ -526,11 +608,18 @@ document.addEventListener('DOMContentLoaded', async function () {
         window.location.href = '../pages/newPost.html';
     });
 
-    // Your Posts button redirect to new your posts page
-    const yourPostsButton = document.getElementById('your-posts-button');
-    yourPostsButton.addEventListener('click', function () {
+    // Other pets button redirect to new your posts page
+    const otherPetsButton = document.getElementById('other-pets');
+    otherPetsButton.addEventListener('click', function () {
         window.location.href = '../pages/postlist.html';
     });
+
+    // Forgot password link
+    forgotPasswordLink.addEventListener('click', function (event) {
+        event.preventDefault();
+        alert('Password recovery functionality');
+    });
+
 
     // Logout funcionality
     const logoutButton = document.getElementById('logout-button');
@@ -557,6 +646,89 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.error('Logout error:', error);
             alert('An error occurred during logout.');
         }
+    });
+
+    // Sign up functionality //
+    const signupTab = document.getElementById('signup-tab');
+    const closeSignupButton = document.getElementById('close-signup');
+    const signupForm = document.getElementById('signup-form');
+    const loginLink = document.getElementById('login-link');
+
+    // Sign up link
+    signupLink.addEventListener('click', function (event) {
+        event.preventDefault();
+        signupTab.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        loginTab.classList.remove('active');
+    });
+
+    // Close signup tab
+    closeSignupButton.addEventListener('click', function () {
+        signupTab.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    // Close tab
+    signupTab.addEventListener('click', function (event) {
+        if (event.target === signupTab) {
+            signupTab.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Handle sign up data submission
+    signupForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const email = signupForm.querySelector('#email').value;
+        const password = signupForm.querySelector('#password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+
+        if (password !== confirmPassword) {
+            alert('Passwords do not match!');
+            return;
+        }
+
+        if (password.length < 6) {
+            alert('The password must be at least 6 characters long!');
+            return;
+        }
+
+        const formData = new URLSearchParams();
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('confirm-password', confirmPassword);
+
+        try {
+            const response = await fetch("http://localhost/backend/services/register.php", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData.toString()
+            });
+
+            const result = await response.json();
+
+            if (result && result.token) {
+                alert('Registration successful! You can now log in.');
+
+                document.getElementById('signup-tab').classList.remove('active');
+                document.getElementById('login-tab').classList.add('active');
+
+                signupForm.reset();
+            } else {
+                alert('Registration failed!');
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+        }
+
+    });
+
+    // Login link
+    loginLink.addEventListener('click', function (event) {
+        event.preventDefault();
+        loginTab.classList.add('active');
+        signupTab.classList.remove('active');
     });
 
     // Profile tab //
