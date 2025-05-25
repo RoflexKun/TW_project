@@ -853,3 +853,104 @@ p {
     background-color: #ffcccc;
     border-color: #ff4d4d;
 }
+
+/* User posts CSS */
+.user-posts-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.user-posts-modal {
+    background-color: #fdf6e3;
+    width: 60%;
+    height: 85%;
+    padding: 24px;
+    border-radius: 12px;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.user-posts-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.user-posts-header h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin: 0;
+    flex: 1;
+    color: #5e4b3c;
+}
+
+.user-posts-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    filter: grayscale(0.2);
+}
+
+.user-posts-summary {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    text-align: left;
+    color: #5e4b3c;
+}
+
+.user-posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+.user-posts-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fef9f0;
+    border: 1px solid #e6dcc9;
+    border-radius: 10px;
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.user-posts-item:hover {
+    background-color: #f1e8d2;
+}
+
+.user-posts-info {
+    font-size: 1rem;
+    color: #4a3b2c;
+}
+
+.user-posts-delete {
+    background-color: #d88c6d;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.user-posts-delete:hover {
+    background-color: #b86649;
+}

@@ -10,6 +10,78 @@ class Post
         $this->conn = Database::getDbInstance()->getConnection();
     }
 
+    public function deletePost($postId)
+    {
+        $deleteQuery = "
+            BEGIN
+                DELETE FROM food_like WHERE id_post = :postId;
+                DELETE FROM food_dislike WHERE id_post = :postId;
+                DELETE FROM medical WHERE id_post = :postId;
+                DELETE FROM wishlist WHERE id_post = :postId;
+                DELETE FROM media WHERE id_post = :postId;
+                DELETE FROM thumbnail WHERE id_post = :postId;
+                DELETE FROM posts WHERE id = :postId;
+            END;
+            ";
+        $deleteQueryCommand = oci_parse($this->conn, $deleteQuery);
+        oci_bind_by_name($deleteQueryCommand, ":postId", $postId);
+
+        if (!oci_execute($deleteQueryCommand)) {
+            $error = oci_error($deleteQueryCommand);
+            return ["error" => $error['message']];
+        }
+    }
+
+    public function userPosts($userId)
+    {
+        $findPostsQuery = "
+            DECLARE
+                CURSOR posts_cursor IS SELECT * FROM posts WHERE posts.owner_id = :user_id;
+                id_result VARCHAR2(1000) := '';
+                name_result VARCHAR2(1000) := '';
+                age_result VARCHAR2(1000) := '';
+                counter NUMBER := 0;
+            BEGIN
+                FOR posts_line IN posts_cursor LOOP
+                    id_result := id_result || TO_CHAR(posts_line.id) || ';';
+                    name_result := name_result || posts_line.name || ';';
+                    age_result := age_result || TO_CHAR(posts_line.age) || ';';
+                    counter := counter + 1;
+                END LOOP;
+                :id_result := id_result;
+                :name_result := name_result;
+                :age_result := age_result;
+                :counter := counter;
+            END;
+        ";
+        $idArray = '';
+        $nameArray = '';
+        $ageArray = '';
+        $counter = 0;
+        $findPostsQueryCommand = oci_parse($this->conn, $findPostsQuery);
+        oci_bind_by_name($findPostsQueryCommand, ":user_id", $userId);
+        oci_bind_by_name($findPostsQueryCommand, ":id_result", $idArray, 1000);
+        oci_bind_by_name($findPostsQueryCommand, ":name_result", $nameArray, 1000);
+        oci_bind_by_name($findPostsQueryCommand, ":age_result", $ageArray, 1000);
+        oci_bind_by_name($findPostsQueryCommand, ":counter", $counter, 25);
+
+        if (oci_execute($findPostsQueryCommand)) {
+            if ($counter === 0) {
+                return ["counter" => 0];
+            } else {
+                return [
+                    "counter" => $counter,
+                    "name" => rtrim($nameArray, ';'),
+                    "age" => rtrim($ageArray, ';'),
+                    "id" => rtrim($idArray, ';')
+                ];
+            }
+        } else {
+            $error = oci_error($findPostsQueryCommand);
+            return ["error" => $error['message']];
+        }
+    }
+
     public function getPostsBySpecies($species)
     {
         $findQuery = "
@@ -210,12 +282,13 @@ class Post
         }
     }
 
-    public function getPostsById($idArray){
+    public function getPostsById($idArray)
+    {
         $nameResult = [];
         $idResult = [];
         $ageResult = [];
         $thumbnailResult = [];
-        foreach($idArray as $id){
+        foreach ($idArray as $id) {
             $findPost = "
                 DECLARE
                     temp_id NUMBER := :id;
@@ -230,25 +303,25 @@ class Post
                     :thumbnail := thumbnail;
                 END;
                 ";
-                $name = '';
-                $age = '';
-                $thumbnail = '';
+            $name = '';
+            $age = '';
+            $thumbnail = '';
 
-                $findPostCommand = oci_parse($this->conn, $findPost);
-                oci_bind_by_name($findPostCommand, ":id", $id);
-                oci_bind_by_name($findPostCommand, ":name", $name, 255);
-                oci_bind_by_name($findPostCommand, ":age", $age, 255);
-                oci_bind_by_name($findPostCommand, ":thumbnail", $thumbnail, 255);
+            $findPostCommand = oci_parse($this->conn, $findPost);
+            oci_bind_by_name($findPostCommand, ":id", $id);
+            oci_bind_by_name($findPostCommand, ":name", $name, 255);
+            oci_bind_by_name($findPostCommand, ":age", $age, 255);
+            oci_bind_by_name($findPostCommand, ":thumbnail", $thumbnail, 255);
 
-                if(oci_execute($findPostCommand)){
-                    $nameResult[] = $name;
-                    $ageResult[] = $age;
-                    $idResult[] = $id;
-                    $thumbnailResult[] = $thumbnail;
-                } else {
-                    $error = oci_error($findPostCommand);
-                    return ["error" => $error['message']];
-                }
+            if (oci_execute($findPostCommand)) {
+                $nameResult[] = $name;
+                $ageResult[] = $age;
+                $idResult[] = $id;
+                $thumbnailResult[] = $thumbnail;
+            } else {
+                $error = oci_error($findPostCommand);
+                return ["error" => $error['message']];
+            }
         }
 
         return [

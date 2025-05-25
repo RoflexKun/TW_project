@@ -181,4 +181,14 @@ class PostController
         $wishlistModel = new Wishlist();
         return $wishlistModel->checkDuplicate($postId, $userId);
     }
+
+    public function getUserPosts($userId){
+        $postModel = new Post();
+        return $postModel->userPosts($userId);
+    }
+
+    public function deletePost($postId){
+        $postModel = new Post();
+        $postModel->deletePost($postId);
+    }
 }
