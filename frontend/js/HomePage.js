@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     logo.addEventListener('click', function () {
         window.location.href = '../pages/HomePage.html';
     });
-    
+
     const speciesIdMap = {};
     const speciesSelect = document.getElementById('species-select');
     const breedSelect = document.getElementById('breed-select');
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     let thumbnails = [];
 
     //Function to display posts
-    function displayPosts(page = 1) {
+    async function displayPosts(page = 1) {
         const wrapper = document.querySelector('.post-wrapper');
         const noResults = document.getElementById('no-results');
         const pagination = document.getElementById('pagination');
@@ -219,18 +219,78 @@ document.addEventListener('DOMContentLoaded', async function () {
             return;
         }
 
+        //Creating each post-card with the wishlist system
         for (let i = start; i < end && i < names.length; i++) {
             const post = document.createElement('div');
             post.classList.add('post-card');
-            post.innerHTML = `
-            <img src="/${thumbnails[i]}" class="post-img" />
-            <p class="post-text"><strong>${names[i]}, ${ages[i]}</strong></p>
-        `;
+            post.style.position = 'relative';
+
+            const image = document.createElement('img');
+            image.src = thumbnails[i] ? `/${thumbnails[i]}` : "/frontend/assets/No_Image_Available.jpg";
+            image.className = 'post-img';
+            image.alt = names[i];
+            post.appendChild(image);
+
+            const nameAge = document.createElement('p');
+            nameAge.className = 'post-text';
+            nameAge.innerHTML = `<strong>${names[i]}, ${ages[i]}</strong>`;
+            post.appendChild(nameAge);
+
+            const heartButton = document.createElement('button');
+            heartButton.className = 'heart-button';
+            heartButton.innerText = '🤍';
+            post.appendChild(heartButton);
 
             post.addEventListener('click', () => {
                 window.location.href = `../pages/post.html?id=${ids[i]}`;
             });
+
+            heartButton.addEventListener('click', (event) => event.stopPropagation());
+
             wrapper.appendChild(post);
+
+            const token = getToken();
+            const checkForm = new FormData();
+            checkForm.append("action", "duplicate");
+            checkForm.append("postId", ids[i]);
+
+            try {
+                const response = await fetch("http://localhost/backend/services/operationwishlistservice.php", {
+                    headers: { 'Authorization': 'Bearer ' + token },
+                    method: 'POST',
+                    body: checkForm
+                });
+
+                const result = await response.text();
+                if (result.trim() === "true") {
+                    heartButton.classList.add("active");
+                    heartButton.innerText = "❤️";
+                }
+            } catch (error) {
+                console.error(error);
+            }
+
+            heartButton.addEventListener("click", async () => {
+                const isActive = heartButton.classList.toggle("active");
+                heartButton.innerText = isActive ? "❤️" : "🤍";
+
+                const formData = new FormData();
+                formData.append("action", isActive ? "add" : "remove");
+                formData.append("postId", ids[i]);
+
+                try {
+                    const response = await fetch("http://localhost/backend/services/operationwishlistservice.php", {
+                        headers: { 'Authorization': 'Bearer ' + token },
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.text();
+                    console.log(result);
+                } catch (error) {
+                    console.error(error);
+                }
+            });
         }
 
         renderPagination(page);

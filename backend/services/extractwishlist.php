@@ -20,5 +20,5 @@ if (!$token) {
 
 $response = $controllerPost->getWishlistPosts($controllerUser->getUserId($token));
 
-echo json_encode($response);
+echo json_encode(['posts' => $response]);
 ?>
