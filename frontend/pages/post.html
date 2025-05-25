@@ -24,6 +24,7 @@
             </div>
             <div class="header-right-section">
                 <div class="wishlist">★</div>
+                <button class="login-button" id="login-button">Login</button>
                 <button class="logged-in-button" id="logged-in-button">Account</button>
 
                 <div class="account-menu">
@@ -149,6 +150,65 @@
                 </form>
             </div>
         </div>
+
+        <!-- Login tab -->
+    <div class="login-overlay" id="login-tab">
+        <div class="login-tab">
+            <div class="tab-header">
+                <div class="logo">Logo</div>
+                <button class="close-button" id="close-login"><img
+                        src="../assets/bone-shaped-dog-biscuit.png" /></button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" required>
+                </div>
+                <div class="remember-me">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+                <button type="submit" class="login-submit">Login</button>
+            </form>
+            <div class="login-alternative">
+                <p>Don't have an account? <a href="#" id="signup-link">Sign up</a></p>
+                <p><a href="#" id="forgot-password">Forgot password?</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign up tab -->
+    <div class="signup-overlay" id="signup-tab">
+        <div class="signup-tab">
+            <div class="tab-header">
+                <div class="logo">Logo</div>
+                <button class="close-button" id="close-signup"><img
+                        src="../assets/bone-shaped-dog-biscuit.png" /></button>
+            </div>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm password</label>
+                    <input type="password" id="confirm-password" name="confirm-password" class="form-control" required>
+                </div>
+                <button type="submit" class="signup-submit">Sign up</button>
+            </form>
+            <div class="signup-alternative">
+                <p>Already have an account? <a href="#" id="login-link">Login</a></p>
+            </div>
+        </div>
+    </div>
 
         <!-- Profile tab -->
         <div class="profile-overlay" id="profile-tab">
