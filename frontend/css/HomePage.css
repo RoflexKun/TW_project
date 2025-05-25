@@ -788,6 +788,48 @@ p {
     display: none !important;
 }
 
+/* Message if someone not logged it tries to wishlist */
+
+.wishlist-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.wishlist-popup-content {
+    position: relative;
+    background-color: white;
+    padding: 40px 50px;
+    border-radius: 16px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    font-size: 18px;
+}
+
+.wishlist-popup-content p {
+    font-size: 16px;
+    color: #333;
+    margin-top: 10px;
+}
+
+.wishlist-popup-close {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    cursor: pointer;
+}
+
 /* Wishlist button CSS */
 .heart-button {
     position: absolute;

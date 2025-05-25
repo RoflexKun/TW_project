@@ -95,6 +95,12 @@ async function showOnlySearchResults(searchText, page = 1) {
 
         heartButton.addEventListener("click", async (event) => {
             event.stopPropagation();
+                const token = getToken();
+                if (!token) {
+                    const popup = document.getElementById("wishlist-popup");
+                    if (popup) popup.style.display = "flex";
+                    return;
+                }
 
             const isActive = heartButton.classList.toggle("active");
             heartButton.innerText = isActive ? "❤️" : "🤍";
@@ -167,6 +173,16 @@ document.addEventListener("DOMContentLoaded", () => {
         url.searchParams.set("page", 1);
         window.location.href = url;
     })
+
+    //Close the popup if you don't have an account
+    const wishlistPopupClose = document.getElementById("wishlist-popup-close");
+    const wishlistPopup = document.getElementById("wishlist-popup");
+
+    if (wishlistPopupClose && wishlistPopup) {
+        wishlistPopupClose.addEventListener("click", () => {
+            wishlistPopup.style.display = "none";
+        });
+    }
 })
 
 async function getSearchResults(searchText) {
@@ -350,6 +366,12 @@ async function getPostList() {
 
             heartButton.addEventListener("click", async (event) => {
                 event.stopPropagation();
+                const token = getToken();
+                if (!token) {
+                    const popup = document.getElementById("wishlist-popup");
+                    if (popup) popup.style.display = "flex";
+                    return;
+                }
 
                 const isActive = heartButton.classList.toggle("active");
                 heartButton.innerText = isActive ? "❤️" : "🤍";

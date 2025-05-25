@@ -201,6 +201,16 @@ document.addEventListener('DOMContentLoaded', async function () {
     let ages = [];
     let thumbnails = [];
 
+    //Close the popup if you don't have an account
+    const wishlistPopupClose = document.getElementById("wishlist-popup-close");
+    const wishlistPopup = document.getElementById("wishlist-popup");
+
+    if (wishlistPopupClose && wishlistPopup) {
+        wishlistPopupClose.addEventListener("click", () => {
+            wishlistPopup.style.display = "none";
+        });
+    }
+
     //Function to display posts
     async function displayPosts(page = 1) {
         const wrapper = document.querySelector('.post-wrapper');
@@ -245,9 +255,38 @@ document.addEventListener('DOMContentLoaded', async function () {
                 window.location.href = `../pages/post.html?id=${ids[i]}`;
             });
 
-            heartButton.addEventListener('click', (event) => event.stopPropagation());
-
             wrapper.appendChild(post);
+
+            
+
+            heartButton.addEventListener("click", async (event) => {
+                event.stopPropagation();
+                const token = getToken();
+                if (!token) {
+                    const popup = document.getElementById("wishlist-popup");
+                    if (popup) popup.style.display = "flex";
+                    return;
+                }
+                const isActive = heartButton.classList.toggle("active");
+                heartButton.innerText = isActive ? "❤️" : "🤍";
+
+                const formData = new FormData();
+                formData.append("action", isActive ? "add" : "remove");
+                formData.append("postId", ids[i]);
+
+                try {
+                    const response = await fetch("http://localhost/backend/services/operationwishlistservice.php", {
+                        headers: { 'Authorization': 'Bearer ' + token },
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.text();
+                    console.log(result);
+                } catch (error) {
+                    console.error(error);
+                }
+            });
 
             const token = getToken();
             const checkForm = new FormData();
@@ -269,28 +308,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             } catch (error) {
                 console.error(error);
             }
-
-            heartButton.addEventListener("click", async () => {
-                const isActive = heartButton.classList.toggle("active");
-                heartButton.innerText = isActive ? "❤️" : "🤍";
-
-                const formData = new FormData();
-                formData.append("action", isActive ? "add" : "remove");
-                formData.append("postId", ids[i]);
-
-                try {
-                    const response = await fetch("http://localhost/backend/services/operationwishlistservice.php", {
-                        headers: { 'Authorization': 'Bearer ' + token },
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const result = await response.text();
-                    console.log(result);
-                } catch (error) {
-                    console.error(error);
-                }
-            });
         }
 
         renderPagination(page);

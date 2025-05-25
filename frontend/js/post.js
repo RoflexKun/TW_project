@@ -34,6 +34,78 @@ document.addEventListener("DOMContentLoaded", function () {
             reportForm.reset();
         });
     }
+
+    const favouriteBtn = document.getElementById("favourite-button");
+    const wishlistPopup = document.getElementById("wishlist-popup");
+    const wishlistPopupClose = document.getElementById("wishlist-popup-close");
+
+    if (favouriteBtn) {
+        const postId = new URLSearchParams(window.location.search).get("id");
+        const token = getToken();
+
+        if (!token) {
+            favouriteBtn.addEventListener("click", () => {
+                wishlistPopup.style.display = "flex";
+            });
+        } else {
+
+            async function checkIfInWishlist() {
+                const formData = new FormData();
+                formData.append("action", "duplicate");
+                formData.append("postId", postId);
+
+                try {
+                    const response = await fetch("http://localhost/backend/services/operationwishlistservice.php", {
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.text();
+                    const isInWishlist = result.trim() === "true";
+
+                    favouriteBtn.classList.toggle("active", isInWishlist);
+                    favouriteBtn.innerText = isInWishlist ? "❤️" : "🤍";
+                } catch (error) {
+                    console.error("Error checking wishlist:", error);
+                }
+            }
+
+            checkIfInWishlist();
+
+            favouriteBtn.addEventListener("click", async () => {
+                const isActive = favouriteBtn.classList.toggle("active");
+                favouriteBtn.innerText = isActive ? "❤️" : "🤍";
+
+                const formData = new FormData();
+                formData.append("action", isActive ? "add" : "remove");
+                formData.append("postId", postId);
+
+                try {
+                    const response = await fetch("http://localhost/backend/services/operationwishlistservice.php", {
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.text();
+                    console.log(result);
+                } catch (error) {
+                    console.error("Wishlist operation failed:", error);
+                }
+            });
+        }
+    }
+
+    if (wishlistPopupClose) {
+        wishlistPopupClose.addEventListener("click", () => {
+            wishlistPopup.style.display = "none";
+        });
+    }
 });
 
 function displayMedia(src, type, thumbElement, mediaDisplay, thumbnails) {
@@ -197,7 +269,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     logo.addEventListener('click', function () {
         window.location.href = '../pages/HomePage.html';
     });
-    
+
     // Toggle dropdown menu
     const petsButton = document.querySelector('.pets-button-container');
     const dropdownMenu = document.querySelector('.dropdown-menu');

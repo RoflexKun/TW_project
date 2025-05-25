@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <script src="../js/postlist.js"></script>
     <title>Document</title>
 </head>
+
 <body>
     <header>
         <div class="header-left-section">
@@ -40,7 +42,7 @@
         <div class="header">
             <h1>Find your perfect companion</h1>
             <div class="search-container">
-                <input type="text" id="search-input" placeholder="Search companions..."/>
+                <input type="text" id="search-input" placeholder="Search companions..." />
                 <div id="search-list" class="search-list"></div>
                 <button id="search-button">🔍</button>
             </div>
@@ -66,7 +68,15 @@
 
                 </div>
             </div>
-        </div> 
+        </div>
+    </div>
+
+    <div class="wishlist-popup" id="wishlist-popup">
+        <div class="wishlist-popup-content">
+            <img src="../assets/bone-shaped-dog-biscuit.png" alt="Close" class="wishlist-popup-close"
+                id="wishlist-popup-close">
+            <p>You need to be logged in to add posts to your wishlist.</p>
+        </div>
     </div>
 
     <!-- Profile tab -->
@@ -97,6 +107,7 @@
                 <button type="submit" class="save-profile">Save</button>
             </form>
         </div>
-    </div>  
+    </div>
 </body>
+
 </html>

@@ -10,7 +10,7 @@ function generate_jwt($user_id, $email) {
     $payload = [
         'iss' => 'pets2adopt.com',
         'iat' => time(),
-        'exp' => time() + (60*60), // 1 hour
+        'exp' => time() + (60*60*24*7), // 1 week
         'user_id' => $user_id,
         'email' => $email
     ];
