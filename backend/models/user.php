@@ -119,6 +119,7 @@ class User
             user_first_name VARCHAR2(255);
             user_last_name VARCHAR2(255);
             user_email VARCHAR2(255);
+            user_location VARCHAR2(255);
             user_date_of_birth DATE;
             user_found NUMBER := 0;
         BEGIN
@@ -126,17 +127,20 @@ class User
                 first_name, 
                 last_name, 
                 email, 
+                location,
                 date_of_birth
             INTO 
                 user_first_name, 
                 user_last_name, 
                 user_email, 
+                user_location,
                 user_date_of_birth
             FROM users WHERE id = :user_id;
             
             :first_name := user_first_name;
             :last_name := user_last_name;
             :email := user_email;
+            :location := user_location;
             :date_of_birth := user_date_of_birth;
             :found := 1;
             
@@ -148,6 +152,7 @@ class User
         $first_name = null;
         $last_name = null;
         $email = null;
+        $location = null;
         $date_of_birth = null;
         $found = 0;
 
@@ -156,6 +161,7 @@ class User
         oci_bind_by_name($stmt, ":first_name", $first_name, 255);
         oci_bind_by_name($stmt, ":last_name", $last_name, 255);
         oci_bind_by_name($stmt, ":email", $email, 255);
+        oci_bind_by_name($stmt, ":location", $location, 255);
         oci_bind_by_name($stmt, ":date_of_birth", $date_of_birth, 255);
         oci_bind_by_name($stmt, ":found", $found);
 
@@ -175,6 +181,7 @@ class User
                     'first_name' => $first_name,
                     'last_name' => $last_name,
                     'email' => $email,
+                    'location' => $location,
                     'date_of_birth' => $formatted_date,
                     'id'=> $user_id
                 ]
@@ -184,10 +191,11 @@ class User
         }
     }
 
-    public function updateProfile($user_id,$data)
+    public function updateProfile($user_id, $data)
     {
         $first_name = $data['first_name'] ?? null;
         $last_name = $data['last_name'] ?? null;
+        $location = $data['location'] ?? null;
         $date_of_birth = $data['date_of_birth'] ?? null;
 
         $updateProfileSQL = "
@@ -196,6 +204,7 @@ class User
             SET 
                 first_name = :first_name,
                 last_name = :last_name,
+                location = :location,
                 date_of_birth = TO_DATE(:date_of_birth, 'DD-MM-YYYY')
             WHERE id = :user_id;
             
@@ -208,6 +217,7 @@ class User
         oci_bind_by_name($stmt, ":user_id", $user_id);
         oci_bind_by_name($stmt, ":first_name", $first_name);
         oci_bind_by_name($stmt, ":last_name", $last_name);
+        oci_bind_by_name($stmt, ":location", $location);
         oci_bind_by_name($stmt, ":date_of_birth", $date_of_birth);
         oci_bind_by_name($stmt, ":rows_updated", $rows_updated);
 
@@ -217,6 +227,7 @@ class User
                     'user' => [
                         'first_name' => $first_name,
                         'last_name' => $last_name,
+                        'location' => $location,
                         'date_of_birth' => $date_of_birth
                     ]
                 ];
@@ -250,8 +261,7 @@ class User
                 email VARCHAR2(255) UNIQUE,
                 first_name VARCHAR2(255),
                 last_name VARCHAR2(255),
-                latitude NUMBER,
-                longitude NUMBER,
+                location VARCHAR2(255),
                 date_of_birth DATE,
                 password_hash VARCHAR2(255) NOT NULL
             )";
