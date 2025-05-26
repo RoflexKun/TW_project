@@ -760,28 +760,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const formData = new URLSearchParams();
         formData.append('email', email);
 
-        // try {
-        //     const response = await fetch("http://localhost/backend/services/register.php", {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        //         body: formData.toString()
-        //     });
-
-        //     const result = await response.json();
-
-        //     if (result && result.token) {
-        //         alert('Registration successful! You can now log in.');
-
-        //         document.getElementById('signup-tab').classList.remove('active');
-        //         document.getElementById('login-tab').classList.add('active');
-
-        //         signupForm.reset();
-        //     } else {
-        //         alert('Registration failed!');
-        //     }
-        // } catch (error) {
-        //     console.error('Registration error:', error);
-        // }
+        // FUNCTIONALITY TO BE ADDED
 
     });
 
@@ -791,6 +770,116 @@ document.addEventListener('DOMContentLoaded', async function () {
         forgotPasswordTab.classList.remove('active'); // Close forgot password tab
         loginTab.classList.add('active'); // Open login tab
         document.body.style.overflow = 'hidden'; // Keep body scroll disabled
+    });
+
+    //Posts tab whole logic and functionality (TO BE COPIED TO OTHER HEADERS)
+    const yourPostsButton = document.getElementById('your-posts-button');
+    const userPostsOverlay = document.getElementById('user-posts-overlay');
+    const userPostsClose = document.getElementById('user-posts-close');
+    const userPostsSummary = document.getElementById('user-posts-summary');
+    const userPostsList = document.getElementById('user-posts-list');
+
+    async function setUsersName() {
+        try {
+            const token = getToken();
+            const response = await fetch("http://localhost/backend/services/getprofile.php", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+            const result = await response.json();
+
+            const userNameSpan = document.getElementById("user-posts-title");
+            if (userNameSpan && result.user && result.user.first_name) {
+                userNameSpan.textContent = result.user.first_name + "'s post list";
+            }
+
+        } catch (error) {
+            console.error('Error fetching profile data:', error);
+        }
+    }
+
+    userPostsClose.addEventListener('click', () => {
+        userPostsOverlay.style.display = 'none';
+    });
+
+    yourPostsButton.addEventListener('click', async () => {
+        setUsersName();
+
+        try {
+            const token = getToken();
+            const response = await fetch("http://localhost/backend/services/userpostservice.php", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+
+            const result = await response.json();
+            console.log(result);
+
+            if (result.counter === 0) {
+                userPostsSummary.textContent = "You don't have any posts.";
+                userPostsList.innerHTML = "";
+            } else {
+                const ids = result.id.split(";");
+                const names = result.name.split(";");
+                const ages = result.age.split(";");
+
+                userPostsSummary.textContent = `Total number of posts: ${result.counter}`;
+                userPostsList.innerHTML = "";
+
+                for (let i = 0; i < result.counter; i++) {
+                    const postItem = document.createElement('div');
+                    postItem.className = 'user-posts-item';
+
+                    const info = document.createElement('div');
+                    info.className = 'user-posts-info';
+                    info.textContent = `${names[i]}, ${ages[i]}`;
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'user-posts-delete';
+                    deleteBtn.textContent = 'Delete';
+
+                    postItem.addEventListener('click', () => {
+                        window.location.href = `/frontend/pages/post.html?id=${ids[i]}`;
+                    });
+
+                    deleteBtn.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        if (confirm(`Are you sure you want to delete ${names[i]}'s post?`)) {
+                            try {
+                                const formData = new FormData();
+                                formData.append('idPost', ids[i]);
+                                const response = fetch("http://localhost/backend/services/deletepostservice.php", {
+                                    headers: {
+                                        'Authorization': 'Bearer ' + token,
+                                    },
+                                    method: 'POST',
+                                    body: formData
+                                });
+
+                                const result = await response.text();
+                                console.log(result);
+
+                            } catch (error) {
+                                console.log(error);
+                            }
+                            userPostsList.removeChild(postItem);
+                            userPostsSummary.textContent = `Total number of posts: ${--result.counter}`;
+                        }
+                    });
+
+                    postItem.appendChild(info);
+                    postItem.appendChild(deleteBtn);
+                    userPostsList.appendChild(postItem);
+                }
+            }
+
+            userPostsOverlay.style.display = 'flex';
+        } catch (error) {
+            console.log(error);
+        }
+
     });
 
     // Profile tab //
