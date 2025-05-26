@@ -425,6 +425,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const loginForm = document.getElementById('login-form');
     const signupLink = document.getElementById('signup-link');
     const forgotPasswordLink = document.getElementById('forgot-password');
+    const forgotPasswordTab = document.getElementById('forgot-tab');
     const accountButton = document.getElementById('logged-in-button');
     const accountMenu = document.querySelector('.account-menu');
     var isLoggedIn = false;
@@ -566,7 +567,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     // Forgot password link
     forgotPasswordLink.addEventListener('click', function (event) {
         event.preventDefault();
-        alert('Password recovery functionality');
+        loginTab.classList.remove('active');
+        forgotPasswordTab.classList.add('active');
     });
 
     // Logout funcionality
@@ -789,6 +791,67 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
     });
+
+    // Forgot password functionality //
+    const closeForgotButton = document.getElementById('close-forgot');
+    const forgotForm = document.getElementById('forgot-form');
+    const forgotLoginLink = document.getElementById('forgot-login-link');
+
+    // Close forgot password tab
+    closeForgotButton.addEventListener('click', function () {
+        forgotPasswordTab.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    // Close tab
+    forgotPasswordTab.addEventListener('click', function (event) {
+        if (event.target === forgotPasswordTab) {
+            forgotPasswordTab.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Handle forgot password data submission
+    forgotForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const email = forgotForm.querySelector('#email').value;
+
+        const formData = new URLSearchParams();
+        formData.append('email', email);
+
+        // try {
+        //     const response = await fetch("http://localhost/backend/services/register.php", {
+        //         method: 'POST',
+        //         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        //         body: formData.toString()
+        //     });
+
+        //     const result = await response.json();
+
+        //     if (result && result.token) {
+        //         alert('Registration successful! You can now log in.');
+
+        //         document.getElementById('signup-tab').classList.remove('active');
+        //         document.getElementById('login-tab').classList.add('active');
+
+        //         signupForm.reset();
+        //     } else {
+        //         alert('Registration failed!');
+        //     }
+        // } catch (error) {
+        //     console.error('Registration error:', error);
+        // }
+
+    });
+
+    // Login link
+    forgotLoginLink.addEventListener('click', function (event) {
+    event.preventDefault();
+    forgotPasswordTab.classList.remove('active'); // Close forgot password tab
+    loginTab.classList.add('active'); // Open login tab
+    document.body.style.overflow = 'hidden'; // Keep body scroll disabled
+});
 
     // Profile tab //
     const profileButton = document.getElementById('profile-button');
