@@ -846,6 +846,25 @@ class Post
         }
     }
 
+    public function getAllPosts(){
+        $allPostsIdQuery = "
+            DECLARE
+                id_result VARCHAR2(1000) := '';
+                CURSOR posts_cursor IS SELECT * FROM posts;
+            BEGIN
+                FOR posts_line IN posts_cursor LOOP
+                    id_result := id_result || TO_CHAR(posts_line.id) || ';';
+                END LOOP;
+                :id_result := id_result;
+            END;
+            ";
+        $idArray = '';
+        $allPostsIdQueryCommand = oci_parse($this->conn, $allPostsIdQuery);
+        oci_bind_by_name($allPostsIdQueryCommand, ":id_result", $idArray, 1000);
+        oci_execute($allPostsIdQueryCommand);
+        return rtrim($idArray ?? '', ';');
+    }
+
     public function verifyTable()
     {
         $checkTable = "

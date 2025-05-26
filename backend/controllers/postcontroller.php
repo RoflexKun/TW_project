@@ -191,4 +191,16 @@ class PostController
         $postModel = new Post();
         $postModel->deletePost($postId);
     }
+
+    public function getPopularPosts(){
+        $wishlistModel = new Wishlist();
+        $popularPosts = $wishlistModel->getPopularPosts();
+        return explode(';', $popularPosts);
+    }
+
+    public function getAllPosts(){
+        $postModel = new Post();
+        $allPosts = $postModel->getAllPosts();
+        return explode(';', $allPosts);
+    }
 }

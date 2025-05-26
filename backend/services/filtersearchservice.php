@@ -88,8 +88,19 @@ if (!empty($filterResults)) {
     }
 }
 
+$sorted = $_POST['sorted'] ?? '';
 if(!empty($finalResults)){
     $postsArray = $controller->getPostsById($finalResults);
+    if($sorted === 'New'){
+       $postsArray = array_reverse($postsArray);
+    }  
+    elseif($sorted === 'Popular'){
+       $popularPostsId = $controller->getPopularPosts(); 
+        $postsArray = array_values(array_filter($popularPostsId, function ($id) use ($finalResults) {
+            return in_array($id, $finalResults);
+        }));
+        $postsArray = $controller->getPostsById($postsArray);
+    }
 }
 else {
     $postsArray = [];

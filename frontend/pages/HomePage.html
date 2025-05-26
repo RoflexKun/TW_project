@@ -108,6 +108,17 @@
                     </div>
                 </div>
 
+                <div class="filter-group">
+                    <label for="sort-by-select">SORT BY</label>
+                    <div class="select-wrapper">
+                        <select id="sort-by" class="filter-select">
+                            <option value="Old">Old to New</option>
+                            <option value="New">New to Old</option>
+                            <option value="Popular">Most popular</option>
+                        </select>
+                    </div>
+                </div>
+
 
 
                 <button id="search-button" class="search-button">Search</button>
@@ -129,6 +140,9 @@
 
         <div class="right-section">
             <div class="post-wrapper"></div>
+            <div id="rss-link-container" class="rss-link-container" style="display: none;">
+                <a id="rss-link">Subscribe to RSS Feed</a>
+            </div>
             <div id="pagination" class="pagination"></div>
             <div class="no-results hidden" id="no-results">
                 <h2>No results found</h2>
@@ -144,6 +158,18 @@
                 <p>You need to be logged in to add posts to your wishlist.</p>
             </div>
         </div>
+    </div>
+
+    <!-- Recent Posts Section -->
+    <div class="highlight-section">
+        <h2 class="section-title">Recently Added</h2>
+        <div class="post-card-container" id="recent-posts-container"></div>
+    </div>
+
+    <!-- Popular Posts Section -->
+    <div class="highlight-section">
+        <h2 class="section-title">Most Popular</h2>
+        <div class="post-card-container" id="popular-posts-container"></div>
     </div>
 
     <!-- User posts tab -->
