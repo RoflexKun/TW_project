@@ -681,7 +681,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         signupTab.classList.remove('active');
     });
 
-    //Posts tab whole logic and functionality (TO BE COPIED TO OTHER HEADERS)
+    //Posts tab whole logic and functionality
     const yourPostsButton = document.getElementById('your-posts-button');
     const userPostsOverlay = document.getElementById('user-posts-overlay');
     const userPostsClose = document.getElementById('user-posts-close');
@@ -819,28 +819,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const formData = new URLSearchParams();
         formData.append('email', email);
 
-        // try {
-        //     const response = await fetch("http://localhost/backend/services/register.php", {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        //         body: formData.toString()
-        //     });
-
-        //     const result = await response.json();
-
-        //     if (result && result.token) {
-        //         alert('Registration successful! You can now log in.');
-
-        //         document.getElementById('signup-tab').classList.remove('active');
-        //         document.getElementById('login-tab').classList.add('active');
-
-        //         signupForm.reset();
-        //     } else {
-        //         alert('Registration failed!');
-        //     }
-        // } catch (error) {
-        //     console.error('Registration error:', error);
-        // }
+        // FUNCTIONALITY TO BE ADDED
 
     });
 
