@@ -10,6 +10,31 @@ class Wishlist
         $this->conn = Database::getDbInstance()->getConnection();
     }
 
+    public function getPopularPosts(){
+        $findPopular = "
+            DECLARE
+                CURSOR wishlist_cursor IS
+                    SELECT id_post, COUNT(*) AS cnt
+                    FROM WISHLIST
+                    GROUP BY id_post
+                    ORDER BY cnt DESC;
+
+                id_string VARCHAR2(4000) := '';
+            BEGIN
+                FOR wishlist_line IN wishlist_cursor LOOP
+                    id_string := id_string || wishlist_line.id_post || ';';
+                END LOOP;
+                :id_result := id_string;
+            END;
+            ";
+
+            $idArray = '';
+            $findPopularCommand = oci_parse($this->conn, $findPopular);
+            oci_bind_by_name($findPopularCommand, ":id_result", $idArray, 4000);
+            oci_execute($findPopularCommand);
+            return rtrim($idArray ?? '', ';');
+    }
+
     public function getWishlistPosts($userId)
     {
         self::verifyTable();

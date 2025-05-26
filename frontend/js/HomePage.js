@@ -325,12 +325,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 
-
     // Search button functionality
     const searchButton = document.getElementById('search-button');
     if (searchButton) {
         searchButton.addEventListener('click', async function () {
 
+            const rssLink = document.getElementById('rss-link');
+            const rssLinkContainer = document.getElementById('rss-link-container');
             const filters = {
                 species: document.getElementById('species-select').value,
                 breed: document.getElementById('breed-select').value,
@@ -338,7 +339,8 @@ document.addEventListener('DOMContentLoaded', async function () {
                 age_max: document.getElementById('age-max').value,
                 size: document.getElementById('size-select').value,
                 gender: document.getElementById('gender-select').value,
-                city: document.getElementById('city-select').value
+                city: document.getElementById('city-select').value,
+                sorted: document.getElementById('sort-by').value
             };
             console.log(filters.species, filters.city, filters.size, filters.gender, filters.age_min, filters.age_max);
             const allAny = (filters.species === "Any" && filters.size === "Any" &&
@@ -367,6 +369,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             formData.append('age_min', searchParams.age_min);
             searchParams.age_max = parseInt(filters.age_max);
             formData.append('age_max', searchParams.age_max);
+            searchParams.sorted = filters.sorted;
+            formData.append('sorted', searchParams.sorted);
 
             console.log("Search Parameters:", searchParams);
 
@@ -392,7 +396,27 @@ document.addEventListener('DOMContentLoaded', async function () {
                     ids = [];
                     ages = [];
                     thumbnails = [];
+                    rssLinkContainer.style.display = 'none';
                     displayPosts(1);
+                }
+
+                const queryParams = new URLSearchParams({
+                    species: searchParams.species,
+                    breed: searchParams.breed,
+                    size: searchParams.size,
+                    gender: searchParams.gender,
+                    city: searchParams.city,
+                    age_min: searchParams.age_min,
+                    age_max: searchParams.age_max,
+                    sorted: searchParams.sorted
+                });
+
+                const rssUrl = `http://localhost/backend/services/rssfeed.php?${queryParams.toString()}`;
+
+                if (rssLink && rssLinkContainer) {
+                    rssLink.href = rssUrl;
+                    rssLink.style.display = 'inline-block';
+                    rssLinkContainer.style.display = 'block';
                 }
 
             } catch (error) {
@@ -417,6 +441,208 @@ document.addEventListener('DOMContentLoaded', async function () {
     document.getElementById('no-results-redirect').addEventListener('click', () => {
         window.location.href = '../pages/postlist.html';
     });
+
+    //Shows most popular posts (based on number of wishlist count)
+    async function showPopularPosts() {
+        try {
+            const response = await fetch("http://localhost/backend/services/popularpostsservice.php", {
+                method: 'GET'
+            });
+
+            const result = await response.json();
+            console.log(result);
+
+            const names = result.data.name || [];
+            const ages = result.data.age || [];
+            const ids = result.data.id || [];
+            const thumbnails = result.data.thumbnail || [];
+
+            const wrapper = document.getElementById("popular-posts-container");
+
+            for (let i = 0; i < 5 && i < names.length; i++) {
+                const post = document.createElement('div');
+                post.classList.add('post-card');
+                post.style.position = 'relative';
+
+                const image = document.createElement('img');
+                image.src = thumbnails[i] ? `/${thumbnails[i]}` : "/frontend/assets/No_Image_Available.jpg";
+                image.className = 'post-img';
+                image.alt = names[i];
+                post.appendChild(image);
+
+                const nameAge = document.createElement('p');
+                nameAge.className = 'post-text';
+                nameAge.innerHTML = `<strong>${names[i]}, ${ages[i]}</strong>`;
+                post.appendChild(nameAge);
+
+                const heartButton = document.createElement('button');
+                heartButton.className = 'heart-button';
+                heartButton.innerText = '🤍';
+                post.appendChild(heartButton);
+
+                post.addEventListener('click', () => {
+                    window.location.href = `../pages/post.html?id=${ids[i]}`;
+                });
+
+                wrapper.appendChild(post);
+
+                heartButton.addEventListener("click", async (event) => {
+                    event.stopPropagation();
+                    const token = getToken();
+                    if (!token) {
+                        const popup = document.getElementById("wishlist-popup");
+                        if (popup) popup.style.display = "flex";
+                        return;
+                    }
+                    const isActive = heartButton.classList.toggle("active");
+                    heartButton.innerText = isActive ? "❤️" : "🤍";
+
+                    const formData = new FormData();
+                    formData.append("action", isActive ? "add" : "remove");
+                    formData.append("postId", ids[i]);
+
+                    try {
+                        const response = await fetch("http://localhost/backend/services/operationwishlistservice.php", {
+                            headers: { 'Authorization': 'Bearer ' + token },
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const result = await response.text();
+                        console.log(result);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                });
+
+                const token = getToken();
+                const checkForm = new FormData();
+                checkForm.append("action", "duplicate");
+                checkForm.append("postId", ids[i]);
+
+                try {
+                    const response = await fetch("http://localhost/backend/services/operationwishlistservice.php", {
+                        headers: { 'Authorization': 'Bearer ' + token },
+                        method: 'POST',
+                        body: checkForm
+                    });
+
+                    const result = await response.text();
+                    if (result.trim() === "true") {
+                        heartButton.classList.add("active");
+                        heartButton.innerText = "❤️";
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    showPopularPosts();
+
+    //Shows most recent posts
+    async function showRecentPosts() {
+        try {
+            const response = await fetch("http://localhost/backend/services/recentpostsservice.php", {
+                method: 'GET'
+            });
+
+            var result = await response.json();
+
+            const names = (result.data.name || []).reverse();
+            const ages = (result.data.age || []).reverse();
+            const ids = (result.data.id || []).reverse();
+            const thumbnails = (result.data.thumbnail || []).reverse();
+
+            const wrapper = document.getElementById("recent-posts-container");
+
+            for (let i = 0; i < 5 && i < names.length; i++) {
+                const post = document.createElement('div');
+                post.classList.add('post-card');
+                post.style.position = 'relative';
+
+                const image = document.createElement('img');
+                image.src = thumbnails[i] ? `/${thumbnails[i]}` : "/frontend/assets/No_Image_Available.jpg";
+                image.className = 'post-img';
+                image.alt = names[i];
+                post.appendChild(image);
+
+                const nameAge = document.createElement('p');
+                nameAge.className = 'post-text';
+                nameAge.innerHTML = `<strong>${names[i]}, ${ages[i]}</strong>`;
+                post.appendChild(nameAge);
+
+                const heartButton = document.createElement('button');
+                heartButton.className = 'heart-button';
+                heartButton.innerText = '🤍';
+                post.appendChild(heartButton);
+
+                post.addEventListener('click', () => {
+                    window.location.href = `../pages/post.html?id=${ids[i]}`;
+                });
+
+                wrapper.appendChild(post);
+
+                heartButton.addEventListener("click", async (event) => {
+                    event.stopPropagation();
+                    const token = getToken();
+                    if (!token) {
+                        const popup = document.getElementById("wishlist-popup");
+                        if (popup) popup.style.display = "flex";
+                        return;
+                    }
+                    const isActive = heartButton.classList.toggle("active");
+                    heartButton.innerText = isActive ? "❤️" : "🤍";
+
+                    const formData = new FormData();
+                    formData.append("action", isActive ? "add" : "remove");
+                    formData.append("postId", ids[i]);
+
+                    try {
+                        const response = await fetch("http://localhost/backend/services/operationwishlistservice.php", {
+                            headers: { 'Authorization': 'Bearer ' + token },
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const result = await response.text();
+                        console.log(result);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                });
+
+                const token = getToken();
+                const checkForm = new FormData();
+                checkForm.append("action", "duplicate");
+                checkForm.append("postId", ids[i]);
+
+                try {
+                    const response = await fetch("http://localhost/backend/services/operationwishlistservice.php", {
+                        headers: { 'Authorization': 'Bearer ' + token },
+                        method: 'POST',
+                        body: checkForm
+                    });
+
+                    const result = await response.text();
+                    if (result.trim() === "true") {
+                        heartButton.classList.add("active");
+                        heartButton.innerText = "❤️";
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+    showRecentPosts();
+
 
     // Login functionality //
     const loginButton = document.querySelector('.login-button');
@@ -846,11 +1072,11 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Login link
     forgotLoginLink.addEventListener('click', function (event) {
-    event.preventDefault();
-    forgotPasswordTab.classList.remove('active'); // Close forgot password tab
-    loginTab.classList.add('active'); // Open login tab
-    document.body.style.overflow = 'hidden'; // Keep body scroll disabled
-});
+        event.preventDefault();
+        forgotPasswordTab.classList.remove('active'); // Close forgot password tab
+        loginTab.classList.add('active'); // Open login tab
+        document.body.style.overflow = 'hidden'; // Keep body scroll disabled
+    });
 
     // Profile tab //
     const profileButton = document.getElementById('profile-button');

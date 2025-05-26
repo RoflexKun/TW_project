@@ -1016,3 +1016,26 @@ p {
 .user-posts-delete:hover {
     background-color: #b86649;
 }
+
+/* Most popular & Most recent sections CSS */
+.highlight-section {
+    margin: 40px auto;
+    max-width: 1200px;
+    padding: 0 20px;
+}
+
+.section-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+    border-left: 5px solid #f88d2b;
+    padding-left: 10px;
+}
+
+.post-card-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    justify-items: start;
+}
