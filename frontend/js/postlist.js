@@ -553,7 +553,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         const email = loginForm.querySelector('#email').value;
         const password = loginForm.querySelector('#password').value;
-        const rememberMe = document.getElementById('remember').checked;
 
         const formData = new URLSearchParams();
         formData.append('email', email);
