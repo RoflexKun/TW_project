@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/adminpage.css">
+    <script src="../js/adminpage.js"></script>
+    <title>Admin Panel</title>
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <div class="title">Admin Panel</div>
+            <div class="logo">Logo</div>
+            <button class="back-button" id="back-button">Back to Home</button>
+        </div>
+    </header>
+
+    <main class="admin-container">
+        <div class="admin-sidebar">
+            <div class="sidebar-item active" data-section="add-admin">
+                <span class="icon">👤</span>
+                Add Admin
+            </div>
+            <div class="sidebar-item" data-section="delete-user">
+                <span class="icon">🗑️</span>
+                Delete User
+            </div>
+            <div class="sidebar-item" data-section="delete-post">
+                <span class="icon">📝</span>
+                Delete Post
+            </div>
+            <div class="sidebar-item" data-section="tickets">
+                <span class="icon">🎫</span>
+                Tickets/Reports
+            </div>
+        </div>
+
+        <div class="admin-content">
+            <!-- Add Admin Section -->
+            <div class="content-section active" id="add-admin-section">
+                <div class="section-header">
+                    <h2>Add New Admin</h2>
+                    <p>Promote a user to administrator role</p>
+                </div>
+                <div class="admin-form">
+                    <form id="add-admin-form">
+                        <div class="form-group">
+                            <label for="admin-email">User Email</label>
+                            <input type="email" id="admin-email" name="admin-email" class="form-control" placeholder="Enter user email to promote" required>
+                        </div>
+                        <button type="submit" class="admin-button primary">Add Admin</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Delete User Section -->
+            <div class="content-section" id="delete-user-section">
+                <div class="section-header">
+                    <h2>User Management</h2>
+                    <p>Search and manage user accounts</p>
+                </div>
+                <div class="search-container">
+                    <div class="search-bar">
+                        <input type="text" id="user-search" placeholder="Search users by email or name..." class="search-input">
+                        <button id="search-users-btn" class="admin-button">Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Post Section -->
+            <div class="content-section" id="delete-post-section">
+                <div class="section-header">
+                    <h2>Post Management</h2>
+                    <p>View and manage all posts</p>
+                </div>
+                <div class="search-container">
+                    <div class="search-bar">
+                        <input type="text" id="post-search" placeholder="Search posts by name or owner..." class="search-input">
+                        <button id="search-posts-btn" class="admin-button">Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tickets/Reports Section -->
+            <div class="content-section" id="tickets-section">
+                <div class="section-header">
+                    <h2>Tickets & Reports</h2>
+                    <p>Manage user reports and support tickets</p>
+                </div>
+                <div class="tickets-filters">
+                    <div class="filter-group">
+                        <label for="ticket-status">Status</label>
+                        <select id="ticket-status" class="filter-select">
+                            <option value="all">All</option>
+                            <option value="pending">Pending</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="closed">Closed</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="ticket-type">Type</label>
+                        <select id="ticket-type" class="filter-select">
+                            <option value="all">All</option>
+                            <option value="report">Report</option>
+                            <option value="support">Support</option>
+                            <option value="bug">Bug Report</option>
+                        </select>
+                    </div>
+                    <button id="filter-tickets-btn" class="admin-button">Filter</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
