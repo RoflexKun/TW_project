@@ -554,15 +554,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         event.stopPropagation();
     });
 
-    document.querySelectorAll('.dropdown-category').forEach(category => {
-        category.addEventListener('click', function () {
-            // Actions to be added
-        });
-    });
-
     // Wishlist button
     document.querySelector('.wishlist').addEventListener('click', function () {
-        // Actions to be added
+        window.location.href = '../pages/wishlist.html';
     });
 
     // Login functionality //
