@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             if (cities && cities.length > 0) {
                 selectElement.disabled = false;
-                selectElement.innerHTML = '<option value="">Select City</option>';
+                selectElement.innerHTML = '<option value="Any">Any</option>';
                 cities.forEach(city => {
                     const option = document.createElement('option');
                     option.value = city;
@@ -342,11 +342,11 @@ document.addEventListener('DOMContentLoaded', async function () {
                 city: document.getElementById('city-select').value,
                 sorted: document.getElementById('sort-by').value
             };
-            console.log(filters.species, filters.city, filters.size, filters.gender, filters.age_min, filters.age_max);
+            console.log("Filters: ", filters.species, "City: ", filters.city, filters.size, filters.gender, filters.age_min, filters.age_max);
             const allAny = (filters.species === "Any" && filters.size === "Any" &&
                 filters.gender === "Any" && filters.city === "Any" &&
                 parseInt(filters.age_min) === 0 && parseInt(filters.age_max) === 20);
-
+            console.log("allAny: ", allAny);
             if (allAny) {
                 document.getElementById('suggestion-popup').style.display = 'flex';
                 return;

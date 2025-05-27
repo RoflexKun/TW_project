@@ -180,8 +180,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const url = new URL(window.location);
         url.searchParams.set("limit", selectedLimit);
         url.searchParams.set("page", 1);
+        getPostCount();
         window.location.href = url;
     })
+
+    const limitFromURL = urlParams.get("limit");
+    if (limitFromURL) {
+        limitSelect.value = limitFromURL;
+    }
 
     //Close the popup if you don't have an account
     const wishlistPopupClose = document.getElementById("wishlist-popup-close");
@@ -341,12 +347,14 @@ async function getPostList() {
     const page = parseInt(new URLSearchParams(window.location.search).get("page")) || 1;
     const urlParams = new URLSearchParams(window.location.search);
     const limitParam = urlParams.get("limit") || "20";
-    const limit = (limitParam === "all") ? currentTotalPosts : parseInt(limitParam);
+    const limit = (limitParam === "all") ? (currentTotalPosts || 9999) : parseInt(limitParam);
 
     const formData = new FormData();
     formData.append("action", "posts");
     formData.append("page", page);
     formData.append("limit", limit);
+
+    console.log("Limit on all:",limit);
 
     try {
         const response = await fetch("http://localhost/backend/services/postlistservice.php", {
