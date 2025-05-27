@@ -47,7 +47,7 @@
         <div class="post-general-information" id="postGeneralInformation" style="display:none">
             <div class="input-group">
                 <p>Name:</p>
-                <input type="text" id="name" />
+                <input type="text" id="name">
             </div>
 
             <div class="input-group">
@@ -86,7 +86,7 @@
 
             <div class="input-group">
                 <p>Birthday:</p>
-                <input type="date" id="birthday" />
+                <input type="date" id="birthday">
             </div>
 
             <div class="input-group">
@@ -117,13 +117,13 @@
 
             <div class="input-group">
                 <p>Food it likes:</p>
-                <input type="text" id="foodLikeInput" placeholder="Chicken, Rice, etc." />
+                <input type="text" id="foodLikeInput" placeholder="Chicken, Rice, etc.">
                 <div id="foodLikeList" class="tag-container"></div>
             </div>
 
             <div class="input-group">
                 <p>Food it doesn't like:</p>
-                <input type="text" id="foodDislikeInput" placeholder="Vegetables, chocolate, etc." />
+                <input type="text" id="foodDislikeInput" placeholder="Vegetables, chocolate, etc.">
                 <div id="foodDislikeList" class="tag-container"></div>
             </div>
 
@@ -174,7 +174,7 @@
             <div class="tab-header">
                 <div class="logo">Logo</div>
                 <button class="close-button" id="close-profile"><img
-                        src="../assets/bone-shaped-dog-biscuit.png" /></button>
+                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
             </div>
             <form id="profile-form">
                 <div class="form-group">
@@ -186,8 +186,14 @@
                     <input type="text" id="user-last-name" name="user-last-name" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="user-email">Email</label>
+                    <label>Email</label>
                     <div class="form-control-email" id="user-email"></div>
+                </div>
+                <div class="form-group">
+                    <label for="user-city">City</label>
+                    <select id="user-city" name="city" class="filter-select">
+                        <option value="">Select City</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="user-date-of-birth">Date of Birth (mm-dd-yyyy)</label>

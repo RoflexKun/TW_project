@@ -1039,3 +1039,305 @@ p {
     gap: 1rem;
     justify-items: start;
 }
+
+/* Mobile First - 480px and up */
+@media (min-width: 480px) {
+    .post-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 0 10px;
+    }
+    
+    .post-card {
+        height: 280px;
+    }
+    
+    .post-img {
+        height: 180px;
+    }
+    
+    .left-section {
+        padding-left: 20px;
+    }
+    
+    .filter-container {
+        gap: 20px;
+    }
+    
+    .login-tab, .signup-tab, .forgot-tab {
+        width: 350px;
+    }
+    
+    .profile-tab {
+        width: 500px;
+        height: 600px;
+    }
+    
+    .post-card-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .image-text {
+        font-size: 40px;
+    }
+}
+
+/* Small tablets and large phones - 768px and up */
+@media (min-width: 768px) {
+    header {
+        padding: 15px 40px;
+    }
+    
+    .split-container {
+        padding: 0 30px;
+    }
+    
+    .left-section {
+        width: 25%;
+        padding-left: 40px;
+    }
+    
+    .right-section {
+        width: 75%;
+    }
+    
+    .post-wrapper {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: none;
+    }
+    
+    .post-card {
+        height: 300px;
+    }
+    
+    .post-img {
+        height: 200px;
+    }
+    
+    .filter-container {
+        gap: 25px;
+    }
+    
+    .login-tab, .signup-tab, .forgot-tab {
+        width: 400px;
+    }
+    
+    .profile-tab {
+        width: 600px;
+        height: 650px;
+    }
+    
+    .post-card-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .image-text {
+        font-size: 50px;
+    }
+    
+    .user-posts-modal {
+        width: 70%;
+    }
+    
+    .pagination {
+        margin-top: 40px;
+    }
+}
+
+/* Tablets and small desktops - 1024px and up */
+@media (min-width: 1024px) {
+    .split-container {
+        padding: 0 40px;
+    }
+    
+    .left-section {
+        width: 30%;
+        padding-left: 60px;
+    }
+    
+    .right-section {
+        width: 70%;
+    }
+    
+    .post-wrapper {
+        grid-template-columns: repeat(3, 240px);
+        justify-content: start;
+        max-width: 800px;
+    }
+    
+    .post-card {
+        width: 240px;
+        height: 320px;
+    }
+    
+    .post-img {
+        height: 220px;
+    }
+    
+    .post-card-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .image-text {
+        font-size: 55px;
+    }
+    
+    .user-posts-modal {
+        width: 65%;
+    }
+    
+    .dropdown-menu {
+        left: 0;
+        width: 100%;
+    }
+    
+    .account-menu {
+        right: 0;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+    header {
+        padding: 10px 15px;
+        flex-wrap: wrap;
+    }
+    
+    .header-left-section {
+        flex: 1;
+        order: 1;
+    }
+    
+    .header-center-section {
+        flex: 1;
+        order: 2;
+    }
+    
+    .header-right-section {
+        flex: 1;
+        order: 3;
+        gap: 10px;
+    }
+    
+    .logo {
+        font-size: 20px;
+        padding: 10px 20px;
+    }
+    
+    .pets-button {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+    
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        margin-top: 0;
+    }
+    
+    .dropdown-category {
+        padding: 15px;
+        text-align: left;
+    }
+    
+    .split-container {
+        flex-direction: column;
+        padding: 0 10px;
+    }
+    
+    .left-section,
+    .right-section {
+        width: 100%;
+        padding: 0;
+    }
+    
+    .left-section {
+        margin-bottom: 20px;
+    }
+    
+    .filter-container {
+        gap: 15px;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+    }
+    
+    .post-wrapper {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .post-card {
+        height: 350px;
+        margin: 0 auto;
+        max-width: 300px;
+    }
+    
+    .post-img {
+        height: 250px;
+    }
+    
+    .image-text {
+        font-size: 24px;
+    }
+    
+    .login-tab, .signup-tab, .forgot-tab {
+        width: 95%;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .profile-tab {
+        width: 95%;
+        height: 95%;
+        padding: 20px;
+    }
+    
+    .user-posts-modal {
+        width: 95%;
+        height: 90%;
+        padding: 15px;
+    }
+    
+    .post-card-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .section-title {
+        font-size: 22px;
+    }
+    
+    .highlight-section {
+        padding: 0 10px;
+    }
+    
+    .pagination {
+        gap: 5px;
+        padding: 15px 10px;
+    }
+    
+    .page-button {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+    
+    .account-menu {
+        right: 0;
+        width: 150px;
+    }
+    
+    .wishlist-popup-content {
+        padding: 20px 25px;
+        font-size: 16px;
+    }
+    
+    .popup-box {
+        max-width: 90%;
+        padding: 20px;
+    }
+}

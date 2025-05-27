@@ -8,7 +8,7 @@
     font-family: sans-serif;
     border: 2px solid #333;
     border-radius: 12px;
-    background-color: #fdf6e3;
+    background-color: #7B3F00;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
@@ -19,7 +19,7 @@
     align-items: center;
     cursor: pointer;
     padding: 15px 20px;
-    background-color: #eee8d5;
+    background-color: #fff0db;
     border-bottom: 1px solid #ccc;
     font-weight: bold;
     font-size: 1.1rem;
@@ -40,7 +40,7 @@
 .post-description-information,
 .media-body {
     padding: 20px;
-    background-color: beige;
+    background-color: #fcf1e1;
 }
 
 .input-group {
@@ -577,4 +577,281 @@ header {
 
 .user-posts-delete:hover {
     background-color: #b86649;
+}
+
+/* Mobile First - max-width: 480px */
+@media (max-width: 480px) {
+    header {
+        padding: 10px 15px;
+        flex-wrap: wrap;
+    }
+    
+    .header-left-section {
+        flex: 1;
+        order: 1;
+    }
+    
+    .header-center-section {
+        flex: 1;
+        order: 2;
+    }
+    
+    .header-right-section {
+        flex: 1;
+        order: 3;
+        gap: 10px;
+    }
+    
+    .logo {
+        font-size: 20px;
+        padding: 10px 20px;
+    }
+    
+    .pets-button {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+    
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        margin-top: 0;
+    }
+
+    .dropdown-category {
+        padding: 15px;
+        text-align: left;
+    }
+
+    .left-section,
+    .right-section {
+        width: 100%;
+        padding: 0;
+    }
+    
+    .left-section {
+        margin-bottom: 20px;
+    }
+    
+    .general-information-container,
+    .description-and-other-container,
+    .media {
+        width: 98%;
+        margin: 10px auto;
+        padding-bottom: 15px;
+    }
+    
+    .headerGeneral,
+    .media-header {
+        padding: 12px 15px;
+        font-size: 1rem;
+    }
+    
+    .post-general-information,
+    .post-description-information,
+    .media-body {
+        padding: 15px;
+    }
+    
+    .upload-box.large {
+        width: 100%;
+        height: 250px;
+        max-width: 300px;
+    }
+    
+    .upload-box.small {
+        width: 80px;
+        height: 80px;
+        margin: 4px;
+    }
+    
+    .media-grid {
+        justify-content: center;
+    }
+    
+    .submit-post {
+        width: 98%;
+        margin: 20px auto;
+        padding: 15px;
+    }
+    
+    .submit-post button {
+        width: 100%;
+        padding: 16px;
+        font-size: 1rem;
+    }
+    
+    .profile-tab {
+        width: 95%;
+        height: 90%;
+        padding: 20px;
+    }
+    
+    .user-posts-modal {
+        width: 95%;
+        height: 90%;
+        padding: 20px;
+    }
+    
+    .account-menu {
+        right: 0;
+        width: 150px;
+    }
+}
+
+/* Small tablets and large phones - min-width: 480px */
+@media (min-width: 480px) {
+    .general-information-container,
+    .description-and-other-container,
+    .media {
+        width: 96%;
+    }
+    
+    .upload-box.large {
+        width: 350px;
+        height: 350px;
+    }
+    
+    .upload-box.small {
+        width: 100px;
+        height: 100px;
+        margin: 6px;
+    }
+    
+    .submit-post button {
+        width: auto;
+        min-width: 200px;
+    }
+    
+    .profile-tab {
+        width: 90%;
+        max-width: 500px;
+    }
+    
+    .user-posts-modal {
+        width: 85%;
+        height: 80%;
+    }
+}
+
+
+
+/* Tablets - min-width: 768px */
+@media (min-width: 768px) {
+    header {
+        padding: 15px 40px;
+    }
+    
+    .general-information-container,
+    .description-and-other-container,
+    .media {
+        width: 90%;
+        max-width: 800px;
+    }
+    
+    .input-group {
+        margin-bottom: 20px;
+    }
+    
+    .post-general-information,
+    .post-description-information,
+    .media-body {
+        padding: 25px;
+    }
+    
+    .upload-box.large {
+        width: 400px;
+        height: 400px;
+    }
+    
+    .upload-box.small {
+        width: 120px;
+        height: 120px;
+        margin: 8px;
+    }
+    
+    .media-grid {
+        justify-content: flex-start;
+    }
+    
+    .profile-tab {
+        width: 70%;
+        max-width: 600px;
+        height: 80%;
+    }
+    
+    .user-posts-modal {
+        width: 75%;
+        height: 85%;
+    }
+    
+    .account-menu {
+        right: 0;
+        width: 220px;
+    }
+    
+    .dropdown-menu {
+        flex-direction: row;
+    }
+}
+
+/* Desktop - min-width: 1024px */
+@media (min-width: 1024px) {
+    header {
+        padding: 15px 50px;
+    }
+    
+    .general-information-container,
+    .description-and-other-container,
+    .media {
+        width: 85%;
+        max-width: 1000px;
+    }
+    
+    .headerGeneral,
+    .media-header {
+        font-size: 1.2rem;
+        padding: 18px 25px;
+    }
+    
+    .post-general-information,
+    .post-description-information,
+    .media-body {
+        padding: 30px;
+    }
+    
+    .input-group {
+        margin-bottom: 25px;
+    }
+    
+    input[type="text"],
+    input[type="date"],
+    textarea,
+    select {
+        font-size: 1.1rem;
+        padding: 10px;
+    }
+    
+    .profile-tab {
+        width: 60%;
+        max-width: 700px;
+        height: 75%;
+    }
+    
+    .user-posts-modal {
+        width: 65%;
+        height: 80%;
+    }
+    
+    .submit-post {
+        margin: 40px auto;
+    }
+    
+    .submit-post button {
+        font-size: 1.2rem;
+        padding: 16px 32px;
+    }
 }

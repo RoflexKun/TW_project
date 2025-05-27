@@ -10,8 +10,6 @@
 </head>
 
 <body>
-
-    <body>
         <header>
             <div class="header-left-section">
                 <div class="pets-button-container">
@@ -132,7 +130,7 @@
         <div id="report-modal-bg" class="hidden">
             <div id="report-modal">
                 <img src="/frontend/assets/bone-shaped-dog-biscuit.png" id="close-report" alt="Close" role="button"
-                    tabindex="0" />
+                    tabindex="0">
                 <h2>Report the post</h2>
                 <form id="report-form">
                     <div class="report-options">
@@ -151,33 +149,7 @@
             </div>
         </div>
 
-    <!-- Login tab -->
-    <div class="login-overlay" id="login-tab">
-        <div class="login-tab">
-            <div class="tab-header">
-                <div class="logo">Logo</div>
-                <button class="close-button" id="close-login"><img
-                        src="../assets/bone-shaped-dog-biscuit.png" /></button>
-            </div>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" required>
-                </div>
-                <button type="submit" class="login-submit">Login</button>
-            </form>
-            <div class="login-alternative">
-                <p>Don't have an account? <a href="#" id="signup-link">Sign up</a></p>
-                <p><a href="#" id="forgot-password">Forgot password?</a></p>
-            </div>
-        </div>
-    </div>
-
-     <!-- User posts tab -->
+    <!-- User posts tab -->
     <div class="user-posts-overlay" id="user-posts-overlay" style="display: none;">
         <div class="user-posts-modal">
             <div class="user-posts-header">
@@ -190,22 +162,48 @@
         </div>
     </div>
 
+    <!-- Login tab -->
+    <div class="login-overlay" id="login-tab">
+        <div class="login-tab">
+            <div class="tab-header">
+                <div class="logo">Logo</div>
+                <button class="close-button" id="close-login"><img
+                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" name="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" name="password" class="form-control" required>
+                </div>
+                <button type="submit" class="login-submit">Login</button>
+            </form>
+            <div class="login-alternative">
+                <p>Don't have an account? <a href="#" id="signup-link">Sign up</a></p>
+                <p><a href="#" id="forgot-password">Forgot password?</a></p>
+            </div>
+        </div>
+    </div>
+
     <!-- Sign up tab -->
     <div class="signup-overlay" id="signup-tab">
         <div class="signup-tab">
             <div class="tab-header">
                 <div class="logo">Logo</div>
                 <button class="close-button" id="close-signup"><img
-                        src="../assets/bone-shaped-dog-biscuit.png" /></button>
+                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
             </div>
             <form id="signup-form">
                 <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" class="form-control" required>
+                    <label for="signup-email">Email Address</label>
+                    <input type="email" id="signup-email" name="email" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" required>
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" name="password" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="confirm-password">Confirm password</label>
@@ -225,12 +223,12 @@
             <div class="tab-header">
                 <div class="logo">Logo</div>
                 <button class="close-button" id="close-forgot"><img
-                        src="../assets/bone-shaped-dog-biscuit.png" /></button>
+                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
             </div>
             <form id="forgot-form">
                 <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" class="form-control" required>
+                    <label for="forgot-email">Email Address</label>
+                    <input type="email" id="forgot-email" name="email" class="form-control" required>
                 </div>
                 <button type="submit" class="forgot-submit">Send resset link</button>
             </form>
@@ -240,35 +238,40 @@
         </div>
     </div>
 
-        <!-- Profile tab -->
-        <div class="profile-overlay" id="profile-tab">
-            <div class="profile-tab">
-                <div class="tab-header">
-                    <div class="logo">Logo</div>
-                    <button class="close-button" id="close-profile"><img
-                            src="../assets/bone-shaped-dog-biscuit.png" /></button>
-                </div>
-                <form id="profile-form">
-                    <div class="form-group">
-                        <label for="user-first-name">First Name</label>
-                        <input type="text" id="user-first-name" name="user-first-name" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="user-last-name">Last Name</label>
-                        <input type="text" id="user-last-name" name="user-last-name" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="user-email">Email</label>
-                        <div class="form-control-email" id="user-email"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="user-date-of-birth">Date of Birth (mm-dd-yyyy)</label>
-                        <input type="date" id="user-date-of-birth" name="user-date-of-birth" class="form-control">
-                    </div>
-                    <button type="submit" class="save-profile">Save</button>
-                </form>
+    <!-- Profile tab -->
+    <div class="profile-overlay" id="profile-tab">
+        <div class="profile-tab">
+            <div class="tab-header">
+                <div class="logo">Logo</div>
+                <button class="close-button" id="close-profile"><img
+                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
             </div>
+            <form id="profile-form">
+                <div class="form-group">
+                    <label for="user-first-name">First Name</label>
+                    <input type="text" id="user-first-name" name="user-first-name" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="user-last-name">Last Name</label>
+                    <input type="text" id="user-last-name" name="user-last-name" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <div class="form-control-email" id="user-email"></div>
+                </div>
+                <div class="form-group">
+                    <label for="user-city">City</label>
+                    <select id="user-city" name="city" class="filter-select">
+                        <option value="">Select City</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="user-date-of-birth">Date of Birth (mm-dd-yyyy)</label>
+                    <input type="date" id="user-date-of-birth" name="user-date-of-birth" class="form-control">
+                </div>
+                <button type="submit" class="save-profile">Save</button>
+            </form>
         </div>
+    </div>
     </body>
-
 </html>

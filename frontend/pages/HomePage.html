@@ -40,7 +40,7 @@
     </header>
 
     <div class="image-container">
-        <img src="../assets/poza_fundal.jpg" class="cropped-image">
+        <img src="../assets/poza_fundal.jpg" class="cropped-image" alt="Background with pets">
         <div class="image-text"> Find your new best friend</div>
     </div>
     <div class="colored-line"></div>
@@ -65,7 +65,7 @@
                 </div>
 
                 <div class="filter-group">
-                    <label for="age-range">AGE</label>
+                    <label for="age-min">AGE</label>
                     <div class="range-slider">
                         <input type="range" id="age-min" min="0" max="20" value="0">
                         <input type="range" id="age-max" min="0" max="20" value="20">
@@ -109,7 +109,7 @@
                 </div>
 
                 <div class="filter-group">
-                    <label for="sort-by-select">SORT BY</label>
+                    <label for="sort-by">SORT BY</label>
                     <div class="select-wrapper">
                         <select id="sort-by" class="filter-select">
                             <option value="Old">Old to New</option>
@@ -119,8 +119,6 @@
                     </div>
                 </div>
 
-
-
                 <button id="search-button" class="search-button">Search</button>
             </div>
         </div>
@@ -128,7 +126,7 @@
         <div class="popup-overlay" id="suggestion-popup" style="display: none;">
             <div class="popup-box">
                 <button class="popup-close" id="popup-close">
-                    <img src="../assets/bone-shaped-dog-biscuit.png" alt="Close" />
+                    <img src="../assets/bone-shaped-dog-biscuit.png" alt="Close">
                 </button>
                 <p class="popup-message">
                     If you don't know what you're looking for,<br>
@@ -191,16 +189,16 @@
             <div class="tab-header">
                 <div class="logo">Logo</div>
                 <button class="close-button" id="close-login"><img
-                        src="../assets/bone-shaped-dog-biscuit.png" /></button>
+                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
             </div>
             <form id="login-form">
                 <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" class="form-control" required>
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" name="email" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" required>
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" name="password" class="form-control" required>
                 </div>
                 <button type="submit" class="login-submit">Login</button>
             </form>
@@ -217,16 +215,16 @@
             <div class="tab-header">
                 <div class="logo">Logo</div>
                 <button class="close-button" id="close-signup"><img
-                        src="../assets/bone-shaped-dog-biscuit.png" /></button>
+                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
             </div>
             <form id="signup-form">
                 <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" class="form-control" required>
+                    <label for="signup-email">Email Address</label>
+                    <input type="email" id="signup-email" name="email" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" required>
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" name="password" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="confirm-password">Confirm password</label>
@@ -246,12 +244,12 @@
             <div class="tab-header">
                 <div class="logo">Logo</div>
                 <button class="close-button" id="close-forgot"><img
-                        src="../assets/bone-shaped-dog-biscuit.png" /></button>
+                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
             </div>
             <form id="forgot-form">
                 <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" class="form-control" required>
+                    <label for="forgot-email">Email Address</label>
+                    <input type="email" id="forgot-email" name="email" class="form-control" required>
                 </div>
                 <button type="submit" class="forgot-submit">Send resset link</button>
             </form>
@@ -267,7 +265,7 @@
             <div class="tab-header">
                 <div class="logo">Logo</div>
                 <button class="close-button" id="close-profile"><img
-                        src="../assets/bone-shaped-dog-biscuit.png" /></button>
+                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
             </div>
             <form id="profile-form">
                 <div class="form-group">
@@ -279,7 +277,7 @@
                     <input type="text" id="user-last-name" name="user-last-name" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="user-email">Email</label>
+                    <label>Email</label>
                     <div class="form-control-email" id="user-email"></div>
                 </div>
                 <div class="form-group">

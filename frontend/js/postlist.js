@@ -641,8 +641,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     loginForm.addEventListener('submit', async function (event) {
         event.preventDefault();
 
-        const email = loginForm.querySelector('#email').value;
-        const password = loginForm.querySelector('#password').value;
+        const email = loginForm.querySelector('#login-email').value;
+        const password = loginForm.querySelector('#login-password').value;
 
         const formData = new URLSearchParams();
         formData.append('email', email);
@@ -783,8 +783,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     signupForm.addEventListener('submit', async function (event) {
         event.preventDefault();
 
-        const email = signupForm.querySelector('#email').value;
-        const password = signupForm.querySelector('#password').value;
+        const email = signupForm.querySelector('#signup-email').value;
+        const password = signupForm.querySelector('#signup-password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
 
         if (password !== confirmPassword) {
@@ -857,7 +857,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     forgotForm.addEventListener('submit', async function (event) {
         event.preventDefault();
 
-        const email = forgotForm.querySelector('#email').value;
+        const email = forgotForm.querySelector('#forgot-email').value;
 
         const formData = new URLSearchParams();
         formData.append('email', email);
