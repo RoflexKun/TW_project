@@ -792,7 +792,7 @@ header {
 }
 
 .user-posts-modal {
-    background-color: #fdf6e3;
+    background-color: #fff0db;
     width: 60%;
     height: 85%;
     padding: 24px;
@@ -857,6 +857,7 @@ header {
 
 .user-posts-item:hover {
     background-color: #f1e8d2;
+    border: 2px solid #7B3F00;
 }
 
 .user-posts-info {
@@ -865,7 +866,7 @@ header {
 }
 
 .user-posts-delete {
-    background-color: #d88c6d;
+    background-color: #7B3F00;
     color: white;
     border: none;
     padding: 8px 14px;
@@ -875,5 +876,32 @@ header {
 }
 
 .user-posts-delete:hover {
-    background-color: #b86649;
+    background-color: #7B3F00;
+}
+
+.filter-select {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background-color: white;
+    font-size: 14px;
+    appearance: none;
+    cursor: pointer;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #b3b3b3;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.filter-select:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.filter-select:focus {
+    border-color: #1a1a1a;
 }

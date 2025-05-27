@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const sortLabel = document.getElementById("sortLabel");
     const sortArrow = document.getElementById("sortArrow");
 
+    const citySelect = document.getElementById('city-select');
+
     let isDescending = false;
 
     sortToggle.addEventListener("click", () => {
@@ -143,6 +145,46 @@ document.addEventListener("DOMContentLoaded", () => {
             wishlistPostsContainer.appendChild(card);
         }
 
+    }
+
+    //Brings locations/cities from the backend
+    async function fetchCityOptions(selectElement = citySelect) {
+        selectElement.innerHTML = '<option value="Any">Any</option>';
+
+        const formData = new FormData();
+        formData.append("action", "location");
+
+        try {
+            const response = await fetch("http://localhost/backend/services/newpostinfoservice.php", {
+                method: "POST",
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const textResponse = await response.text();
+            const cities = JSON.parse(textResponse);
+
+            if (cities && cities.length > 0) {
+                selectElement.disabled = false;
+                selectElement.innerHTML = '<option value="">Select City</option>';
+                cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.text = city;
+                    selectElement.appendChild(option);
+                });
+            } else {
+                selectElement.disabled = true;
+                selectElement.innerHTML = '<option value="">No cities available</option>';
+            }
+        } catch (error) {
+            console.error("Failed to fetch cities:", error);
+            selectElement.disabled = true;
+            selectElement.innerHTML = '<option value="">No cities available</option>';
+        }
     }
 
     // Redirect button if there are no posts in the wishlist
@@ -442,6 +484,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         first_name: '',
         last_name: '',
         email: '',
+        location: '',
         date_of_birth: '',
         id: ' '
     };
@@ -511,6 +554,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 const lastNameInput = document.getElementById('user-last-name');
                 const emailDisplay = document.getElementById('user-email');
                 const dateOfBirthInput = document.getElementById('user-date-of-birth');
+                const cityInput = document.getElementById('user-city');
 
                 if (firstNameInput)
                     firstNameInput.value = userData.first_name || '';
@@ -525,6 +569,8 @@ document.addEventListener('DOMContentLoaded', async function () {
                         dateOfBirthInput.value = '';
                     }
                 }
+                if (cityInput)
+                    cityInput.value = userData.location || '';
 
                 console.log(userData.id);
 
@@ -545,12 +591,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         const firstName = document.getElementById('user-first-name').value;
         const lastName = document.getElementById('user-last-name').value;
         const dateOfBirth = document.getElementById('user-date-of-birth').value;
+        const city = document.getElementById('user-city').value;
         const formattedDate = formatDateForDatabase(dateOfBirth);
 
         const formData = new URLSearchParams();
         formData.append('first_name', firstName);
         formData.append('last_name', lastName);
         formData.append('date_of_birth', formattedDate);
+        formData.append('location', city);
 
         try {
             const response = await fetch("http://localhost/backend/services/updateprofile.php", {
@@ -570,7 +618,8 @@ document.addEventListener('DOMContentLoaded', async function () {
                     ...userData,
                     first_name: firstName,
                     last_name: lastName,
-                    date_of_birth: dateOfBirth
+                    date_of_birth: dateOfBirth,
+                    location: city
                 };
                 profileTab.classList.remove('active');
                 document.body.style.overflow = '';
@@ -583,4 +632,9 @@ document.addEventListener('DOMContentLoaded', async function () {
             alert('An error occurred while updating your profile.');
         }
     });
+
+    const userCitySelect = document.getElementById('user-city');
+    if (userCitySelect) {
+        fetchCityOptions(userCitySelect);
+    }
 });

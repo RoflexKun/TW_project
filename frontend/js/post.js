@@ -305,6 +305,47 @@ document.addEventListener('DOMContentLoaded', async function () {
         // Actions to be added
     });
 
+    //Brings locations/cities from the backend
+    async function fetchCityOptions(selectElement = citySelect) {
+        selectElement.innerHTML = '<option value="Any">Any</option>';
+
+        const formData = new FormData();
+        formData.append("action", "location");
+
+        try {
+            const response = await fetch("http://localhost/backend/services/newpostinfoservice.php", {
+                method: "POST",
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const textResponse = await response.text();
+            const cities = JSON.parse(textResponse);
+
+            if (cities && cities.length > 0) {
+                selectElement.disabled = false;
+                selectElement.innerHTML = '<option value="">Select City</option>';
+                cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.text = city;
+                    selectElement.appendChild(option);
+                });
+            } else {
+                selectElement.disabled = true;
+                selectElement.innerHTML = '<option value="">No cities available</option>';
+            }
+        } catch (error) {
+            console.error("Failed to fetch cities:", error);
+            selectElement.disabled = true;
+            selectElement.innerHTML = '<option value="">No cities available</option>';
+        }
+    }
+
+
     // Login functionality //
     const loginButton = document.querySelector('.login-button');
     const loginTab = document.getElementById('login-tab');
