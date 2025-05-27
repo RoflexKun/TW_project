@@ -315,11 +315,13 @@ document.addEventListener('DOMContentLoaded', async function () {
     const forgotPasswordTab = document.getElementById('forgot-tab');
     const accountButton = document.getElementById('logged-in-button');
     const accountMenu = document.querySelector('.account-menu');
+    const wishlistBtt = document.getElementById('wishlist-button');
     var isLoggedIn = false;
 
     function setLoggedInUI() {
         loginButton.style.display = 'none';
         accountButton.style.display = 'block';
+        wishlistBtt.style.display = 'block';
         loginTab.classList.remove('active');
         isLoggedIn = true;
     }
@@ -327,6 +329,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     function setLoggedOutUI() {
         loginButton.style.display = 'block';
         accountButton.style.display = 'none';
+        wishlistBtt.style.display = 'none';
         accountMenu.classList.remove('active');
         isLoggedIn = false;
     }
@@ -436,6 +439,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (!accountMenu.contains(event.target) && event.target !== accountButton) {
             accountMenu.classList.remove('active');
         }
+    });
+
+    // Wishlist button redirect to wishlist page
+    const wishlistBtton = document.getElementById('wishlist-button');
+    wishlistBtton.addEventListener('click', function () {
+        window.location.href = '../pages/wishlist.html';
     });
 
     // Post button redirect to new post page

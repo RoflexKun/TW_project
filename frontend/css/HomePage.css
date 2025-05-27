@@ -133,6 +133,13 @@ header {
 .wishlist {
     color: #ff0000;
     font-size: 24px;
+    transition: transform 0.2s ;
+    display: none;
+}
+
+.wishlist:hover{
+    cursor: pointer;
+    transform: translateY(-4px) scale(1.02);
 }
 
 .login-button {

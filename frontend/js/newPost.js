@@ -453,6 +453,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     });
 
+    // Wishlist button redirect to wishlist page
+    const wishlistBtton = document.getElementById('wishlist-button');
+    wishlistBtton.addEventListener('click', function () {
+        window.location.href = '../pages/wishlist.html';
+    });
+
     // Post button redirect to new post page
     const postButton = document.getElementById('post-button');
     postButton.addEventListener('click', function () {
