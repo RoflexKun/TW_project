@@ -464,6 +464,17 @@ document.addEventListener('DOMContentLoaded', async function () {
     otherPetsButton.addEventListener('click', function () {
         window.location.href = '../pages/postlist.html';
     });
+    // Dogs & puppies button redirect to the list of all posts with dogs page
+    const dogsButton = document.getElementById('Dog');
+    dogsButton.addEventListener('click', function () {
+        window.location.href = '../pages/postlist.html?filter=Dog';
+    });
+
+    // Cats & kittens button redirect to the list of all posts with cats page
+    const catssButton = document.getElementById('Cat');
+    catssButton.addEventListener('click', function () {
+        window.location.href = '../pages/postlist.html?filter=Cat';
+    });
 
     // Logout funcionality
     const logoutButton = document.getElementById('logout-button');

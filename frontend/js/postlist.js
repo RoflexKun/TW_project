@@ -147,11 +147,20 @@ async function showOnlySearchResults(searchText, page = 1) {
     }
 }
 
-
+let filter = "All";
 document.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById("search-input");
     const limitSelect = document.getElementById("posts-limit");
     const button = document.getElementById("search-button");
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlFilter = urlParams.get("filter");
+
+    if (urlFilter === "Dog" || urlFilter === "Cat") {
+        filter = urlFilter;
+    }
+
+    console.log(filter);
 
     button.addEventListener("click", () => {
         const searchText = document.getElementById("search-input").value.trim();
@@ -217,6 +226,48 @@ async function getSearchResults(searchText) {
         const ids = result.id.split(";");
         const ages = result.age.split(";");
         const thumbnails = result.thumbnail.split(";");
+
+        const anotherFormData = new FormData();
+        anotherFormData.append('ids', ids.join(';'));
+        anotherFormData.append('filter', filter);
+
+        const filterResponse = await fetch("http://localhost/backend/services/filteridservice.php", {
+            method: "POST",
+            body: anotherFormData
+        });
+
+        const filterResult = await filterResponse.json();
+        const filteredIds = filterResult.data;
+
+        const idIndexMap = {};
+        ids.forEach((id, index) => {
+            idIndexMap[id] = index;
+        });
+
+        const newNames = [];
+        const newAges = [];
+        const newThumbnails = [];
+        const newIdsFinal = [];
+
+        filteredIds.forEach((id) => {
+            const index = idIndexMap[id];
+            if (index !== undefined) {
+                newNames.push(names[index]);
+                newAges.push(ages[index]);
+                newThumbnails.push(thumbnails[index]);
+                newIdsFinal.push(ids[index]);
+            }
+        });
+
+        names.length = 0;
+        ages.length = 0;
+        thumbnails.length = 0;
+        ids.length = 0;
+
+        Array.prototype.push.apply(names, newNames);
+        Array.prototype.push.apply(ages, newAges);
+        Array.prototype.push.apply(thumbnails, newThumbnails);
+        Array.prototype.push.apply(ids, newIdsFinal);
 
         currentNames = names;
         currentAges = ages;
@@ -311,6 +362,51 @@ async function getPostList() {
         const ages = posts.ages.split(";");
         const thumbnails = posts.thumbnails.split(";");
         const ids = posts.ids.split(";");
+
+        const anotherFormData = new FormData();
+        anotherFormData.append('ids', ids.join(';'));
+        anotherFormData.append('filter', filter);
+        console.log("Filter: ", filter);
+        try {
+            const response = await fetch("http://localhost/backend/services/filteridservice.php", {
+                method: "POST",
+                body: anotherFormData
+            });
+            const result = await response.json();
+            const newIds = result.data;
+
+
+            const idIndexMap = {};
+            ids.forEach((id, index) => {
+                idIndexMap[id] = index;
+            });
+
+            const newNames = [];
+            const newAges = [];
+            const newThumbnails = [];
+            const newIdsFinal = [];
+
+            newIds.forEach((id) => {
+                const index = idIndexMap[id];
+                if (index !== undefined) {
+                    newNames.push(names[index]);
+                    newAges.push(ages[index]);
+                    newThumbnails.push(thumbnails[index]);
+                    newIdsFinal.push(ids[index]);
+                }
+            });
+            names.length = 0;
+            ages.length = 0;
+            thumbnails.length = 0;
+            ids.length = 0;
+
+            Array.prototype.push.apply(names, newNames);
+            Array.prototype.push.apply(ages, newAges);
+            Array.prototype.push.apply(thumbnails, newThumbnails);
+            Array.prototype.push.apply(ids, newIdsFinal);
+        } catch (error) {
+            console.log(error)
+        }
 
         const container = document.getElementById("post-list");
         container.innerHTML = "";
@@ -612,6 +708,18 @@ document.addEventListener('DOMContentLoaded', async function () {
     const otherPetsButton = document.getElementById('other-pets');
     otherPetsButton.addEventListener('click', function () {
         window.location.href = '../pages/postlist.html';
+    });
+
+    // Dogs & puppies button redirect to the list of all posts with dogs page
+    const dogsButton = document.getElementById('Dog');
+    dogsButton.addEventListener('click', function () {
+        window.location.href = '../pages/postlist.html?filter=Dog';
+    });
+
+    // Cats & kittens button redirect to the list of all posts with cats page
+    const catssButton = document.getElementById('Cat');
+    catssButton.addEventListener('click', function () {
+        window.location.href = '../pages/postlist.html?filter=Cat';
     });
 
     // Forgot password link

@@ -11,6 +11,7 @@ class Wishlist
     }
 
     public function getPopularPosts(){
+        self::verifyTable();
         $findPopular = "
             DECLARE
                 CURSOR wishlist_cursor IS
@@ -69,6 +70,7 @@ class Wishlist
 
     public function addWishlistPost($postId, $userId)
     {
+        self::verifyTable();
         $insertQuery = "
         INSERT INTO WISHLIST(id_user, id_post) VALUES(:id_user, :id_post)";
         $insertQueryCommand = oci_parse($this->conn, $insertQuery);
@@ -80,6 +82,7 @@ class Wishlist
 
     public function removeWishlistPost($postId, $userId)
     {
+        self::verifyTable();
         $deleteQuery = " 
         DELETE FROM wishlist WHERE id_user = :id_user AND id_post = :id_post";
 
@@ -92,6 +95,7 @@ class Wishlist
     }
 
     public function checkDuplicate($postId, $userid) {
+        self::verifyTable();
         $checkQuery = "
             DECLARE
                 count_post NUMBER;

@@ -203,4 +203,10 @@ class PostController
         $allPosts = $postModel->getAllPosts();
         return explode(';', $allPosts);
     }
+
+    public function getFilteredIds($ids, $filter){
+        $postModel = new Post();
+        $newIds = $postModel->getFilteredIds($ids, $filter);
+        return explode(';', $newIds);
+    }
 }

@@ -865,6 +865,38 @@ class Post
         return rtrim($idArray ?? '', ';');
     }
 
+    public function getFilteredIds($ids, $filter){
+        $newIds = '';
+        foreach ($ids as $id) {
+            $testIdQuery = "
+                DECLARE
+                    post_id_to_test NUMBER := :id;
+                    filter VARCHAR2(255) := :filter;
+                    post_species VARCHAR2(255) := '';
+                    keep VARCHAR2(255);
+                BEGIN
+                    SELECT species INTO post_species FROM posts WHERE posts.id = post_id_to_test;
+                    IF post_species = filter THEN
+                        keep := 'true';
+                    ELSE
+                        keep := 'false';
+                    END IF;
+                    :keep := keep;
+                END;
+                    ";
+            $testIdQueryCommand = oci_parse($this->conn, $testIdQuery);
+            oci_bind_by_name($testIdQueryCommand, ":id", $id);
+            oci_bind_by_name($testIdQueryCommand, ":filter", $filter);
+            $keep = "false";
+            oci_bind_by_name($testIdQueryCommand, ":keep", $keep, 10);
+            oci_execute($testIdQueryCommand);
+            if($keep === "true"){
+                $newIds .= $id . ';';
+            }
+        }
+        return rtrim($newIds ?? '', ';');
+    }
+
     public function verifyTable()
     {
         $checkTable = "
