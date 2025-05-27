@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             if (cities && cities.length > 0) {
                 selectElement.disabled = false;
-                selectElement.innerHTML = '<option value="">Select City</option>';
+                selectElement.innerHTML = '<option value="Any">Any</option>';
                 cities.forEach(city => {
                     const option = document.createElement('option');
                     option.value = city;
