@@ -20,13 +20,9 @@
 
     <main class="admin-container">
         <div class="admin-sidebar">
-            <div class="sidebar-item active" data-section="add-admin">
-                <span class="icon">👤</span>
-                Add Admin
-            </div>
             <div class="sidebar-item" data-section="delete-user">
-                <span class="icon">🗑️</span>
-                Delete User
+                <span class="icon">👨‍💼</span>
+                User Management
             </div>
             <div class="sidebar-item" data-section="delete-post">
                 <span class="icon">📝</span>
@@ -39,24 +35,8 @@
         </div>
 
         <div class="admin-content">
-            <!-- Add Admin Section -->
-            <div class="content-section active" id="add-admin-section">
-                <div class="section-header">
-                    <h2>Add New Admin</h2>
-                    <p>Promote a user to administrator role</p>
-                </div>
-                <div class="admin-form">
-                    <form id="add-admin-form">
-                        <div class="form-group">
-                            <label for="admin-email">User Email</label>
-                            <input type="email" id="admin-email" name="admin-email" class="form-control" placeholder="Enter user email to promote" required>
-                        </div>
-                        <button type="submit" class="admin-button primary">Add Admin</button>
-                    </form>
-                </div>
-            </div>
 
-            <!-- Delete User Section -->
+            <!-- Manager User Section -->
             <div class="content-section" id="delete-user-section">
                 <div class="section-header">
                     <h2>User Management</h2>
@@ -64,9 +44,10 @@
                 </div>
                 <div class="search-container">
                     <div class="search-bar">
-                        <input type="text" id="user-search" placeholder="Search users by email or name..." class="search-input">
+                        <input type="text" id="user-search" placeholder="Search users by email or account id..." class="search-input">
                         <button id="search-users-btn" class="admin-button">Search</button>
                     </div>
+                    <div id="user-results" class="user-results-container"></div>
                 </div>
             </div>
 
@@ -78,7 +59,7 @@
                 </div>
                 <div class="search-container">
                     <div class="search-bar">
-                        <input type="text" id="post-search" placeholder="Search posts by name or owner..." class="search-input">
+                        <input type="text" id="post-search" placeholder="Search posts by name or owner's email..." class="search-input">
                         <button id="search-posts-btn" class="admin-button">Search</button>
                     </div>
                 </div>

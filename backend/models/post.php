@@ -12,6 +12,7 @@ class Post
 
     public function deletePost($postId)
     {
+        self::verifyTable();
         $deleteQuery = "
             BEGIN
                 DELETE FROM food_like WHERE id_post = :postId;
@@ -34,6 +35,7 @@ class Post
 
     public function userPosts($userId)
     {
+        self::verifyTable();
         $findPostsQuery = "
             DECLARE
                 CURSOR posts_cursor IS SELECT * FROM posts WHERE posts.owner_id = :user_id;
@@ -84,6 +86,7 @@ class Post
 
     public function getPostsBySpecies($species)
     {
+        self::verifyTable();
         $findQuery = "
             DECLARE
                 species VARCHAR2(255) := :species;
@@ -117,6 +120,7 @@ class Post
 
     public function getPostsByBreed($breed)
     {
+        self::verifyTable();
         $findQuery = "
             DECLARE
                 breed VARCHAR2(255) := :breed;
@@ -150,6 +154,7 @@ class Post
 
     public function getPostsBySize($animal_size)
     {
+        self::verifyTable();
         $findQuery = "
             DECLARE
                 animal_size VARCHAR2(255) := :animal_size;
@@ -183,6 +188,7 @@ class Post
 
     public function getPostsByGender($gender)
     {
+        self::verifyTable();
         $findQuery = "
             DECLARE
                 gender VARCHAR2(255) := :gender;
@@ -216,6 +222,7 @@ class Post
 
     public function getPostsByCity($location)
     {
+        self::verifyTable();
         $findQuery = "
             DECLARE
                 location VARCHAR2(255) := :location;
@@ -249,6 +256,7 @@ class Post
 
     public function getPostsByAge($ageMin, $ageMax)
     {
+        self::verifyTable();
         $findQuery = "
             DECLARE
                 age_min NUMBER := :age_min;
@@ -284,6 +292,7 @@ class Post
 
     public function getPostsById($idArray)
     {
+        self::verifyTable();
         $nameResult = [];
         $idResult = [];
         $ageResult = [];
@@ -378,6 +387,7 @@ class Post
 
     public function postInfo($id)
     {
+        self::verifyTable();
         $extractData = "
     DECLARE
         post_not_found EXCEPTION;
@@ -522,6 +532,7 @@ class Post
 
     public function getPostsFromPage($page, $limit)
     {
+        self::verifyTable();
         $firstPostIndex = $limit * ($page - 1) + 1;
         $lastPostIndex = $limit * $page;
 
@@ -614,6 +625,7 @@ class Post
 
     public function getPostCount()
     {
+        self::verifyTable();
         $postsCount = "
         BEGIN
             SELECT COUNT(*) INTO :number_posts from posts;
@@ -634,6 +646,7 @@ class Post
 
     public function getSearchResults($searchInput)
     {
+        self::verifyTable();
         $searchPosts = "
         DECLARE
 
@@ -847,6 +860,7 @@ class Post
     }
 
     public function getAllPosts(){
+        self::verifyTable();
         $allPostsIdQuery = "
             DECLARE
                 id_result VARCHAR2(1000) := '';
@@ -866,6 +880,7 @@ class Post
     }
 
     public function getFilteredIds($ids, $filter){
+        self::verifyTable();
         $newIds = '';
         foreach ($ids as $id) {
             $testIdQuery = "
@@ -895,6 +910,29 @@ class Post
             }
         }
         return rtrim($newIds ?? '', ';');
+    }
+
+    public function deleteUserPosts($userId){
+        self::verifyTable();
+        $deletePosts = "
+            DECLARE
+                post_owner_id NUMBER := :user_id;
+                CURSOR user_posts IS SELECT * FROM posts WHERE owner_id = post_owner_id;
+            BEGIN
+                FOR user_posts_line IN user_posts LOOP
+                    DELETE FROM food_like WHERE id_post = user_posts_line.id;
+                    DELETE FROM food_dislike WHERE id_post = user_posts_line.id;
+                    DELETE FROM medical WHERE id_post = user_posts_line.id;
+                    DELETE FROM wishlist WHERE id_post = user_posts_line.id;
+                    DELETE FROM media WHERE id_post = user_posts_line.id;
+                    DELETE FROM thumbnail WHERE id_post = user_posts_line.id;  
+                END LOOP;
+                DELETE FROM posts WHERE id = post_owner_id;
+            END;
+            ";
+        $deletePostsCommand = oci_parse($this->conn, $deletePosts);
+        oci_bind_by_name($deletePostsCommand, ":user_id", $userId);
+        oci_execute($deletePostsCommand);
     }
 
     public function verifyTable()

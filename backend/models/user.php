@@ -15,7 +15,7 @@ class User
         self::verifyTable();
         $email = $data['email'] ?? '';
         $password = $data['password'] ?? '';
-        
+
         $checkUser = "
         DECLARE
             user_count NUMBER := 0;
@@ -26,17 +26,17 @@ class User
 
         $checkUserCommand = oci_parse($this->conn, $checkUser);
         $user_exists = 0;
-        
+
         oci_bind_by_name($checkUserCommand, ":email", $email);
         oci_bind_by_name($checkUserCommand, ":user_exists", $user_exists, 8);
         oci_execute($checkUserCommand);
-        
+
         if ($user_exists > 0) {
             return false;
         }
-        
+
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        
+
         $insertUser = "
         DECLARE
             new_id NUMBER;
@@ -52,14 +52,14 @@ class User
             
             :new_id := new_id;
         END;";
-        
+
         $new_id = 0;
         $insertCommand = oci_parse($this->conn, $insertUser);
-        
+
         oci_bind_by_name($insertCommand, ":email", $email);
         oci_bind_by_name($insertCommand, ":password_hash", $hashed_password);
         oci_bind_by_name($insertCommand, ":new_id", $new_id, 8);
-        
+
         if (oci_execute($insertCommand)) {
             return ["id" => $new_id, "email" => $email];
         } else {
@@ -67,12 +67,12 @@ class User
             return false;
         }
     }
-    
+
     public function login($data)
     {
         $email = $data['email'] ?? '';
         $password = $data['password'] ?? '';
-        
+
         $getUserData = "
         DECLARE
             user_id NUMBER := 0;
@@ -91,27 +91,26 @@ class User
             :pwd_hash := pwd_hash;
             :user_found := CASE WHEN user_found THEN 1 ELSE 0 END;
         END;";
-        
+
         $user_id = 0;
         $pwd_hash = '';
         $user_found = 0;
-        
+
         $getUserCommand = oci_parse($this->conn, $getUserData);
         oci_bind_by_name($getUserCommand, ":email", $email);
         oci_bind_by_name($getUserCommand, ":user_id", $user_id, 8);
         oci_bind_by_name($getUserCommand, ":pwd_hash", $pwd_hash, 255);
         oci_bind_by_name($getUserCommand, ":user_found", $user_found, 1);
-        
+
         oci_execute($getUserCommand);
-        
+
         if ($user_found == 1 && password_verify($password, $pwd_hash)) {
             return ["id" => $user_id, "email" => $email];
-        }
-        else {
+        } else {
             return false;
         }
     }
-    
+
     public function getProfile($user_id)
     {
         $getUserData = "
@@ -183,7 +182,7 @@ class User
                     'email' => $email,
                     'location' => $location,
                     'date_of_birth' => $formatted_date,
-                    'id'=> $user_id
+                    'id' => $user_id
                 ]
             ];
         } else {
@@ -242,7 +241,142 @@ class User
             ];
         }
     }
-    
+
+    public function getUsersBySearch($searchInput)
+    {
+        // Need to verify if already admin
+        $findQuery = "
+            DECLARE
+                search_input VARCHAR2(255) := :search_input;
+                name_result VARCHAR2(4000) := '';
+                id_result VARCHAR2(4000) := '';
+                email_result VARCHAR2(4000) := '';
+                is_admin_result VARCHAR2(4000) := '';
+                is_admin NUMBER;
+                CURSOR user_cursor IS SELECT * FROM users;
+            BEGIN
+                FOR user_line IN user_cursor LOOP
+                    IF LOWER(user_line.first_name) IS NOT NULL AND LOWER(user_line.first_name) LIKE '%' || LOWER(search_input) || '%' THEN
+                        name_result := name_result || user_line.first_name || ';';
+                        id_result := id_result || user_line.id || ';';
+                        email_result := email_result || user_line.email || ';';
+                        SELECT COUNT(*) INTO is_admin FROM admins WHERE user_id = user_line.id;
+                        IF is_admin > 0 THEN
+                            is_admin_result := is_admin_result || '1;';
+                        ELSE
+                            is_admin_result := is_admin_result || '0;';
+                        END IF;
+                    ELSIF LOWER(user_line.email) LIKE '%' || LOWER(search_input) || '%' THEN
+                        name_result := name_result || user_line.first_name || ';';
+                        id_result := id_result || user_line.id || ';';
+                        email_result := email_result || user_line.email || ';';
+                        SELECT COUNT(*) INTO is_admin FROM admins WHERE user_id = user_line.id;
+                        IF is_admin > 0 THEN
+                            is_admin_result := is_admin_result || '1;';
+                        ELSE
+                            is_admin_result := is_admin_result || '0;';
+                        END IF;
+                    END IF;
+                END LOOP;
+                :name_result := name_result;
+                :id_result := id_result;
+                :email_result := email_result;
+                :is_admin_result := is_admin_result;
+            END;
+        ";
+        $findQueryCommand = oci_parse($this->conn, $findQuery);
+        $nameArray = '';
+        $idArray = '';
+        $emailArray = '';
+        $isAdminArray = '';
+        oci_bind_by_name($findQueryCommand, ":search_input", $searchInput);
+        oci_bind_by_name($findQueryCommand, ":name_result", $nameArray, 4000);
+        oci_bind_by_name($findQueryCommand, ":id_result", $idArray, 4000);
+        oci_bind_by_name($findQueryCommand, ":email_result", $emailArray, 4000);
+        oci_bind_by_name($findQueryCommand, ":is_admin_result", $isAdminArray, 4000);
+
+        if (oci_execute($findQueryCommand)) {
+            return [
+                "name" => rtrim($nameArray ?? '', ';'),
+                "id" => rtrim($idArray ?? '', ';'),
+                "email" => rtrim($emailArray ?? '', ';'),
+                "is_admin" => rtrim($isAdminArray ?? '', ';')
+            ];
+        }
+    }
+
+    public function deleteUser($userId)
+    {
+        self::verifyTable();
+        self::verifyTableAdmin();
+        $deleteQuery = "
+        BEGIN
+            DELETE FROM admins WHERE user_id = :user_id;
+            DELETE FROM users WHERE id = :user_id;
+        END;
+        ";
+        $deleteQueryCommand = oci_parse($this->conn, $deleteQuery);
+        oci_bind_by_name($deleteQueryCommand, ":user_id", $userId);
+        oci_execute($deleteQueryCommand);
+    }
+
+    public function promoteUser($userId)
+    {
+        self::verifyTable();
+        self::verifyTableAdmin();
+        $promoteQuery = "
+            DECLARE
+                new_id NUMBER;
+            BEGIN
+                SELECT NVL(MAX(id), 0) + 1 INTO new_id FROM admins;
+                INSERT INTO admins (id, user_id) VALUES (new_id, :user_id);
+            END;
+            ";
+        $promoteQueryCommand = oci_parse($this->conn, $promoteQuery);
+        oci_bind_by_name($promoteQueryCommand, ":user_id", $userId);
+        oci_execute($promoteQueryCommand);
+    }
+
+    public function demoteUser($userId){
+        self::verifyTable();
+        self::verifyTableAdmin();
+        $demoteQuery = "
+            BEGIN
+                DELETE FROM admins WHERE user_id = :user_id;
+            END;
+            ";
+        $demoteQueryCommand = oci_parse($this->conn, $demoteQuery);
+        oci_bind_by_name($demoteQueryCommand, ":user_id", $userId);
+        oci_execute($demoteQueryCommand);
+    }
+
+    public function verifyTableAdmin()
+    {
+        $checkTable = "
+        SELECT table_name
+        FROM user_tables
+        WHERE table_name = UPPER('admins')
+        ";
+        $checkCommand = oci_parse($this->conn, $checkTable);
+        oci_execute($checkCommand);
+        $tableExists = oci_fetch_array($checkCommand, OCI_ASSOC + OCI_RETURN_NULLS);
+
+        if (!$tableExists) {
+            $createTable = "
+            CREATE TABLE admins (
+                id NUMBER PRIMARY KEY,
+                user_id NUMBER,
+                CONSTRAINT fk_user_id_admin FOREIGN KEY (user_id) REFERENCES users(id)
+            )";
+            $createCommand = oci_parse($this->conn, $createTable);
+            if (!oci_execute($createCommand)) {
+                $e = oci_error($createCommand);
+                echo json_encode(["status" => "error", "message" => "Table creation failed: " . $e['message']]);
+                exit;
+            }
+        }
+    }
+
     public function verifyTable()
     {
         $checkTable = "
@@ -274,4 +408,3 @@ class User
         }
     }
 }
-?>

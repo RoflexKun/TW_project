@@ -354,3 +354,55 @@ header {
     outline: none;
     border-color: #7B3F00;
 }
+
+/* CSS for users-cards */
+.user-results-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.user-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 15px 20px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.user-info .user-id {
+    font-style: italic;
+    color: gray;
+    margin: 0;
+}
+
+.user-info p {
+    margin: 2px 0;
+}
+
+.user-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.make-admin {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete-user {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
