@@ -15,6 +15,12 @@ require_once(__DIR__."/../controllers/usercontroller.php");
 $controllerPost = new PostController();
 $controllerUser = new UserController();
 
+if (isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id'])) {
+    $controllerPost->deletePost($_POST['id']);
+    deleteMediaFilesByPostId($_POST['id']);
+    exit;
+}
+
 $headers = getallheaders();
 $token = null;
 if (isset($headers['Authorization'])) {

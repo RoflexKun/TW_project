@@ -33,4 +33,9 @@ class AdminController
         $userModel = new User();
         $userModel->demoteUser($id);
     }
+
+    public function getPostsBySearch($searchInput){
+        $postModel = new Post();
+        return $postModel->getPostsBySearch($searchInput);
+    }
 }

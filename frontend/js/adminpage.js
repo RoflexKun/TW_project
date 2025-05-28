@@ -56,6 +56,34 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    const postSearchInput = document.getElementById('post-search');
+    if(postSearchInput){
+        postSearchInput.addEventListener('input', async function () {
+            const searchInput = this.value;
+            try {
+                const formData = new FormData();
+                formData.append('search', searchInput);
+
+                const response = await fetch("http://localhost/backend/services/postsearchservice.php", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const result = await response.json();
+                console.log(result);
+                if (result.data.name.length > 0)
+                    displayPostResults(result.data);
+                else {
+                    const container = document.getElementById('post-results');
+                    container.innerHTML = '';
+                }
+
+            }catch(error){
+                console.log(error);
+            }
+        });
+    }
 });
 
 //Displays the search results users
@@ -159,5 +187,77 @@ function displayUserResults(users) {
         userCard.appendChild(userInfo);
         userCard.appendChild(userActions);
         container.appendChild(userCard);
+    }
+}
+
+// Displays the post results from the search
+function displayPostResults(posts) {
+    const container = document.getElementById('post-results');
+    container.innerHTML = '';
+
+    const names = posts.name.split(';');
+    const ids = posts.id.split(';');
+
+    for (let i = 0; i < names.length; i++) {
+        const postCard = document.createElement('div');
+        postCard.classList.add('user-card');
+        postCard.style.cursor = 'pointer';
+
+        postCard.addEventListener('click', () => {
+            window.location.href = `http://localhost/frontend/pages/post.html?id=${ids[i]}`;
+        });
+
+        const postInfo = document.createElement('div');
+        postInfo.classList.add('user-info');
+
+        const postId = document.createElement('p');
+        postId.classList.add('user-id');
+        postId.textContent = `#${ids[i]}`;
+
+        const postName = document.createElement('p');
+        postName.textContent = names[i];
+
+        postInfo.appendChild(postId);
+        postInfo.appendChild(postName);
+
+        const postActions = document.createElement('div');
+        postActions.classList.add('user-actions');
+
+        const deletePostBtn = document.createElement('button');
+        deletePostBtn.classList.add('delete-user');
+        deletePostBtn.textContent = 'Delete';
+
+        deletePostBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+
+            if (!confirm(`Are you sure you want to delete post "${names[i]}"?`))
+                return;
+
+            const formData = new FormData();
+            formData.append("id", ids[i]);
+            formData.append("action", "delete");
+
+            try {
+                const response = await fetch("http://localhost/backend/services/deletepostservice.php", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const result = await response.text();
+                console.log(result);
+
+                const searchInput = document.getElementById('post-search');
+                if (searchInput) searchInput.value = '';
+                container.innerHTML = '';
+
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
+        postActions.appendChild(deletePostBtn);
+        postCard.appendChild(postInfo);
+        postCard.appendChild(postActions);
+        container.appendChild(postCard);
     }
 }

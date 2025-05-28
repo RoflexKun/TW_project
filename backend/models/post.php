@@ -935,6 +935,42 @@ class Post
         oci_execute($deletePostsCommand);
     }
 
+    public function getPostsBySearch($searchInput){
+        self::verifyTable();
+        $searchPostQuery = "
+            DECLARE
+                search_input VARCHAR2(255) := :search_input;
+                CURSOR posts_cursor IS SELECT * FROM posts;
+                id_result VARCHAR2(4000) := '';
+                name_result VARCHAR2(4000) := '';
+            BEGIN
+                FOR posts_line IN posts_cursor LOOP
+                    IF LOWER(posts_line.name) LIKE '%' || LOWER(search_input) || '%' THEN
+                        id_result := id_result || posts_line.id || ';';
+                        name_result := name_result || posts_line.name || ';';
+                    ELSIF LOWER(posts_line.id) LIKE '%' || LOWER(search_input) || '%' THEN
+                        id_result := id_result || posts_line.id || ';';
+                        name_result := name_result || posts_line.name || ';';
+                    END IF;
+                END LOOP;
+                :name_result := name_result;
+                :id_result := id_result;
+            END;
+            ";
+            $searchPostQueryCommand = oci_parse($this->conn, $searchPostQuery);
+            oci_bind_by_name($searchPostQueryCommand, ":search_input", $searchInput);
+            $nameArray = '';
+            $idArray = '';
+            oci_bind_by_name($searchPostQueryCommand, ":id_result", $idArray, 4000);
+            oci_bind_by_name($searchPostQueryCommand, ":name_result", $nameArray, 4000);
+            if(oci_execute($searchPostQueryCommand)){
+                return [
+                    "name" => rtrim($nameArray ?? '', ';'),
+                    "id" => rtrim($idArray ?? '', ';')
+                ];
+            }
+    }
+
     public function verifyTable()
     {
         $checkTable = "
