@@ -402,4 +402,64 @@ class User
             }
         }
     }
+
+    // Google login
+    public function findOrCreateGoogleUser($googleUser) {
+        $email = $googleUser['email'];
+        $firstName = $googleUser['first_name'];
+        $lastName = $googleUser['last_name'];
+
+        // Check if user exists
+        $user = $this->getUserByEmail($email);
+        if ($user) {
+            return $user;
+        }
+
+        $dummyPassword = password_hash('GOOGLE_USER', PASSWORD_DEFAULT);
+
+        $insertUser = "
+        DECLARE
+            new_id NUMBER;
+        BEGIN
+            SELECT NVL(MAX(id), 0) + 1 INTO new_id FROM users;
+            INSERT INTO users(id, email, first_name, last_name, password_hash)
+            VALUES(new_id, :email, :first_name, :last_name, :password_hash);
+            :new_id := new_id;
+        END;";
+
+        $new_id = 0;
+        $insertCommand = oci_parse($this->conn, $insertUser);
+
+        oci_bind_by_name($insertCommand, ":email", $email, 255);
+        oci_bind_by_name($insertCommand, ":first_name", $firstName, 255);
+        oci_bind_by_name($insertCommand, ":last_name", $lastName, 255);
+        oci_bind_by_name($insertCommand, ":password_hash", $dummyPassword, 255);
+        oci_bind_by_name($insertCommand, ":new_id", $new_id, 8);
+
+        if (oci_execute($insertCommand)) {
+            return $this->getUserById($new_id);
+        } else {
+            $e = oci_error($insertCommand);
+            error_log("Oracle error: " . $e['message']);
+            return false;
+        }
+    }
+
+    public function getUserByEmail($email) {
+        $query = "SELECT * FROM users WHERE email = :email";
+        $stmt = oci_parse($this->conn, $query);
+        oci_bind_by_name($stmt, ":email", $email);
+        oci_execute($stmt);
+        $row = oci_fetch_assoc($stmt);
+        return $row ? $row : false;
+    }
+
+    public function getUserById($id) {
+        $query = "SELECT * FROM users WHERE id = :id";
+        $stmt = oci_parse($this->conn, $query);
+        oci_bind_by_name($stmt, ":id", $id);
+        oci_execute($stmt);
+        $row = oci_fetch_assoc($stmt);
+        return $row ? $row : false;
+    }
 }

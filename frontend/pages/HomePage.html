@@ -202,6 +202,22 @@
                     <input type="password" id="login-password" name="password" class="form-control" required>
                 </div>
                 <button type="submit" class="login-submit">Login</button>
+
+                <div class="divider-container">
+                    <div class="divider-line"></div>
+                    <span class="divider-text">Or</span>
+                    <div class="divider-line"></div>
+                </div>
+
+                <!-- Google signin -->
+                <script src="https://accounts.google.com/gsi/client" async defer></script>
+                <div id="g_id_onload"
+                    data-client_id="655497541449-ct2cha40r6uk5qqps6ammp5jtgq9ghcu.apps.googleusercontent.com"
+                    data-context="signin"
+                    data-callback="handleGoogleLogin"
+                    data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin"></div>
             </form>
             <div class="login-alternative">
                 <p>Don't have an account? <a href="#" id="signup-link">Sign up</a></p>
