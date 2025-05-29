@@ -356,12 +356,8 @@ class Post
         $insertEntry = "
     DECLARE
         new_id NUMBER;
-        CURSOR iterate_lines IS SELECT * FROM posts;
     BEGIN
-        new_id := 1;
-        for lines in iterate_lines LOOP
-            new_id := new_id + 1;
-        END LOOP;
+        SELECT NVL(MAX(id), 0) + 1 INTO new_id FROM posts;
         INSERT INTO POSTS(id, name, species, breed, birthday, age, location, description, animal_size, gender, owner_id)
         VALUES(new_id, :name, :species, :breed, TO_DATE(:birthday, 'YYYY-MM-DD'), TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(:birthday, 'YYYY-MM-DD'))/12), :location, :description, :animal_size, :gender, :owner_id);
 

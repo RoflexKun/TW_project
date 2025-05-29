@@ -8,6 +8,7 @@ require_once(__DIR__ . "/../models/species.php");
 require_once(__DIR__ . "/../models/location.php");
 require_once(__DIR__ . "/../models/wishlist.php");
 require_once(__DIR__."/../models/User.php");
+require_once(__DIR__."/../models/ticket.php");
 require_once(__DIR__."/../utils/jwt_helper.php");
 
 class AdminController
@@ -37,5 +38,10 @@ class AdminController
     public function getPostsBySearch($searchInput){
         $postModel = new Post();
         return $postModel->getPostsBySearch($searchInput);
+    }
+
+    public function createTicket($postId, $subject, $description){
+        $ticketModel = new Ticket();
+        $ticketModel->createTicket($postId, $subject, $description);
     }
 }
