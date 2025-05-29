@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const postSearchInput = document.getElementById('post-search');
-    if(postSearchInput){
+    if (postSearchInput) {
         postSearchInput.addEventListener('input', async function () {
             const searchInput = this.value;
             try {
@@ -79,11 +79,66 @@ document.addEventListener('DOMContentLoaded', function () {
                     container.innerHTML = '';
                 }
 
-            }catch(error){
+            } catch (error) {
                 console.log(error);
             }
         });
     }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        if (document.getElementById('tickets-section').classList.contains('active')) {
+            displayTickets();
+        }
+    });
+
+    document.getElementById('filter-tickets-btn').addEventListener('click', () => {
+        const status = document.getElementById('ticket-status').value;
+        displayTickets(status);
+    });
+
+    document.getElementById('close-ticket-popup').addEventListener('click', () => {
+        document.getElementById('ticket-popup').classList.add('hidden');
+    });
+
+    document.getElementById('ticket-close-btn').addEventListener('click', async () => {
+        const ticketId = document.getElementById('popup-ticket-id').value;
+        const formData = new FormData();
+        formData.append('id', ticketId);
+        formData.append('status', document.getElementById('ticket-close-btn').value);
+        try{
+            const response = await fetch("http://localhost/backend/services/ticketstatusservice.php", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.text();
+            console.log(result);
+        }catch(error){
+            console.log(error);
+        }
+        document.getElementById('ticket-popup').classList.add('hidden');
+        displayTickets();
+    });
+
+    document.getElementById('ticket-solved-btn').addEventListener('click', async () => {
+        const ticketId = document.getElementById('popup-ticket-id').value;
+        const formData = new FormData();
+        formData.append('id', ticketId);
+        formData.append('status', document.getElementById('ticket-solved-btn').value);
+        try{
+            const response = await fetch("http://localhost/backend/services/ticketstatusservice.php", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.text();
+            console.log(result);
+        }catch(error){
+            console.log(error);
+        }
+        document.getElementById('ticket-popup').classList.add('hidden');
+        displayTickets();
+    });
 });
 
 //Displays the search results users
@@ -129,7 +184,7 @@ function displayUserResults(users) {
             const confirmMsg = isAdmin
                 ? `Are you sure you want to demote ${names[i]}?`
                 : `Are you sure you want to promote ${names[i]} to admin?`;
-            if (!confirm(confirmMsg)) 
+            if (!confirm(confirmMsg))
                 return;
 
             const formData = new FormData();
@@ -158,7 +213,7 @@ function displayUserResults(users) {
         deleteUserBtn.textContent = 'Delete';
 
         deleteUserBtn.addEventListener('click', async () => {
-            if (!confirm(`Are you sure you want to delete ${names[i]}?`)) 
+            if (!confirm(`Are you sure you want to delete ${names[i]}?`))
                 return;
 
             const formData = new FormData();
@@ -259,5 +314,79 @@ function displayPostResults(posts) {
         postCard.appendChild(postInfo);
         postCard.appendChild(postActions);
         container.appendChild(postCard);
+    }
+}
+
+async function displayTickets(status = "all") {
+    const container = document.getElementById('tickets-container');
+    container.innerHTML = '';
+
+    try {
+        const formData = new FormData();
+        formData.append("status", status);
+
+        const response = await fetch("http://localhost/backend/services/getticketsservice.php", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+        console.log(result);
+
+        if(result.data.id.length === 0)
+            return;
+
+        const ids = result.data.id.split(';');
+        const subjects = result.data.subject.split(';');
+        const postIds = result.data.post_id.split(';');
+        const descriptions = result.data.description.split(';');
+        const statuses = result.data.status.split(';');
+
+        for (let i = 0; i < ids.length; i++) {
+            const ticketCard = document.createElement('div');
+            ticketCard.classList.add('user-card');
+
+            const ticketInfo = document.createElement('div');
+            ticketInfo.classList.add('user-info');
+
+            const ticketId = document.createElement('p');
+            ticketId.classList.add('user-id');
+            ticketId.textContent = `#${ids[i]}`;
+
+            const ticketSubject = document.createElement('p');
+            ticketSubject.textContent = subjects[i];
+
+            ticketInfo.appendChild(ticketId);
+            ticketInfo.appendChild(ticketSubject);
+
+            const ticketActions = document.createElement('div');
+            ticketActions.classList.add('user-actions');
+
+            const statusTag = document.createElement('span');
+            statusTag.classList.add('ticket-status');
+            statusTag.textContent = `STATUS: ${statuses[i]}`;
+
+            const viewBtn = document.createElement('button');
+            viewBtn.classList.add('ticket-view-btn');
+            viewBtn.textContent = 'View';
+
+            viewBtn.addEventListener('click', () => {
+                document.getElementById('popup-subject').textContent = subjects[i];
+                document.getElementById('popup-post-id').textContent = postIds[i] !== '-1' ? postIds[i] : 'None';
+                document.getElementById('popup-description').textContent = descriptions[i];
+                document.getElementById('ticket-popup').classList.remove('hidden');
+                document.getElementById('popup-ticket-id').value = ids[i];
+            });
+
+            ticketActions.appendChild(statusTag);
+            ticketActions.appendChild(viewBtn);
+
+            ticketCard.appendChild(ticketInfo);
+            ticketCard.appendChild(ticketActions);
+            container.appendChild(ticketCard);
+        }
+
+    } catch (error) {
+        console.log(error);
     }
 }

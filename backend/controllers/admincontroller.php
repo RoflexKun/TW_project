@@ -44,4 +44,14 @@ class AdminController
         $ticketModel = new Ticket();
         $ticketModel->createTicket($postId, $subject, $description);
     }
+
+    public function getTickets($status){
+        $ticketModel = new Ticket();
+        return $ticketModel->getTickets($status);
+    }
+
+    public function updateTicketStatus($ticketId, $status){
+        $ticketModel = new Ticket();
+        return $ticketModel->updateTicketStatus($ticketId, $status);
+    }
 }
