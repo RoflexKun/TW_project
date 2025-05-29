@@ -457,6 +457,35 @@ header {
     background-color: #f0f0f0;
 }
 
+.divider-container {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.divider-line {
+    flex: 1;
+    height: 1px;
+    background-color: #ddd;
+}
+
+.divider-text {
+    padding: 0 15px;
+    color: #666;
+    font-size: 14px;
+    font-weight: normal;
+    background-color: #fff0db;
+}
+
+.g_id_signin {
+    margin-top: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+
 /* Login tab */
 .login-overlay {
     position: fixed;

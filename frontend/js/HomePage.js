@@ -664,6 +664,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         loginTab.classList.remove('active');
         isLoggedIn = true;
     }
+    window.setLoggedInUI = setLoggedInUI;
 
     function setLoggedOutUI() {
         loginButton.style.display = 'block';
@@ -1267,3 +1268,42 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
 });
+
+// Google login
+window.handleGoogleLogin = async function(response) {
+    const idToken = response.credential;
+
+    try {
+        const res = await fetch("http://localhost/backend/services/googlelogin.php", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `id_token=${encodeURIComponent(idToken)}`
+        });
+
+        const text = await res.text();
+        let result;
+        try {
+            result = JSON.parse(text);
+        } catch (e) {
+            console.error("Google login response was not JSON:", text);
+            alert('Google login failed: Invalid server response');
+            return;
+        }
+
+        if (result.token) {
+            setToken(result.token);
+            localStorage.setItem('user', JSON.stringify(result.user));
+            setLoggedInUI();
+
+            document.getElementById('login-tab').classList.remove('active');
+            document.body.style.overflow = '';
+        } else {
+            alert('Google login failed: ' + (result.message || 'Unknown error'));
+        }
+    } catch (error) {
+        console.error("Google login error:", error);
+    }
+    document.body.style.overflow = '';
+}

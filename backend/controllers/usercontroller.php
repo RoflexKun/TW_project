@@ -54,5 +54,55 @@ class UserController {
         }
         return false;
     }
+
+    public function googleLogin($data) {
+        if (!isset($data['id_token'])) {
+            return ['success' => false, 'message' => 'No ID token provided'];
+        }
+
+        $idToken = $data['id_token'];
+
+        // Verify Google token
+        $googleUser = $this->verifyGoogleToken($idToken);
+        if (!$googleUser) {
+            return ['success' => false, 'message' => 'Invalid Google token'];
+        }
+
+        $user = $this->userModel->findOrCreateGoogleUser([
+            'email' => $googleUser['email'],
+            'first_name' => $googleUser['first_name'],
+            'last_name' => $googleUser['last_name']
+        ]);
+
+        if (!$user) {
+            return ['success' => false, 'message' => 'Failed to create or find user'];
+        }
+
+        $token = generate_jwt($user['ID'], $user['EMAIL']);
+
+        return [
+            'success' => true,
+            'token' => $token,
+            'user' => $user
+        ];
+    }
+
+    private function verifyGoogleToken($idToken) {
+        $url = "https://oauth2.googleapis.com/tokeninfo?id_token=".urlencode($idToken);
+        $response = file_get_contents($url);
+        if ($response === false) 
+            return false;
+        $data = json_decode($response, true);
+
+        if (!isset($data['email'])) 
+            return false;
+
+        return [
+            'email' => $data['email'],
+            'first_name' => $data['given_name'] ?? '',
+            'last_name' => $data['family_name'] ?? ''
+        ];
+    }
+
 }
 ?>
