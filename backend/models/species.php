@@ -10,9 +10,19 @@ class Species
         $this->conn = Database::getDbInstance()->getConnection();
     }
 
-    /*
-    Admin dashboard idea: a method do add species beside the default ones
-    */
+    public function addSpecies($species){
+        $addQuery = "
+            DECLARE
+                new_id NUMBER := 0;
+            BEGIN
+                SELECT NVL(MAX(id_species), 0) + 1 INTO new_id FROM species;
+                INSERT INTO species(id_species, species_name) VALUES(new_id, :new_species);
+            END; 
+        ";
+        $addQueryCommand = oci_parse($this->conn, $addQuery);
+        oci_bind_by_name($addQueryCommand, ":new_species", $species);
+        oci_execute($addQueryCommand);
+    }
 
     public function getSpecies()
     {

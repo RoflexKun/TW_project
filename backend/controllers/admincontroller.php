@@ -54,4 +54,14 @@ class AdminController
         $ticketModel = new Ticket();
         return $ticketModel->updateTicketStatus($ticketId, $status);
     }
+
+    public function addSpecies($species){
+        $speciesModel = new Species();
+        $speciesModel->addSpecies($species);
+    }
+
+    public function addBreed($breed, $speciesId) {
+        $breedModel = new Breed();
+        $breedModel->addBreed($breed, $speciesId);
+    }
 }

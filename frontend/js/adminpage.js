@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
     const backButton = document.getElementById('back-button');
     if (backButton) {
         backButton.addEventListener('click', function () {
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = new FormData();
         formData.append('id', ticketId);
         formData.append('status', document.getElementById('ticket-close-btn').value);
-        try{
+        try {
             const response = await fetch("http://localhost/backend/services/ticketstatusservice.php", {
                 method: "POST",
                 body: formData
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const result = await response.text();
             console.log(result);
-        }catch(error){
+        } catch (error) {
             console.log(error);
         }
         document.getElementById('ticket-popup').classList.add('hidden');
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = new FormData();
         formData.append('id', ticketId);
         formData.append('status', document.getElementById('ticket-solved-btn').value);
-        try{
+        try {
             const response = await fetch("http://localhost/backend/services/ticketstatusservice.php", {
                 method: "POST",
                 body: formData
@@ -133,12 +133,127 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const result = await response.text();
             console.log(result);
-        }catch(error){
+        } catch (error) {
             console.log(error);
         }
         document.getElementById('ticket-popup').classList.add('hidden');
         displayTickets();
     });
+
+    document.getElementById('species-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const speciesInput = document.getElementById('species-input');
+        const speciesError = document.getElementById('species-error');
+        const species = speciesInput.value.trim();
+
+        if (species === "") {
+            speciesInput.classList.add('invalid');
+            speciesError.textContent = "Please don't leave it empty!";
+            speciesError.style.display = "block";
+            return;
+        } else {
+            speciesInput.classList.remove('invalid');
+            speciesError.textContent = "";
+            speciesError.style.display = "none";
+        }
+
+        const formData = new FormData();
+        formData.append('species', species);
+
+        try {
+            const response = await fetch("http://localhost/backend/services/addservice.php", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.text();
+            console.log(result);
+        } catch (error) {
+            console.log(error);
+        }
+
+        speciesInput.value = "";
+    });
+
+    document.getElementById('breed-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        
+        const breedInput = document.getElementById('breed-input');
+        const speciesSelect = document.getElementById('species-select');
+        const breedError = document.getElementById('breed-error');
+
+        const breed = breedInput.value.trim();
+        const speciesId = speciesSelect.value;
+        let hasError = false;
+
+        if (speciesId === "") {
+            speciesSelect.classList.add('invalid');
+            hasError = true;
+        } else {
+            speciesSelect.classList.remove('invalid');
+        }
+
+        if (breed === "") {
+            breedInput.classList.add('invalid');
+            hasError = true;
+        } else {
+            breedInput.classList.remove('invalid');
+        }
+
+        if (hasError) {
+            breedError.textContent = "Please don't leave it empty!";
+            breedError.style.display = "block";
+            return;
+        } else {
+            breedError.textContent = "";
+            breedError.style.display = "none";
+        }
+
+        const formData = new FormData();
+        formData.append('breed', breed);
+        formData.append('species_id', speciesId);
+
+        try {
+            const response = await fetch("http://localhost/backend/services/addservice.php", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.text();
+            console.log(result);
+        } catch (error) {
+            console.log(error);
+        }
+
+        breedInput.value = "";
+        speciesSelect.value = "";
+    });
+
+    const speciesSelect = document.getElementById('species-select');
+    try {
+        const formData = new FormData();
+        formData.append('action', 'species');
+
+        const response = await fetch("http://localhost/backend/services/newpostinfoservice.php", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+        const { ids, names } = data;
+
+        if (ids && names && ids.length === names.length) {
+            for (let i = 0; i < ids.length; i++) {
+                const option = document.createElement('option');
+                option.value = ids[i];
+                option.textContent = names[i];
+                speciesSelect.appendChild(option);
+            }
+        }
+    } catch (error) {
+        console.log(error);
+    }
 });
 
 //Displays the search results users
@@ -333,7 +448,7 @@ async function displayTickets(status = "all") {
         const result = await response.json();
         console.log(result);
 
-        if(result.data.id.length === 0)
+        if (result.data.id.length === 0)
             return;
 
         const ids = result.data.id.split(';');

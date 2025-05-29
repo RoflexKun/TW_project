@@ -108,6 +108,43 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Section where you can add Species or breeds-->
+            <div class="content-section" id="add-animals-section">
+                <div class="section-header">
+                    <h2>Add Breed/Species</h2>
+                    <p>Use the forms below to add new species or breeds to the database</p>
+                </div>
+
+                <div class="add-section">
+                    <div class="add-box">
+                        <h3>Add New Species</h3>
+                        <form class="add-form" id="species-form">
+                            <div class="input-group">
+                                <input type="text" id="species-input" placeholder="Enter new species...">
+                                <span class="error-message" id="species-error" style="display: none;"></span>
+                            </div>
+                            <button type="submit" class="admin-button">Add</button>
+                        </form>
+                    </div>
+                    <div class="add-box">
+                        <h3>Add New Breed</h3>
+                        <form class="add-form" id="breed-form">
+                            <div class="input-group">
+                                <select id="species-select">
+                                    <option value="" disabled selected>Select species</option>
+                                </select>
+                                <span class="error-message" id="species-select-error" style="display: none;"></span>
+                            </div>
+                            <div class="input-group">
+                                <input type="text" id="breed-input" placeholder="Enter new breed...">
+                                <span class="error-message" id="breed-error" style="display: none;"></span>
+                            </div>
+                            <button type="submit" class="admin-button">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </body>

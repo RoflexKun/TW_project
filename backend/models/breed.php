@@ -10,9 +10,20 @@ class Breed
         $this->conn = Database::getDbInstance()->getConnection();
     }
 
-    /*
-    Admin dashboard idea: a method do add breeds based on the id of a species like the method below
-    */
+    public function addBreed($breed, $speciesId){
+        $addQuery = "
+            DECLARE
+                new_id NUMBER := 0;
+            BEGIN
+                SELECT NVL(MAX(id_breed), 0) + 1 INTO new_id FROM breeds;
+                INSERT INTO breeds(id_breed, id_species, breed_name) VALUES(new_id, :species_id, :breed_name);
+            END;
+            ";
+        $addQueryCommand = oci_parse($this->conn, $addQuery);
+        oci_bind_by_name($addQueryCommand, ":species_id", $speciesId);
+        oci_bind_by_name($addQueryCommand, ":breed_name", $breed);
+        oci_execute($addQueryCommand);
+    }
 
     public function getBreedBySpecies($speciesId)
     {
