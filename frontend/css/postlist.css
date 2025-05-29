@@ -905,3 +905,287 @@ header {
 .filter-select:focus {
     border-color: #1a1a1a;
 }
+
+/* Mobile First - 480px and up */
+@media (min-width: 480px) {
+    .left-section {
+        padding-left: 20px;
+    }
+    
+    .profile-tab {
+        width: 500px;
+        height: 600px;
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    #search-input {
+        width: 400px;
+    }
+    
+    .post-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 15px;
+    }
+    
+    .filters {
+        flex: 0 0 300px;
+    }
+}
+
+/* Small tablets and large phones - 768px and up */
+@media (min-width: 768px) {
+    header {
+        padding: 15px 40px;
+    }
+    
+    .left-section {
+        width: 25%;
+        padding-left: 40px;
+    }
+    
+    .right-section {
+        width: 75%;
+    }
+    
+    .profile-tab {
+        width: 600px;
+        height: 650px;
+    }
+    
+    .user-posts-modal {
+        width: 70%;
+    }
+    
+    .header h1 {
+        font-size: 2.2rem;
+    }
+    
+    #search-input {
+        width: 500px;
+    }
+    
+    .post-list {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        padding: 18px;
+    }
+    
+    .filters {
+        flex: 0 0 350px;
+    }
+    
+    .posts-part {
+        padding: 0 30px;
+    }
+}
+
+/* Tablets and small desktops - 1024px and up */
+@media (min-width: 1024px) {
+    .left-section {
+        width: 30%;
+        padding-left: 60px;
+    }
+    
+    .right-section {
+        width: 70%;
+    }
+    
+    .user-posts-modal {
+        width: 65%;
+    }
+    
+    .dropdown-menu {
+        left: 0;
+        width: 100%;
+    }
+    
+    .account-menu {
+        right: 0;
+    }
+    
+    .header h1 {
+        font-size: 2.5rem;
+    }
+    
+    #search-input {
+        width: 600px;
+    }
+    
+    .post-list {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        padding: 20px;
+    }
+    
+    .filters {
+        flex: 0 0 400px;
+    }
+    
+    .posts-part {
+        padding: 0 40px;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+    header {
+        padding: 10px 15px;
+        flex-wrap: wrap;
+    }
+    
+    .header-left-section {
+        flex: 1;
+        order: 1;
+    }
+    
+    .header-center-section {
+        flex: 1;
+        order: 2;
+    }
+    
+    .header-right-section {
+        flex: 1;
+        order: 3;
+        gap: 10px;
+    }
+    
+    .logo {
+        font-size: 20px;
+        padding: 10px 20px;
+    }
+    
+    .pets-button {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+    
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        margin-top: 0;
+    }
+    
+    .dropdown-category {
+        padding: 15px;
+        text-align: left;
+    }
+    
+    .left-section,
+    .right-section {
+        width: 100%;
+        padding: 0;
+    }
+    
+    .left-section {
+        margin-bottom: 20px;
+    }
+    
+    .profile-tab {
+        width: 95%;
+        height: 95%;
+        padding: 20px;
+    }
+    
+    .user-posts-modal {
+        width: 95%;
+        height: 90%;
+        padding: 15px;
+    }
+    
+    .account-menu {
+        right: 0;
+        width: 150px;
+    }
+    
+    /* Main content responsive adjustments for mobile */
+    .header {
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    .header h1 {
+        font-size: 1.8rem;
+    }
+    
+    #search-input {
+        width: 280px;
+        font-size: 14px;
+    }
+    
+    .search-container {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .posts-part {
+        flex-direction: column;
+        padding: 0 15px;
+        gap: 15px;
+    }
+    
+    /* Move filters to bottom but extract posts-per-page */
+    .filters {
+        flex: none;
+        width: 100%;
+        order: -1;
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .post-list-section {
+        order: 2;
+        margin-top: 15px;
+    }
+    
+    .post-list {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 15px 0;
+    }
+    
+    .post-card {
+        height: 280px;
+    }
+    
+    .post-card img {
+        height: 180px;
+    }
+    
+    .post-card h3 {
+        font-size: 18px;
+        margin: 10px 12px;
+    }
+    
+    .pagination {
+        gap: 5px;
+        padding: 15px 0;
+    }
+    
+    .page-button {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+    
+    /* Modal adjustments for mobile */
+    .login-tab,
+    .signup-tab,
+    .forgot-tab {
+        width: 95%;
+        margin: 0 10px;
+        padding: 25px;
+    }
+    
+    .wishlist-popup-content {
+        width: 95%;
+        padding: 30px 25px;
+        margin: 0 10px;
+    }
+}
