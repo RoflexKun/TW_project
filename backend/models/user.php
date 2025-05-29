@@ -240,6 +240,7 @@ class User
     public function getUsersBySearch($searchInput)
     {
         self::verifyTable();
+        self::verifyTableAdmin();
         $findQuery = "
             DECLARE
                 search_input VARCHAR2(255) := :search_input;
