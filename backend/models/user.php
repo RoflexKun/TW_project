@@ -239,7 +239,7 @@ class User
 
     public function getUsersBySearch($searchInput)
     {
-        // Need to verify if already admin
+        self::verifyTable();
         $findQuery = "
             DECLARE
                 search_input VARCHAR2(255) := :search_input;
