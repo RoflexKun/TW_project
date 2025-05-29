@@ -40,13 +40,8 @@ class User
         $insertUser = "
         DECLARE
             new_id NUMBER;
-            CURSOR iterate_users IS SELECT * FROM users;
         BEGIN
-            new_id := 1;
-            FOR user_line IN iterate_users LOOP
-                new_id := new_id + 1;
-            END LOOP;
-            
+            SELECT NVL(MAX(id), 0) + 1 INTO new_id FROM users;
             INSERT INTO users(id, email, password_hash)
             VALUES(new_id, :email, :password_hash);
             

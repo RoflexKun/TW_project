@@ -21,11 +21,29 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        reportForm.addEventListener('submit', (e) => {
+        reportForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(reportForm);
             const reason = formData.get('reason');
             const comments = formData.get('comments');
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+
+            const formDataTicket = new FormData();
+            formDataTicket.append('subject', reason);
+            formDataTicket.append('description', comments);
+            formDataTicket.append('id', postId);
+            try {
+                const response = await fetch("http://localhost/backend/services/createticketservice.php", {
+                    method: "POST",
+                    body: formDataTicket
+                });
+                
+                const result = await response.text();
+                console.log(result);
+            }catch(error){
+                console.log(error);
+            }
 
             console.log('Report submitted:', { reason, comments });
 

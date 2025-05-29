@@ -29,6 +29,7 @@
                 <div class="account-menu-category" id="profile-button"> Profile </div>
                 <div class="account-menu-category" id="post-button"> Post </div>
                 <div class="account-menu-category" id="your-posts-button"> Your Posts </div>
+                <div class="account-menu-category" id="create-ticket"> Create Ticket</div>
                 <div class="account-menu-category" id="logout-button"> Logout </div>
             </div>
         </div>
@@ -188,8 +189,8 @@
         <div class="login-tab">
             <div class="tab-header">
                 <div class="logo">Logo</div>
-                <button class="close-button" id="close-login"><img
-                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
+                <button class="close-button" id="close-login"><img src="../assets/bone-shaped-dog-biscuit.png"
+                        alt="Close"></button>
             </div>
             <form id="login-form">
                 <div class="form-group">
@@ -230,8 +231,8 @@
         <div class="signup-tab">
             <div class="tab-header">
                 <div class="logo">Logo</div>
-                <button class="close-button" id="close-signup"><img
-                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
+                <button class="close-button" id="close-signup"><img src="../assets/bone-shaped-dog-biscuit.png"
+                        alt="Close"></button>
             </div>
             <form id="signup-form">
                 <div class="form-group">
@@ -259,8 +260,8 @@
         <div class="forgot-tab">
             <div class="tab-header">
                 <div class="logo">Logo</div>
-                <button class="close-button" id="close-forgot"><img
-                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
+                <button class="close-button" id="close-forgot"><img src="../assets/bone-shaped-dog-biscuit.png"
+                        alt="Close"></button>
             </div>
             <form id="forgot-form">
                 <div class="form-group">
@@ -280,8 +281,8 @@
         <div class="profile-tab">
             <div class="tab-header">
                 <div class="logo">Logo</div>
-                <button class="close-button" id="close-profile"><img
-                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
+                <button class="close-button" id="close-profile"><img src="../assets/bone-shaped-dog-biscuit.png"
+                        alt="Close"></button>
             </div>
             <form id="profile-form">
                 <div class="form-group">
@@ -308,6 +309,25 @@
                 </div>
                 <button type="submit" class="save-profile">Save</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Create Ticket Popup -->
+    <div id="ticket-modal" class="ticket-modal hidden">
+        <div class="ticket-modal-content">
+
+            <img src="../assets/bone-shaped-dog-biscuit.png" id="ticket-modal-close" alt="Close" class="ticket-modal-close" />
+            <h2>Create Ticket</h2>
+
+            <label for="ticket-modal-subject">Subject</label>
+            <input type="text" id="ticket-modal-subject" placeholder="Enter subject" />
+            <span id="subject-error" class="ticket-modal-error"></span>
+
+            <label for="ticket-modal-description">Description</label>
+            <textarea id="ticket-modal-description" placeholder="Enter description"></textarea>
+            <span id="description-error" class="ticket-modal-error"></span>
+
+            <button id="ticket-modal-submit">Submit</button>
         </div>
     </div>
 
