@@ -115,6 +115,7 @@ class User
             user_email VARCHAR2(255);
             user_location VARCHAR2(255);
             user_date_of_birth DATE;
+            user_phone_number VARCHAR2(255);
             user_found NUMBER := 0;
         BEGIN
             SELECT 
@@ -122,13 +123,15 @@ class User
                 last_name, 
                 email, 
                 location,
-                date_of_birth
+                date_of_birth,
+                phone_number
             INTO 
                 user_first_name, 
                 user_last_name, 
                 user_email, 
                 user_location,
-                user_date_of_birth
+                user_date_of_birth,
+                user_phone_number
             FROM users WHERE id = :user_id;
             
             :first_name := user_first_name;
@@ -136,6 +139,7 @@ class User
             :email := user_email;
             :location := user_location;
             :date_of_birth := user_date_of_birth;
+            :phone_number := user_phone_number;
             :found := 1;
             
         EXCEPTION
@@ -148,6 +152,7 @@ class User
         $email = null;
         $location = null;
         $date_of_birth = null;
+        $phone_number = null;
         $found = 0;
 
         $stmt = oci_parse($this->conn, $getUserData);
@@ -157,6 +162,7 @@ class User
         oci_bind_by_name($stmt, ":email", $email, 255);
         oci_bind_by_name($stmt, ":location", $location, 255);
         oci_bind_by_name($stmt, ":date_of_birth", $date_of_birth, 255);
+        oci_bind_by_name($stmt, ":phone_number", $phone_number, 255);
         oci_bind_by_name($stmt, ":found", $found);
 
         oci_execute($stmt);
@@ -177,6 +183,7 @@ class User
                     'email' => $email,
                     'location' => $location,
                     'date_of_birth' => $formatted_date,
+                    'phone_number' => $phone_number,
                     'id' => $user_id
                 ]
             ];
@@ -191,6 +198,7 @@ class User
         $last_name = $data['last_name'] ?? null;
         $location = $data['location'] ?? null;
         $date_of_birth = $data['date_of_birth'] ?? null;
+        $phone_number = $data['phone_number'] ?? null;
 
         $updateProfileSQL = "
         BEGIN
@@ -199,7 +207,8 @@ class User
                 first_name = :first_name,
                 last_name = :last_name,
                 location = :location,
-                date_of_birth = TO_DATE(:date_of_birth, 'DD-MM-YYYY')
+                date_of_birth = TO_DATE(:date_of_birth, 'DD-MM-YYYY'),
+                phone_number = :phone_number
             WHERE id = :user_id;
             
             :rows_updated := SQL%ROWCOUNT;
@@ -213,6 +222,7 @@ class User
         oci_bind_by_name($stmt, ":last_name", $last_name);
         oci_bind_by_name($stmt, ":location", $location);
         oci_bind_by_name($stmt, ":date_of_birth", $date_of_birth);
+        oci_bind_by_name($stmt, ":phone_number", $phone_number);
         oci_bind_by_name($stmt, ":rows_updated", $rows_updated);
 
         if (oci_execute($stmt)) {
@@ -222,7 +232,8 @@ class User
                         'first_name' => $first_name,
                         'last_name' => $last_name,
                         'location' => $location,
-                        'date_of_birth' => $date_of_birth
+                        'date_of_birth' => $date_of_birth,
+                        'phone_number' => $phone_number
                     ]
                 ];
             } else {
@@ -393,6 +404,7 @@ class User
                 last_name VARCHAR2(255),
                 location VARCHAR2(255),
                 date_of_birth DATE,
+                phone_number VARCHAR2(255),
                 password_hash VARCHAR2(255) NOT NULL
             )";
             $createCommand = oci_parse($this->conn, $createTable);

@@ -937,6 +937,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 const lastNameInput = document.getElementById('user-last-name');
                 const emailDisplay = document.getElementById('user-email');
                 const dateOfBirthInput = document.getElementById('user-date-of-birth');
+                const phoneNumberInput = document.getElementById('user-phone-number');
 
                 if (firstNameInput)
                     firstNameInput.value = userData.first_name || '';
@@ -944,6 +945,8 @@ document.addEventListener('DOMContentLoaded', async function () {
                     lastNameInput.value = userData.last_name || '';
                 if (emailDisplay)
                     emailDisplay.textContent = userData.email || '';
+                if (phoneNumberInput)
+                    phoneNumberInput.value = userData.phone_number || '';
                 if (dateOfBirthInput) {
                     if (userData.date_of_birth) {
                         dateOfBirthInput.value = formatDateForInput(userData.date_of_birth);
@@ -971,11 +974,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         const firstName = document.getElementById('user-first-name').value;
         const lastName = document.getElementById('user-last-name').value;
         const dateOfBirth = document.getElementById('user-date-of-birth').value;
+        const phoneNumber = document.getElementById('user-phone-number').value;
         const formattedDate = formatDateForDatabase(dateOfBirth);
 
         const formData = new URLSearchParams();
         formData.append('first_name', firstName);
         formData.append('last_name', lastName);
+        formData.append('phone_number', phoneNumber);
         formData.append('date_of_birth', formattedDate);
 
         try {
@@ -996,6 +1001,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                     ...userData,
                     first_name: firstName,
                     last_name: lastName,
+                    phone_number: phoneNumber,
                     date_of_birth: dateOfBirth
                 };
                 profileTab.classList.remove('active');
