@@ -64,4 +64,10 @@ class AdminController
         $breedModel = new Breed();
         $breedModel->addBreed($breed, $speciesId);
     }
+
+    public function getAllPosts(){
+        $postModel = new Post();
+        $allPosts = explode(';', $postModel->getAllPosts());
+        return $postModel->getPostsById($allPosts);
+    }
 }

@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     document.getElementById('breed-form').addEventListener('submit', async function (e) {
         e.preventDefault();
-        
+
         const breedInput = document.getElementById('breed-input');
         const speciesSelect = document.getElementById('species-select');
         const breedError = document.getElementById('breed-error');
@@ -254,6 +254,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     } catch (error) {
         console.log(error);
     }
+
+    document.getElementById('export-json-btn').addEventListener('click', async function () {
+        const downloadLink = document.createElement('a');
+        downloadLink.href = 'http://localhost/backend/services/exportjsonservice.php';
+        downloadLink.download = 'posts.json';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    });
 });
 
 //Displays the search results users
