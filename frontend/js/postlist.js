@@ -198,7 +198,67 @@ document.addEventListener("DOMContentLoaded", () => {
             wishlistPopup.style.display = "none";
         });
     }
-})
+
+    // Create a ticket modal login(SHOULD BE ADDED TO ALL HEADERS)
+    const ticketCreateBtn = document.getElementById('create-ticket');
+    const ticketModal = document.getElementById('ticket-modal');
+    const ticketSubmitBtn = document.getElementById('ticket-modal-submit');
+    const subjectInput = document.getElementById('ticket-modal-subject');
+    const descriptionInput = document.getElementById('ticket-modal-description');
+    const subjectError = document.getElementById('subject-error');
+    const descriptionError = document.getElementById('description-error');
+
+    ticketCreateBtn.addEventListener('click', () => {
+        ticketModal.classList.remove('hidden');
+    });
+
+    ticketSubmitBtn.addEventListener('click', async () => {
+        const subject = document.getElementById('ticket-modal-subject').value.trim();
+        const description = document.getElementById('ticket-modal-description').value.trim();
+
+        subjectError.textContent = '';
+        descriptionError.textContent = '';
+        subjectInput.classList.remove('invalid');
+        descriptionInput.classList.remove('invalid');
+
+        let hasError = false;
+
+        if (!subject) {
+            subjectError.textContent = 'Subject must not be empty';
+            subjectInput.classList.add('invalid');
+            hasError = true;
+        }
+
+        if (!description) {
+            descriptionError.textContent = 'Description must not be empty';
+            descriptionInput.classList.add('invalid');
+            hasError = true;
+        }
+
+        if (hasError) return;
+
+        const formData = new FormData();
+        formData.append('subject', subject);
+        formData.append('description', description);
+        try {
+            const response = await fetch("http://localhost/backend/services/createticketservice.php", {
+                method: "POST",
+                body: formData
+            });
+        } catch (error) {
+            error.log(error);
+        }
+
+        console.log('Ticket submitted!');
+        ticketModal.classList.add('hidden');
+    });
+
+    const ticketCloseBtn = document.getElementById('ticket-modal-close');
+
+    ticketCloseBtn.addEventListener('click', () => {
+        ticketModal.classList.add('hidden');
+    });
+});
 
 async function getSearchResults(searchText) {
     const formData = new FormData();

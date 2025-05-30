@@ -73,9 +73,9 @@ class Post
             } else {
                 return [
                     "counter" => $counter,
-                    "name" => rtrim($nameArray, ';'),
-                    "age" => rtrim($ageArray, ';'),
-                    "id" => rtrim($idArray, ';')
+                    "name" => rtrim($nameArray ?? '', ';'),
+                    "age" => rtrim($ageArray ?? '', ';'),
+                    "id" => rtrim($idArray ?? '', ';')
                 ];
             }
         } else {
