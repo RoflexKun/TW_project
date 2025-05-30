@@ -257,6 +257,32 @@ document.addEventListener("DOMContentLoaded", () => {
     ticketCloseBtn.addEventListener('click', () => {
         ticketModal.classList.add('hidden');
     });
+
+    //Check if an user is an admin
+    async function isAdmin(){
+        try {
+            const token = getToken();
+            const response = await fetch("http://localhost/backend/services/validateadminservice.php", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+            const result = await response.json();
+            console.log(result);
+
+            if(result.is_admin === true){
+                document.getElementById('admin-button').classList.remove('hidden');
+                document.getElementById('admin-button').addEventListener('click', function () {
+                    window.location.href = "http://localhost/frontend/pages/adminpage.html";
+                });
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+    isAdmin();
 });
 
 // Header functionality

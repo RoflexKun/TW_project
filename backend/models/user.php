@@ -357,6 +357,30 @@ class User
         oci_execute($demoteQueryCommand);
     }
 
+    public function verifyAdmin($userId){
+        self::verifyTable();
+        self::verifyTableAdmin();
+        $isAdminQuery = "
+            DECLARE 
+                result NUMBER := 0;
+            BEGIN
+                SELECT COUNT(*) INTO result FROM admins WHERE user_id = :user_id;
+                :result := TO_CHAR(result);
+            END;
+        ";
+        $isAdminQueryCommand = oci_parse($this->conn, $isAdminQuery);
+        $result = 0;
+        oci_bind_by_name($isAdminQueryCommand, ":user_id", $userId);
+        oci_bind_by_name($isAdminQueryCommand, ":result", $result, 10);
+        if(oci_execute($isAdminQueryCommand)){
+            if($result === '0')
+                return false;
+            else
+                return true;
+        }
+        
+    }
+
     public function verifyTableAdmin()
     {
         $checkTable = "

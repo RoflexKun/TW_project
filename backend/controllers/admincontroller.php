@@ -70,4 +70,9 @@ class AdminController
         $allPosts = explode(';', $postModel->getAllPosts());
         return $postModel->getPostsById($allPosts);
     }
+
+    public function verifyAdmin($userId){
+        $userModel = new User();
+        return $userModel->verifyAdmin($userId);
+    }
 }
