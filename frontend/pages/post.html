@@ -10,146 +10,150 @@
 </head>
 
 <body>
-        <header>
-            <div class="header-left-section">
-                <div class="pets-button-container">
-                    <button class="pets-button">All about pets</button>
-                    <span class="arrow-icon">▼</span>
-                </div>
+    <header>
+        <div class="header-left-section">
+            <div class="pets-button-container">
+                <button class="pets-button">All about pets</button>
+                <span class="arrow-icon">▼</span>
             </div>
-            <div class="header-center-section">
-                <div class="logo">Logo</div>
+        </div>
+        <div class="header-center-section">
+            <div class="logo">Logo</div>
+        </div>
+        <div class="header-right-section">
+            <div class="wishlist" id="wishlist-button">❤️</div>
+            <button class="login-button" id="login-button">Login</button>
+            <button class="logged-in-button" id="logged-in-button">Account</button>
+
+            <div class="account-menu">
+                <div class="account-menu-category" id="profile-button"> Profile </div>
+                <div class="account-menu-category hidden" id="admin-button">Admin panel</div>
+                <div class="account-menu-category" id="post-button"> Post </div>
+                <div class="account-menu-category" id="your-posts-button"> Your Posts </div>
+                <div class="account-menu-category" id="create-ticket"> Create Ticket</div>
+                <div class="account-menu-category" id="logout-button"> Logout </div>
             </div>
-            <div class="header-right-section">
-                <div class="wishlist" id="wishlist-button">❤️</div>
-                <button class="login-button" id="login-button">Login</button>
-                <button class="logged-in-button" id="logged-in-button">Account</button>
+        </div>
+        <div class="dropdown-menu">
+            <div class="dropdown-category" id="Dog">Dogs & Puppies</div>
+            <div class="dropdown-category" id="Cat">Cats & Kittens</div>
+            <div class="dropdown-category" id="other-pets">Other Pets</div>
+        </div>
+    </header>
 
-                <div class="account-menu">
-                    <div class="account-menu-category" id="profile-button"> Profile </div>
-                    <div class="account-menu-category hidden" id="admin-button">Admin panel</div>
-                    <div class="account-menu-category" id="post-button"> Post </div>
-                    <div class="account-menu-category" id="your-posts-button"> Your Posts </div>
-                    <div class="account-menu-category" id="create-ticket"> Create Ticket</div>
-                    <div class="account-menu-category" id="logout-button"> Logout </div>
-                </div>
-            </div>
-            <div class="dropdown-menu">
-                <div class="dropdown-category" id="Dog">Dogs & Puppies</div>
-                <div class="dropdown-category" id="Cat">Cats & Kittens</div>
-                <div class="dropdown-category" id="other-pets">Other Pets</div>
-            </div>
-        </header>
+    <div class="post-display">
+        <div class="photo-section">
+            <div class="media-display" id="main-media"></div>
+            <div class="media-thumbnails" id="media-thumbnails"></div>
 
-        <div class="post-display">
-            <div class="photo-section">
-                <div class="media-display" id="main-media"></div>
-                <div class="media-thumbnails" id="media-thumbnails"></div>
-
-                <div class="adopt-section">
-                    <button class="adopt-button">Adopt me!</button>
-                    <div class="post-actions">
-                        <button class="favourite-button" id="favourite-button">🤍</button>
-                        <div class="report-button" id="report-button">⚠️</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="wishlist-popup" id="wishlist-popup">
-                <div class="wishlist-popup-content">
-                    <img src="../assets/bone-shaped-dog-biscuit.png" alt="Close" class="wishlist-popup-close"
-                        id="wishlist-popup-close">
-                    <p>You need to be logged in to add posts to your wishlist.</p>
-                </div>
-            </div>
-
-            <div class="information-section">
-                <div class="general-section">
-                    <h2>General information: </h2>
-                    <div class="gInfo-structure">
-                        <div class="gInfo-leftSide">
-                            <div class="gInfo-label">
-                                <span class="gInfo-label-title">Name:</span>
-                                <span id="pet-name"></span>
-                            </div>
-                            <div class="gInfo-label">
-                                <span class="gInfo-label-title">Species:</span>
-                                <span id="pet-species"></span>
-                            </div>
-                            <div class="gInfo-label">
-                                <span class="gInfo-label-title">Breed:</span>
-                                <span id="pet-breed"></span>
-                            </div>
-                            <div class="gInfo-label">
-                                <span class="gInfo-label-title">Size:</span>
-                                <span id="pet-size"></span>
-                            </div>
-                        </div>
-
-                        <div class="gInfo-rightSide">
-                            <div class="gInfo-label">
-                                <span class="gInfo-label-title">Gender:</span>
-                                <span id="pet-gender"></span>
-                            </div>
-                            <div class="gInfo-label">
-                                <span class="gInfo-label-title">Birthday:</span>
-                                <span id="pet-birthday"></span>
-                            </div>
-                            <div class="gInfo-label">
-                                <span class="gInfo-label-title">Age:</span>
-                                <span id="pet-age"></span>
-                            </div>
-                            <div class="gInfo-label">
-                                <span class="gInfo-label-title">Location:</span>
-                                <span id="pet-location"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="description-section">
-                    <h2>Description of the pet</h2>
-                    <div class="desc-label">
-                        <h3>Description</h3>
-                        <p id="pet-description"></p>
-                    </div>
-                    <div class="desc-label">
-                        <h3>Medical History</h3>
-                        <p id="pet-medical"></p>
-                    </div>
-                    <div class="desc-label">
-                        <h3>Foods that it likes</h3>
-                        <p id="pet-food-like"></p>
-                    </div>
-                    <div class="desc-label">
-                        <h3>Foods that it doesn't like</h3>
-                        <p id="pet-food-dislike"></p>
-                    </div>
+            <div class="adopt-section">
+                <button class="adopt-button">Adopt me!</button>
+                <div class="post-actions">
+                    <button class="favourite-button" id="favourite-button">🤍</button>
+                    <div class="report-button" id="report-button">⚠️</div>
                 </div>
             </div>
         </div>
 
-        <div id="report-modal-bg" class="hidden">
-            <div id="report-modal">
-                <img src="/frontend/assets/bone-shaped-dog-biscuit.png" id="close-report" alt="Close" role="button"
-                    tabindex="0">
-                <h2>Report the post</h2>
-                <form id="report-form">
-                    <div class="report-options">
-                        <label><input type="radio" name="reason" value="Inappropriate content">Inappropriate
-                            content</label><br>
-                        <label><input type="radio" name="reason" value="Scam">Scam</label><br>
-                        <label><input type="radio" name="reason" value="Fake post">Fake post</label><br>
-                        <label><input type="radio" name="reason" value="Animal abuse">Animal abuse</label><br>
-                        <label><input type="radio" name="reason" value="Other">Other</label><br>
-                    </div>
-                    <textarea name="comments" placeholder="Other comments..." rows="5"></textarea>
-                    <div class="report-action">
-                        <button type="submit">Report</button>
-                    </div>
-                </form>
+        <div class="wishlist-popup" id="wishlist-popup">
+            <div class="wishlist-popup-content">
+                <img src="../assets/bone-shaped-dog-biscuit.png" alt="Close" class="wishlist-popup-close"
+                    id="wishlist-popup-close">
+                <p>You need to be logged in to add posts to your wishlist.</p>
             </div>
         </div>
+
+        <div class="information-section">
+            <div class="general-section">
+                <h2>General information: </h2>
+                <div class="gInfo-structure">
+                    <div class="gInfo-leftSide">
+                        <div class="gInfo-label">
+                            <span class="gInfo-label-title">Name:</span>
+                            <span id="pet-name"></span>
+                        </div>
+                        <div class="gInfo-label">
+                            <span class="gInfo-label-title">Species:</span>
+                            <span id="pet-species"></span>
+                        </div>
+                        <div class="gInfo-label">
+                            <span class="gInfo-label-title">Breed:</span>
+                            <span id="pet-breed"></span>
+                        </div>
+                        <div class="gInfo-label">
+                            <span class="gInfo-label-title">Size:</span>
+                            <span id="pet-size"></span>
+                        </div>
+                    </div>
+
+                    <div class="gInfo-rightSide">
+                        <div class="gInfo-label">
+                            <span class="gInfo-label-title">Gender:</span>
+                            <span id="pet-gender"></span>
+                        </div>
+                        <div class="gInfo-label">
+                            <span class="gInfo-label-title">Birthday:</span>
+                            <span id="pet-birthday"></span>
+                        </div>
+                        <div class="gInfo-label">
+                            <span class="gInfo-label-title">Age:</span>
+                            <span id="pet-age"></span>
+                        </div>
+                        <div class="gInfo-label">
+                            <span class="gInfo-label-title">Location:</span>
+                            <span id="pet-location"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="description-section">
+                <h2>Description of the pet</h2>
+                <div class="desc-label">
+                    <h3>Posted by</h3>
+                    <p id="post-owner"></p>
+                </div>
+                <div class="desc-label">
+                    <h3>Description</h3>
+                    <p id="pet-description"></p>
+                </div>
+                <div class="desc-label">
+                    <h3>Medical History</h3>
+                    <p id="pet-medical"></p>
+                </div>
+                <div class="desc-label">
+                    <h3>Foods that it likes</h3>
+                    <p id="pet-food-like"></p>
+                </div>
+                <div class="desc-label">
+                    <h3>Foods that it doesn't like</h3>
+                    <p id="pet-food-dislike"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="report-modal-bg" class="hidden">
+        <div id="report-modal">
+            <img src="/frontend/assets/bone-shaped-dog-biscuit.png" id="close-report" alt="Close" role="button"
+                tabindex="0">
+            <h2>Report the post</h2>
+            <form id="report-form">
+                <div class="report-options">
+                    <label><input type="radio" name="reason" value="Inappropriate content">Inappropriate
+                        content</label><br>
+                    <label><input type="radio" name="reason" value="Scam">Scam</label><br>
+                    <label><input type="radio" name="reason" value="Fake post">Fake post</label><br>
+                    <label><input type="radio" name="reason" value="Animal abuse">Animal abuse</label><br>
+                    <label><input type="radio" name="reason" value="Other">Other</label><br>
+                </div>
+                <textarea name="comments" placeholder="Other comments..." rows="5"></textarea>
+                <div class="report-action">
+                    <button type="submit">Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- User posts tab -->
     <div class="user-posts-overlay" id="user-posts-overlay" style="display: none;">
@@ -169,8 +173,8 @@
         <div class="login-tab">
             <div class="tab-header">
                 <div class="logo">Logo</div>
-                <button class="close-button" id="close-login"><img
-                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
+                <button class="close-button" id="close-login"><img src="../assets/bone-shaped-dog-biscuit.png"
+                        alt="Close"></button>
             </div>
             <form id="login-form">
                 <div class="form-group">
@@ -182,7 +186,7 @@
                     <input type="password" id="login-password" name="password" class="form-control" required>
                 </div>
                 <button type="submit" class="login-submit">Login</button>
-                
+
                 <div class="divider-container">
                     <div class="divider-line"></div>
                     <span class="divider-text">Or</span>
@@ -193,9 +197,7 @@
                 <script src="https://accounts.google.com/gsi/client" async defer></script>
                 <div id="g_id_onload"
                     data-client_id="655497541449-ct2cha40r6uk5qqps6ammp5jtgq9ghcu.apps.googleusercontent.com"
-                    data-context="signin"
-                    data-callback="handleGoogleLogin"
-                    data-auto_prompt="false">
+                    data-context="signin" data-callback="handleGoogleLogin" data-auto_prompt="false">
                 </div>
                 <div class="g_id_signin"></div>
             </form>
@@ -211,8 +213,8 @@
         <div class="signup-tab">
             <div class="tab-header">
                 <div class="logo">Logo</div>
-                <button class="close-button" id="close-signup"><img
-                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
+                <button class="close-button" id="close-signup"><img src="../assets/bone-shaped-dog-biscuit.png"
+                        alt="Close"></button>
             </div>
             <form id="signup-form">
                 <div class="form-group">
@@ -240,8 +242,8 @@
         <div class="forgot-tab">
             <div class="tab-header">
                 <div class="logo">Logo</div>
-                <button class="close-button" id="close-forgot"><img
-                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
+                <button class="close-button" id="close-forgot"><img src="../assets/bone-shaped-dog-biscuit.png"
+                        alt="Close"></button>
             </div>
             <form id="forgot-form">
                 <div class="form-group">
@@ -261,8 +263,8 @@
         <div class="profile-tab">
             <div class="tab-header">
                 <div class="logo">Logo</div>
-                <button class="close-button" id="close-profile"><img
-                        src="../assets/bone-shaped-dog-biscuit.png" alt="Close" ></button>
+                <button class="close-button" id="close-profile"><img src="../assets/bone-shaped-dog-biscuit.png"
+                        alt="Close"></button>
             </div>
             <form id="profile-form">
                 <div class="form-group">
@@ -300,7 +302,8 @@
     <div id="ticket-modal" class="ticket-modal hidden">
         <div class="ticket-modal-content">
 
-            <img src="../assets/bone-shaped-dog-biscuit.png" id="ticket-modal-close" alt="Close" class="ticket-modal-close" />
+            <img src="../assets/bone-shaped-dog-biscuit.png" id="ticket-modal-close" alt="Close"
+                class="ticket-modal-close" />
             <h2>Create Ticket</h2>
 
             <label for="ticket-modal-subject">Subject</label>
@@ -314,5 +317,6 @@
             <button id="ticket-modal-submit">Submit</button>
         </div>
     </div>
-    </body>
+</body>
+
 </html>

@@ -397,15 +397,22 @@ class Post
         thumbnail_string VARCHAR2(255) := '';
         medical_string VARCHAR2(4000) := '';
         food_like_string VARCHAR2(4000) := '';
-        food_dislike_string VARCHAR2(4000) := ''; 
+        food_dislike_string VARCHAR2(4000) := '';
+        owner_name_string VARCHAR2(4000) := '';
         CURSOR posts_lines IS SELECT * FROM posts;
         CURSOR media_lines IS SELECT * FROM media;
         CURSOR medical_lines IS SELECT * FROM medical;
         CURSOR food_like_lines IS SELECT * FROM food_like;
         CURSOR food_dislike_lines IS SELECT * FROM food_dislike;
+        owner_first_name VARCHAR2(255) := '';
+        owner_last_name VARCHAR2(255) := '';
+        owner_id_temp NUMBER := 0;
         count_media NUMBER := 0;
     BEGIN
         SELECT thumbnail_path INTO thumbnail_string FROM thumbnail WHERE id_post = id_rec;
+        SELECT owner_id INTO owner_id_temp FROM posts WHERE id = id_rec;
+        SELECT first_name, last_name INTO owner_first_name, owner_last_name FROM users WHERE id = owner_id_temp;
+        owner_name_string := owner_name_string || owner_first_name || ' ' || owner_last_name;
         FOR lines IN posts_lines LOOP
             IF lines.id = id_rec THEN
                 post := lines;
@@ -453,6 +460,7 @@ class Post
                 END IF;
             END LOOP;
 
+            :owner := owner_name_string;
             :media_array := temp_media_array;
             :medical_array := medical_string;
             :food_like_array := food_like_string;
@@ -484,6 +492,7 @@ class Post
         $medicalArray = "";
         $foodLikeArray = "";
         $foodDislikeArray = "";
+        $owner = "";
         $error = "";
 
         oci_bind_by_name($extractDataCommand, ":name", $name, 50);
@@ -501,6 +510,7 @@ class Post
         oci_bind_by_name($extractDataCommand, ":medical_array", $medicalArray, 4000);
         oci_bind_by_name($extractDataCommand, ":food_like_array", $foodLikeArray, 4000);
         oci_bind_by_name($extractDataCommand, ":food_dislike_array", $foodDislikeArray, 4000);
+        oci_bind_by_name($extractDataCommand, ":owner", $owner, 4000);
 
         if (oci_execute($extractDataCommand)) {
             if ($error != "") {
@@ -520,7 +530,8 @@ class Post
                     "media_array" => rtrim($mediaArray ?? '', ';'),
                     "medical_array" => rtrim($medicalArray ?? '', ';'),
                     "food_like_array" => rtrim($foodLikeArray ?? '', ';'),
-                    "food_dislike_array" => rtrim($foodDislikeArray ?? '', ';')
+                    "food_dislike_array" => rtrim($foodDislikeArray ?? '', ';'),
+                    "owner" => $owner
                 ];
             }
         }

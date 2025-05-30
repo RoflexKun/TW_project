@@ -281,6 +281,7 @@ async function extractPostInfo() {
             document.getElementById('pet-size').textContent = result.animal_size;
             document.getElementById('pet-gender').textContent = result.gender;
             document.getElementById('pet-description').textContent = result.description || 'Description unavailable';
+            document.getElementById('post-owner').textContent = result.owner;
 
             displayList('pet-medical', result.medical_array);
             displayList('pet-food-like', result.food_like_array);
