@@ -14,37 +14,58 @@ document.addEventListener("DOMContentLoaded", () => {
     setupBreedDropdownListener();
     fetchSpeciesOptions();
     fetchLocationOptions();
-
-    //Check if an user is an admin
-    async function isAdmin(){
-        try {
-            const token = getToken();
-            const response = await fetch("http://localhost/backend/services/validateadminservice.php", {
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-            });
-            const result = await response.json();
-            console.log(result);
-
-            if(result.is_admin === true){
-                document.getElementById('admin-button').classList.remove('hidden');
-                document.getElementById('admin-button').addEventListener('click', function () {
-                    window.location.href = "http://localhost/frontend/pages/adminpage.html";
-                });
-            }
-
-        } catch (error) {
-            console.log(error);
-        }
-
-    }
-    isAdmin();
 });
 
 // Helper to get JWT token from localStorage, stolen from homepage.js
 function getToken() {
     return localStorage.getItem('token');
+}
+
+// Get user data from DB
+async function fetchUserProfile() {
+    try {
+        const token = getToken();
+        const response = await fetch("http://localhost/backend/services/getprofile.php", {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
+        const result = await response.json();
+
+        if (result && result.user) {
+            userData = result.user;
+
+            const firstNameInput = document.getElementById('user-first-name');
+            const lastNameInput = document.getElementById('user-last-name');
+            const emailDisplay = document.getElementById('user-email');
+            const dateOfBirthInput = document.getElementById('user-date-of-birth');
+            const phoneNumberInput = document.getElementById('user-phone-number');
+
+            if (firstNameInput)
+                firstNameInput.value = userData.first_name || '';
+            if (lastNameInput)
+                lastNameInput.value = userData.last_name || '';
+            if (emailDisplay)
+                emailDisplay.textContent = userData.email || '';
+            if (phoneNumberInput)
+                phoneNumberInput.value = userData.phone_number || '';
+            if (dateOfBirthInput) {
+                if (userData.date_of_birth) {
+                    dateOfBirthInput.value = formatDateForInput(userData.date_of_birth);
+                } else {
+                    dateOfBirthInput.value = '';
+                }
+            }
+
+            localStorage.setItem('phone_number', userData.phone_number);
+
+        }
+        else {
+            console.error('Failed to fetch profile data:', result.message);
+        }
+    } catch (error) {
+        console.error('Error fetching profile data:', error);
+    }
 }
 
 async function extractData() {
@@ -62,6 +83,7 @@ async function extractData() {
     const selectSize = document.getElementById('size');
     const selectGender = document.getElementById('gender');
 
+    await fetchUserProfile();
     const phoneNumber = localStorage.getItem('phone_number');
 
     if (!inputName.value.trim()) {
@@ -127,10 +149,7 @@ async function extractData() {
 
     try {
 
-        console.log('----------------');
-        console.log(phoneNumber);
-        if (phoneNumber === null)
-        {
+        if (phoneNumber === null) {
             const msgDiv = document.getElementById("postMessage");
             msgDiv.textContent = "Complete you'r account before creating a post!";
             msgDiv.style.color = "red";
@@ -410,7 +429,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     logo.addEventListener('click', function () {
         window.location.href = '../pages/HomePage.html';
     });
-    
+
     // Toggle dropdown menu
     const petsButton = document.querySelector('.pets-button-container');
     const dropdownMenu = document.querySelector('.dropdown-menu');
@@ -513,11 +532,13 @@ document.addEventListener('DOMContentLoaded', async function () {
             else {
                 removeToken();
                 localStorage.removeItem('user');
+                localStorage.removeItem('phone_number');
             }
         }
         catch (error) {
             removeToken();
             localStorage.removeItem('user');
+            localStorage.removeItem('phone_number');
         }
     }
     else {
@@ -580,6 +601,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (result.success) {
                 removeToken();
                 localStorage.removeItem('user');
+                localStorage.removeItem('phone_number');
                 alert('Logged out successfully!');
 
                 // Redirect to homepage
@@ -763,54 +785,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (parts.length !== 3) return '';
 
         return `${parts[2]}-${parts[1]}-${parts[0]}`;
-    }
-
-    // Get user data from DB
-    async function fetchUserProfile() {
-        try {
-            const token = getToken();
-            const response = await fetch("http://localhost/backend/services/getprofile.php", {
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-            });
-            const result = await response.json();
-
-            if (result && result.user) {
-                userData = result.user;
-
-                const firstNameInput = document.getElementById('user-first-name');
-                const lastNameInput = document.getElementById('user-last-name');
-                const emailDisplay = document.getElementById('user-email');
-                const dateOfBirthInput = document.getElementById('user-date-of-birth');
-                const phoneNumberInput = document.getElementById('user-phone-number');
-
-                if (firstNameInput)
-                    firstNameInput.value = userData.first_name || '';
-                if (lastNameInput)
-                    lastNameInput.value = userData.last_name || '';
-                if (emailDisplay)
-                    emailDisplay.textContent = userData.email || '';
-                if (phoneNumberInput)
-                    phoneNumberInput.value = userData.phone_number || '';
-                if (dateOfBirthInput) {
-                    if (userData.date_of_birth) {
-                        dateOfBirthInput.value = formatDateForInput(userData.date_of_birth);
-                    } else {
-                        dateOfBirthInput.value = '';
-                    }
-                }
-
-                localStorage.setItem('phone_number', userData.phone_number);
-                console.log(userData.id);
-
-            }
-            else {
-                console.error('Failed to fetch profile data:', result.message);
-            }
-        } catch (error) {
-            console.error('Error fetching profile data:', error);
-        }
     }
 
     // Profile data submision
