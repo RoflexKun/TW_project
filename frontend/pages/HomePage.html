@@ -214,9 +214,7 @@
                 <script src="https://accounts.google.com/gsi/client" async defer></script>
                 <div id="g_id_onload"
                     data-client_id="655497541449-ct2cha40r6uk5qqps6ammp5jtgq9ghcu.apps.googleusercontent.com"
-                    data-context="signin"
-                    data-callback="handleGoogleLogin"
-                    data-auto_prompt="false">
+                    data-context="signin" data-callback="handleGoogleLogin" data-auto_prompt="false">
                 </div>
                 <div class="g_id_signin"></div>
             </form>
@@ -269,11 +267,13 @@
                     <label for="forgot-email">Email Address</label>
                     <input type="email" id="forgot-email" name="email" class="form-control" required>
                 </div>
-                <button type="submit" class="forgot-submit">Send resset link</button>
+                <button type="submit" class="forgot-submit">Send reset link</button>
             </form>
             <div class="forgot-alternative">
                 <a href="#" id="forgot-login-link">Login</a>
             </div>
+
+            <div class="confirmation-message" id="confirmation-message" style="display: none;"></div>
         </div>
     </div>
 
@@ -321,7 +321,8 @@
     <div id="ticket-modal" class="ticket-modal hidden">
         <div class="ticket-modal-content">
 
-            <img src="../assets/bone-shaped-dog-biscuit.png" id="ticket-modal-close" alt="Close" class="ticket-modal-close" />
+            <img src="../assets/bone-shaped-dog-biscuit.png" id="ticket-modal-close" alt="Close"
+                class="ticket-modal-close" />
             <h2>Create Ticket</h2>
 
             <label for="ticket-modal-subject">Subject</label>

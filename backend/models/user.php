@@ -408,6 +408,44 @@ class User
         }
     }
 
+    public function verifyEmail($email){
+        self::verifyTable();
+        $verifyEmailQuery = "
+            DECLARE
+                result NUMBER := 0;
+            BEGIN
+                SELECT COUNT(*) INTO result FROM users WHERE email = :email;
+                :result := TO_CHAR(result);
+            END;
+        ";
+        $verifyEmailQueryCommand = oci_parse($this->conn, $verifyEmailQuery);
+        $result = '';
+        oci_bind_by_name($verifyEmailQueryCommand, ":email", $email);
+        oci_bind_by_name($verifyEmailQueryCommand, ":result", $result, 10);
+
+        if(oci_execute($verifyEmailQueryCommand)){
+            if($result === '0')
+                return false;
+            else
+                return true;
+        }
+    }
+
+    public function updatePassword($email, $newPass){
+        self::verifyTable();
+        $updatePasswordQuery = "
+            UPDATE users SET password_hash = :new_pass WHERE email = :email
+        ";
+        $updatePasswordQueryCommand = oci_parse($this->conn, $updatePasswordQuery);
+        oci_bind_by_name($updatePasswordQueryCommand, ":email", $email);
+        oci_bind_by_name($updatePasswordQueryCommand, ":new_pass", $newPass);
+        if(oci_execute($updatePasswordQueryCommand)){
+            return ['status' => true];
+        }else {
+            return ['status' => false];
+        }
+    }
+
     public function verifyTable()
     {
         $checkTable = "

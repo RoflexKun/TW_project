@@ -104,5 +104,16 @@ class UserController {
         ];
     }
 
+    public function verifyEmail($email){
+        $userModel = new User();
+        return $userModel->verifyEmail($email);
+    }
+
+    public function updatePassword($email, $newPass){
+        $hashedPass = password_hash($newPass, PASSWORD_DEFAULT);
+        $userModel = new User();
+        return $userModel->updatePassword($email, $hashedPass);
+    }
+
 }
 ?>

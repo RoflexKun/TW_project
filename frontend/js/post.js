@@ -618,11 +618,21 @@ document.addEventListener('DOMContentLoaded', async function () {
         window.location.href = '../pages/postlist.html?filter=Cat';
     });
 
-    // Forgot password link
+    // Forgot password link(TO BE MODIFIED IN ALL HEADERS)
     forgotPasswordLink.addEventListener('click', function (event) {
         event.preventDefault();
         loginTab.classList.remove('active');
         forgotPasswordTab.classList.add('active');
+
+        const form = document.getElementById('forgot-form');
+        const altLink = document.querySelector('.forgot-alternative');
+        const confirmationContainer = document.getElementById('confirmation-message');
+
+        form.reset();
+        form.style.display = 'block';
+        altLink.style.display = 'block';
+        confirmationContainer.style.display = 'none';
+        confirmationContainer.innerHTML = '';
     });
 
     // Logout funcionality
@@ -763,7 +773,36 @@ document.addEventListener('DOMContentLoaded', async function () {
         const formData = new URLSearchParams();
         formData.append('email', email);
 
-        // FUNCTIONALITY TO BE ADDED
+        try {
+            const response = await fetch("http://localhost/backend/services/emailservice.php", {
+                method: "POST",
+                body: formData
+            });
+            const result = await response.json();
+            console.log(result);
+
+            if (result.status === 'Password reset email sent.') {
+                const form = document.getElementById('forgot-form');
+                const altLink = document.querySelector('.forgot-alternative');
+                const confirmationContainer = document.getElementById('confirmation-message');
+
+                form.style.display = 'none';
+                altLink.style.display = 'none';
+
+                confirmationContainer.innerHTML = '';
+                const messagePara = document.createElement('p');
+                messagePara.textContent = 'An email with the password reset link has been sent to ';
+                const emailStrong = document.createElement('strong');
+                emailStrong.textContent = email;
+                messagePara.appendChild(emailStrong);
+                messagePara.appendChild(document.createTextNode('.'));
+
+                confirmationContainer.appendChild(messagePara);
+                confirmationContainer.style.display = 'block';
+            }
+        } catch (error) {
+            console.log(error);
+        }
 
     });
 

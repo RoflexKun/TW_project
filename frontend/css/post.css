@@ -1,6 +1,6 @@
 body {
     background-color: #fdf6e3;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Arial, sans-serif;
     color: #3b3b3b;
 }
 
@@ -1246,4 +1246,28 @@ header {
 .ticket-modal-content input.invalid,
 .ticket-modal-content textarea.invalid {
   border-color: red;
+}
+
+/* Confirmation message if email has been sent */
+.confirmation-message {
+    padding: 20px;
+    text-align: center;
+}
+
+.confirmation-message p {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.confirmation-message{
+    padding: 10px 20px;
+    background-color: #000000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    display: inline-block;
+    min-width: 120px;
+    box-sizing: border-box;
 }
