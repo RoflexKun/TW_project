@@ -21,6 +21,16 @@ function getToken() {
     return localStorage.getItem('token');
 }
 
+// Format date for input field (YYYY-MM-DD)
+    function formatDateForInput(dateString) {
+        if (!dateString) return '';
+
+        const parts = dateString.split('-');
+        if (parts.length !== 3) return '';
+
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    }
+
 // Get user data from DB
 async function fetchUserProfile() {
     try {
@@ -31,6 +41,7 @@ async function fetchUserProfile() {
             }
         });
         const result = await response.json();
+        console.log(result.user);
 
         if (result && result.user) {
             userData = result.user;
@@ -777,15 +788,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         return `${day}-${month}-${year}`;
     }
 
-    // Format date for input field (YYYY-MM-DD)
-    function formatDateForInput(dateString) {
-        if (!dateString) return '';
-
-        const parts = dateString.split('-');
-        if (parts.length !== 3) return '';
-
-        return `${parts[2]}-${parts[1]}-${parts[0]}`;
-    }
+    
 
     // Profile data submision
     profileForm.addEventListener('submit', async function (event) {
