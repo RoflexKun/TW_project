@@ -6,11 +6,6 @@ let currentIds = null;
 let currentThumbnail = null;
 let searchResultsCount = 0;
 
-getPostCount();
-getPostList();
-
-
-
 async function showOnlySearchResults(searchText, page = 1) {
     const postList = document.getElementById("post-list");
     const pagination = document.getElementById("pagination");
@@ -19,8 +14,15 @@ async function showOnlySearchResults(searchText, page = 1) {
     postList.innerHTML = "";
     pagination.innerHTML = "";
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const limitValueFromURL = urlParams.get("limit");
+
     const limitSelect = document.getElementById("posts-limit");
-    const limitValue = limitSelect.value;
+    const limitValue = limitValueFromURL || limitSelect.value;
+
+    if (limitValueFromURL) {
+        limitSelect.value = limitValueFromURL;
+    }
     const postsPerPage = (limitValue === "all") ? currentIds.length : parseInt(limitValue);
 
     if (!currentNames || currentNames.length === 0) {
@@ -149,12 +151,25 @@ async function showOnlySearchResults(searchText, page = 1) {
 }
 
 let filter = "All";
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const input = document.getElementById("search-input");
     const limitSelect = document.getElementById("posts-limit");
     const button = document.getElementById("search-button");
 
     const urlParams = new URLSearchParams(window.location.search);
+
+    const searchTextFromURL = urlParams.get("search");
+    const pageFromURL = parseInt(urlParams.get("page")) || 1;
+
+    if (searchTextFromURL) {
+        lastSearchText = searchTextFromURL;
+        await getSearchResults(searchTextFromURL);
+        showOnlySearchResults(searchTextFromURL, pageFromURL);
+    } else {
+        getPostCount();
+        getPostList();
+    }
+
     const urlFilter = urlParams.get("filter");
 
     if (urlFilter === "Dog" || urlFilter === "Cat") {
@@ -173,7 +188,11 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("Has result?:", hasResults);
 
             if (hasResults) {
-                showOnlySearchResults(searchText, 1);
+                const params = new URLSearchParams(window.location.search);
+                params.set("search", searchText);
+                params.set("page", 1);
+                params.set("limit", limitSelect.value);
+                window.location.search = params.toString();
             } else {
                 const postList = document.getElementById("post-list");
                 const pagination = document.getElementById("pagination");
@@ -437,7 +456,9 @@ async function getPostCount() {
             button.className = "page-button" + (i === currentPage ? " active" : "");
             button.textContent = i;
             button.addEventListener("click", () => {
-                window.location.search = `?page=${i}`;
+                const params = new URLSearchParams(window.location.search);
+                params.set("page", i);
+                window.location.search = params.toString();
             });
             paginationPart.appendChild(button);
         }
