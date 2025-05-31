@@ -282,6 +282,7 @@ async function extractPostInfo() {
             document.getElementById('pet-gender').textContent = result.gender;
             document.getElementById('pet-description').textContent = result.description || 'Description unavailable';
             document.getElementById('post-owner').textContent = result.owner;
+            document.getElementById('post-owner-phone').textContent = result['owner_phone'];
 
             displayList('pet-medical', result.medical_array);
             displayList('pet-food-like', result.food_like_array);
@@ -1082,3 +1083,30 @@ window.handleGoogleLogin = async function(response) {
     }
     document.body.style.overflow = '';
 }
+
+//Phone number Popup
+function getPostOwnerPhoneNumber() {
+    return window.currentPostOwnerPhoneNumber || "123-456-7890";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const adoptBtn = document.querySelector('.adopt-button');
+    const adoptOverlay = document.getElementById('adopt-tab');
+    const closeAdoptBtn = document.getElementById('close-adopt');
+    const phoneNumberDiv = document.getElementById('adopt-phone-number');
+
+    if (adoptBtn) {
+        adoptBtn.addEventListener('click', function () {
+            // Get phone number from hidden div
+            const phone = document.getElementById('post-owner-phone').textContent;
+            phoneNumberDiv.textContent = phone;
+            adoptOverlay.style.display = 'flex';
+        });
+    }
+
+    if (closeAdoptBtn) {
+        closeAdoptBtn.addEventListener('click', function () {
+            adoptOverlay.style.display = 'none';
+        });
+    }
+});
