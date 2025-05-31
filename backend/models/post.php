@@ -406,12 +406,13 @@ class Post
         CURSOR food_dislike_lines IS SELECT * FROM food_dislike;
         owner_first_name VARCHAR2(255) := '';
         owner_last_name VARCHAR2(255) := '';
+        owner_phone_string VARCHAR2(255) := '';
         owner_id_temp NUMBER := 0;
         count_media NUMBER := 0;
     BEGIN
         SELECT thumbnail_path INTO thumbnail_string FROM thumbnail WHERE id_post = id_rec;
         SELECT owner_id INTO owner_id_temp FROM posts WHERE id = id_rec;
-        SELECT first_name, last_name INTO owner_first_name, owner_last_name FROM users WHERE id = owner_id_temp;
+        SELECT first_name, last_name, phone_number INTO owner_first_name, owner_last_name, owner_phone_string FROM users WHERE id = owner_id_temp; -- add phone_number
         owner_name_string := owner_name_string || owner_first_name || ' ' || owner_last_name;
         FOR lines IN posts_lines LOOP
             IF lines.id = id_rec THEN
@@ -461,6 +462,7 @@ class Post
             END LOOP;
 
             :owner := owner_name_string;
+            :owner_phone := owner_phone_string;
             :media_array := temp_media_array;
             :medical_array := medical_string;
             :food_like_array := food_like_string;
@@ -493,6 +495,7 @@ class Post
         $foodLikeArray = "";
         $foodDislikeArray = "";
         $owner = "";
+        $owner_phone = "";
         $error = "";
 
         oci_bind_by_name($extractDataCommand, ":name", $name, 50);
@@ -511,6 +514,7 @@ class Post
         oci_bind_by_name($extractDataCommand, ":food_like_array", $foodLikeArray, 4000);
         oci_bind_by_name($extractDataCommand, ":food_dislike_array", $foodDislikeArray, 4000);
         oci_bind_by_name($extractDataCommand, ":owner", $owner, 4000);
+        oci_bind_by_name($extractDataCommand, ":owner_phone", $owner_phone, 255);
 
         if (oci_execute($extractDataCommand)) {
             if ($error != "") {
@@ -531,7 +535,8 @@ class Post
                     "medical_array" => rtrim($medicalArray ?? '', ';'),
                     "food_like_array" => rtrim($foodLikeArray ?? '', ';'),
                     "food_dislike_array" => rtrim($foodDislikeArray ?? '', ';'),
-                    "owner" => $owner
+                    "owner" => $owner,
+                    "owner_phone" => $owner_phone
                 ];
             }
         }

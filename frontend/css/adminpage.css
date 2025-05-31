@@ -284,6 +284,13 @@ header {
     gap: 8px;
 }
 
+.post-results-container{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
 /* Tickets */
 .ticket-card {
     background-color: white;
@@ -600,4 +607,245 @@ header {
 .add-form input.invalid,
 .add-form select.invalid {
     border-color: red;
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+        text-align: center;
+    }
+    
+    .title {
+        font-size: 24px;
+    }
+    
+    .logo {
+        font-size: 18px;
+        padding: 10px 20px;
+    }
+    
+    .admin-container {
+        flex-direction: column;
+        margin: 16px auto;
+        padding: 0 16px;
+        gap: 16px;
+    }
+    
+    .admin-sidebar {
+        width: 100%;
+        position: static;
+        padding: 16px 0;
+    }
+    
+    .sidebar-item {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    
+    .sidebar-item .icon {
+        margin-right: 12px;
+        font-size: 16px;
+    }
+    
+    .export-button-container {
+        margin-top: 16px;
+    }
+    
+    .export-json-btn {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+    
+    .admin-content {
+        padding: 16px;
+    }
+    
+    .section-header h2 {
+        font-size: 24px;
+    }
+    
+    .search-bar {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .search-input {
+        width: 100%;
+    }
+    
+    .add-section {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .add-box {
+        padding: 16px;
+    }
+    
+    .tickets-filters {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 16px;
+    }
+    
+    .filter-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .user-card {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+        text-align: center;
+    }
+    
+    .user-actions {
+        justify-content: center;
+    }
+    
+    .ticket-modal-content {
+        width: 300px;
+        padding: 1.5rem;
+    }
+    
+    .ticket-modal-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .post-card-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+    }
+    
+    .post-thumbnail {
+        margin-right: 0;
+        align-self: center;
+    }
+    
+    .post-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
+/* Mobile First - 480px and up */
+@media (min-width: 480px) {
+    .header-container {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .admin-container {
+        flex-direction: column;
+        padding: 0 24px;
+    }
+    
+    .admin-sidebar {
+        width: 100%;
+        position: static;
+    }
+    
+    .search-bar {
+        flex-direction: row;
+    }
+    
+    .add-section {
+        flex-direction: column;
+        gap: 24px;
+    }
+    
+    .user-card {
+        flex-direction: row;
+        align-items: center;
+    }
+    
+    .tickets-filters {
+        flex-direction: row;
+        align-items: center;
+    }
+    
+    .filter-group {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+/* Small tablets and large phones - 768px and up */
+@media (min-width: 768px) {
+    .admin-container {
+        flex-direction: row;
+        padding: 0 32px;
+    }
+    
+    .admin-sidebar {
+        width: 280px;
+        position: sticky;
+        top: 120px;
+    }
+    
+    .add-section {
+        flex-direction: row;
+        gap: 32px;
+    }
+    
+    .add-box {
+        flex: 1;
+        padding: 24px;
+    }
+    
+    .ticket-modal-content {
+        width: 400px;
+        padding: 2rem;
+    }
+    
+    .ticket-modal-actions {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .post-card-header {
+        flex-direction: row;
+        text-align: left;
+    }
+    
+    .post-thumbnail {
+        margin-right: 16px;
+    }
+    
+    .post-actions {
+        justify-content: flex-end;
+        flex-wrap: nowrap;
+    }
+}
+
+/* Tablets and small desktops - 1024px and up */
+@media (min-width: 1024px) {
+    .admin-container {
+        max-width: 1400px;
+        margin: 32px auto;
+    }
+    
+    .admin-content {
+        padding: 32px;
+    }
+    
+    .add-box {
+        padding: 32px;
+    }
+    
+    .section-header h2 {
+        font-size: 32px;
+    }
+    
+    .tickets-filters {
+        padding: 24px;
+    }
 }
