@@ -795,6 +795,7 @@ p {
   justify-content: start;
   gap: 20px;
   max-width: 1080px; 
+  margin-top: 20px;
   margin: 0 auto;
   padding: 0;
 }
@@ -1295,6 +1296,7 @@ p {
         grid-template-columns: repeat(3, 240px);
         justify-content: start;
         max-width: 800px;
+        margin-top: 20px;
     }
     
     .post-card {
