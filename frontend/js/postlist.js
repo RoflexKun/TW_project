@@ -4,6 +4,7 @@ let currentNames = null;
 let currentAges = null;
 let currentIds = null;
 let currentThumbnail = null;
+let searchResultsCount = 0;
 
 getPostCount();
 getPostList();
@@ -162,11 +163,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log(filter);
 
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
+        console.log("Button is pressed");
         const searchText = document.getElementById("search-input").value.trim();
         if (searchText !== "") {
             lastSearchText = searchText;
-            showOnlySearchResults(searchText, 1);
+            await getSearchResults(searchText);
+            let hasResults = searchResultsCount > 0;
+            console.log("Has result?:", hasResults);
+
+            if (hasResults) {
+                showOnlySearchResults(searchText, 1);
+            } else {
+                const postList = document.getElementById("post-list");
+                const pagination = document.getElementById("pagination");
+                const searchMessage = document.getElementById("search-message");
+                postList.innerHTML = "";
+                pagination.innerHTML = "";
+                searchMessage.textContent = `No companions found for: "${searchText}"`;
+                searchMessage.style.display = "block";
+            }
         }
     });
 
@@ -260,7 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     //Check if an user is an admin
-    async function isAdmin(){
+    async function isAdmin() {
         try {
             const token = getToken();
             const response = await fetch("http://localhost/backend/services/validateadminservice.php", {
@@ -271,7 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const result = await response.json();
             console.log(result);
 
-            if(result.is_admin === true){
+            if (result.is_admin === true) {
                 document.getElementById('admin-button').classList.remove('hidden');
                 document.getElementById('admin-button').addEventListener('click', function () {
                     window.location.href = "http://localhost/frontend/pages/adminpage.html";
@@ -309,6 +325,7 @@ async function getSearchResults(searchText) {
         var result = JSON.parse(text);
 
         if (parseInt(result.counter) === 0) {
+            searchResultsCount = parseInt(result.counter);
             list.innerHTML = "<div class='list-item'>No companions found</div>";
             list.style.display = "block";
             return;
@@ -365,6 +382,7 @@ async function getSearchResults(searchText) {
         currentAges = ages;
         currentIds = ids;
         currentThumbnail = thumbnails;
+        searchResultsCount = parseInt(result.counter);
 
         list.innerHTML = "";
 
@@ -440,7 +458,7 @@ async function getPostList() {
     formData.append("page", page);
     formData.append("limit", limit);
 
-    console.log("Limit on all:",limit);
+    console.log("Limit on all:", limit);
 
     try {
         const response = await fetch("http://localhost/backend/services/postlistservice.php", {
@@ -1328,7 +1346,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 });
 
 // Google login
-window.handleGoogleLogin = async function(response) {
+window.handleGoogleLogin = async function (response) {
     const idToken = response.credential;
 
     try {
