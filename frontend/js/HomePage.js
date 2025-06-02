@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             const nameAge = document.createElement('p');
             nameAge.className = 'post-text';
-            nameAge.innerHTML = `<strong>${names[i]}, ${ages[i]}</strong>`;
+            nameAge.textContent = `${names[i]}, ${ages[i]}`;
             post.appendChild(nameAge);
 
             const heartButton = document.createElement('button');
@@ -471,9 +471,9 @@ document.addEventListener('DOMContentLoaded', async function () {
                 post.appendChild(image);
 
                 const nameAge = document.createElement('p');
-                nameAge.className = 'post-text';
-                nameAge.innerHTML = `<strong>${names[i]}, ${ages[i]}</strong>`;
-                post.appendChild(nameAge);
+            nameAge.className = 'post-text';
+            nameAge.textContent = `${names[i]}, ${ages[i]}`;
+            post.appendChild(nameAge);
 
                 const heartButton = document.createElement('button');
                 heartButton.className = 'heart-button';
@@ -571,9 +571,9 @@ document.addEventListener('DOMContentLoaded', async function () {
                 post.appendChild(image);
 
                 const nameAge = document.createElement('p');
-                nameAge.className = 'post-text';
-                nameAge.innerHTML = `<strong>${names[i]}, ${ages[i]}</strong>`;
-                post.appendChild(nameAge);
+            nameAge.className = 'post-text';
+            nameAge.textContent = `${names[i]}, ${ages[i]}`;
+            post.appendChild(nameAge);
 
                 const heartButton = document.createElement('button');
                 heartButton.className = 'heart-button';

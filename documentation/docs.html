@@ -253,7 +253,38 @@
 
             Utilizatorul poate filtra informatii despre animalute precum specia, rasa, varsta, marimea, sex-ul, orasul,
             iar aplicatia face un call AJAX catre baza de date care ne da, ca raspuns, o lista de postari care respecta
-            filtrele respective. In final, aplicatia afiseaza postarile respective.
+            filtrele respective. In final, aplicatia afiseaza postarile respective. "post-card"-urile sunt create prin
+            manipularea DOM-ului prin arbori de elemente, construind o interfata grafica mai dragut de vizualizat cu
+            putine informatii despre postarea respectiva, mai mult pastram id-ul postari pentru a face post-card-ul
+            apasabil pentru ca utilizatorii sa poata sa fie redirectionati la pagina postarii respective
+            <br>Un exemplu de cum construim un "post-card":
+            <pre><code>
+                const post = document.createElement('div');
+                post.classList.add('post-card');
+                post.style.position = 'relative';
+
+                const image = document.createElement('img');
+                image.src = thumbnails[i] ? `/${thumbnails[i]}` : "/frontend/assets/No_Image_Available.jpg";
+                image.className = 'post-img';
+                image.alt = names[i];
+                post.appendChild(image);
+
+                const nameAge = document.createElement('p');
+                nameAge.className = 'post-text';
+                nameAge.textContent = `${names[i]}, ${ages[i]}`;
+                post.appendChild(nameAge);
+
+                const heartButton = document.createElement('button');
+                heartButton.className = 'heart-button';
+                heartButton.innerText = '🤍';
+                post.appendChild(heartButton);
+
+                post.addEventListener('click', () => {
+                    window.location.href = `../pages/post.html?id=${ids[i]}`;
+                });
+
+                wrapper.appendChild(post);
+            </code></pre>
 
             <br>Atunci cand o specie de animale este selectata, programul face un call AJAX si primeste de la baza de
             date
@@ -280,7 +311,50 @@
             <h2 property="schema:about">2.11 Wishlist</h2>
             Utilizatorul are optiunea de a adauga postari la favorite prin apasarea butonului inima. Atunci cand acest
             buton este apasat se face un call AJAX cu id-ul postarii si al user-ului catre baza de date, unde postarea
-            cu id-ul respectiv este adaugat in pagina de Wishlist al utilizatorului.
+            cu id-ul respectiv este adaugat in pagina de Wishlist al utilizatorului. La fel ca mai sus folosdin
+            manipularea DOM-ului, dupa ce am verificat daca un utilizator are sau nu postarea in wishlist putem
+            determina cum sa afiisam postarea
+            <pre><code>
+            const heartButton = document.createElement('button');
+            heartButton.className = 'heart-button';
+            heartButton.innerText = '🤍';
+            post.appendChild(heartButton);
+
+            post.addEventListener('click', () => {
+                window.location.href = `../pages/post.html?id=${ids[i]}`;
+            });
+
+            wrapper.appendChild(post);
+
+            heartButton.addEventListener("click", async (event) => {
+                event.stopPropagation();
+                const token = getToken();
+                if (!token) {
+                    const popup = document.getElementById("wishlist-popup");
+                    if (popup) popup.style.display = "flex";
+                    return;
+                }
+                const isActive = heartButton.classList.toggle("active");
+                heartButton.innerText = isActive ? "❤️" : "🤍";
+
+                const formData = new FormData();
+                formData.append("action", isActive ? "add" : "remove");
+                formData.append("postId", ids[i]);
+
+                try {
+                    const response = await fetch("http://localhost/backend/services/operationwishlistservice.php", {
+                        headers: { 'Authorization': 'Bearer ' + token },
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.text();
+                    console.log(result);
+                } catch (error) {
+                    console.error(error);
+                }
+            });
+            </code></pre>
         </section>
 
         <section id="postarea" resource="#postarea">
@@ -410,9 +484,52 @@
             <br>→<strong>SQL Injection</strong>: protectia impotriva atacurilor de tip SQL Injection este realizata
             chiar folosind
             maniera de lucru cu oci8, astfel incat noi mai intai scrie query-ul PL/SQL, iar folosind comanda
-            *oci_bind_by_name* parsam informatiile primite in string-uri, astfel incat script-uri rau-intentionate vor
+            <i>oci_bind_by_name</i> parsam informatiile primite in string-uri, astfel incat script-uri rau-intentionate vor
             fi observate de catre administratorul de baze de date si vazute ca obiecte de tip VARCHAR2, nici de cum
             aceste script-uri nu vor fi executate.
+            <br>Exemplu de parsare a unui script PL/SQL(chiar metoda de inserare a unei noi postari):
+            <pre><code>
+    public function insertPost($data, $userId)
+    {
+        self::verifyTable();
+        $name = $data['name'] ?? '';
+        $species = $data['species'] ?? '';
+        $breed = $data['breed'] ?? '';
+        $birthday = $data['birthday'] ?? '';
+        $location = $data['location'] ?? '';
+        $description = $data['description'] ?? '';
+        $animal_size = $data['size'] ?? '';
+        $gender = $data['gender'] ?? '';
+
+        $insertEntry = "
+    DECLARE
+        new_id NUMBER;
+    BEGIN
+        SELECT NVL(MAX(id), 0) + 1 INTO new_id FROM posts;
+        INSERT INTO POSTS(id, name, species, breed, birthday, age, location, description, animal_size, gender, owner_id)
+        VALUES(new_id, :name, :species, :breed, TO_DATE(:birthday, 'YYYY-MM-DD'), TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(:birthday, 'YYYY-MM-DD'))/12), :location, :description, :animal_size, :gender, :owner_id);
+
+        :new_id := new_id;
+    END;";
+
+        $new_id = 0;
+        $insertCommand = oci_parse($this->conn, $insertEntry);
+        oci_bind_by_name($insertCommand, ":name", $name);
+        oci_bind_by_name($insertCommand, ":species", $species);
+        oci_bind_by_name($insertCommand, ":breed", $breed);
+        oci_bind_by_name($insertCommand, ":birthday", $birthday);
+        oci_bind_by_name($insertCommand, ":location", $location);
+        oci_bind_by_name($insertCommand, ":description", $description);
+        oci_bind_by_name($insertCommand, ":animal_size", $animal_size);
+        oci_bind_by_name($insertCommand, ":gender", $gender);
+        oci_bind_by_name($insertCommand, ":owner_id", $userId);
+        oci_bind_by_name($insertCommand, ":new_id", $new_id, 8);
+
+        oci_execute($insertCommand);
+        return $new_id;
+    }
+
+            </code></pre>
 
             <br>→<strong>Cross-Site Scripting</strong>: Desi am rezolvat partea de executare de script-uri rau
             intentionate executate in
@@ -532,24 +649,32 @@
         <ul>
             <li><a href="resources/Lighthouse Report/Desktop/AdminPage_Desktop.html" target="_blank">Admin Page</a></li>
             <li><a href="resources/Lighthouse Report/Desktop/HomePage_Desktop.html" target="_blank">Home Page</a></li>
-            <li><a href="resources/Lighthouse Report/Desktop/NewPostPage_Desktop.html" target="_blank">New Post Page</a></li>
-            <li><a href="resources/Lighthouse Report/Desktop/PostListPage_Desktop.html" target="_blank">Post List Page</a></li>
+            <li><a href="resources/Lighthouse Report/Desktop/NewPostPage_Desktop.html" target="_blank">New Post Page</a>
+            </li>
+            <li><a href="resources/Lighthouse Report/Desktop/PostListPage_Desktop.html" target="_blank">Post List
+                    Page</a></li>
             <li><a href="resources/Lighthouse Report/Desktop/PostPage_Desktop.html" target="_blank">Post Page</a></li>
-            <li><a href="resources/Lighthouse Report/Desktop/ResetPasswordPage_Desktop.html" target="_blank">Reset Password Page</a></li>
-            <li><a href="resources/Lighthouse Report/Desktop/WishlistPage_Desktop.html" target="_blank">Wishlist Page</a></li>
+            <li><a href="resources/Lighthouse Report/Desktop/ResetPasswordPage_Desktop.html" target="_blank">Reset
+                    Password Page</a></li>
+            <li><a href="resources/Lighthouse Report/Desktop/WishlistPage_Desktop.html" target="_blank">Wishlist
+                    Page</a></li>
         </ul>
 
         <h3>Teste Mobile</h3>
         <ul>
             <li><a href="resources/Lighthouse Report/Mobile/HomePage_Mobile.html" target="_blank">Home Page</a></li>
-            <li><a href="resources/Lighthouse Report/Mobile/NewPostPage_Mobile.html" target="_blank">New Post Page</a></li>
-            <li><a href="resources/Lighthouse Report/Mobile/PostListPage_Mobile.html" target="_blank">Post List Page</a></li>
+            <li><a href="resources/Lighthouse Report/Mobile/NewPostPage_Mobile.html" target="_blank">New Post Page</a>
+            </li>
+            <li><a href="resources/Lighthouse Report/Mobile/PostListPage_Mobile.html" target="_blank">Post List Page</a>
+            </li>
             <li><a href="resources/Lighthouse Report/Mobile/PostPage_Mobile.html" target="_blank">Post Page</a></li>
-            <li><a href="resources/Lighthouse Report/Mobile/ResetPasswordPage_Mobile.html" target="_blank">Reset Password Page</a></li>
-            <li><a href="resources/Lighthouse Report/Mobile/WishlistPage_Mobile.html" target="_blank">Wishlist Page</a></li>
+            <li><a href="resources/Lighthouse Report/Mobile/ResetPasswordPage_Mobile.html" target="_blank">Reset
+                    Password Page</a></li>
+            <li><a href="resources/Lighthouse Report/Mobile/WishlistPage_Mobile.html" target="_blank">Wishlist Page</a>
+            </li>
         </ul>
     </section>
-    
+
 
 </body>
 
