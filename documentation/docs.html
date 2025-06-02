@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ro" prefix="schema: http://schema.org/">
+
+<head>
+    <meta charset="utf-8">
+    <title>Documentatia Pets2Adopt</title>
+    <meta about="#pets2adopt" typeof="schema:ScholarlyArticle">
+    <link rel="stylesheet" href="docs.css">
+</head>
+
+<body>
+    <article resource="#pets2adopt" typeof="schema:ScholarlyArticle">
+        <h1 property="schema:headline">Documentatia Pets2Adopt</h1>
+
+        <nav aria-label="Cuprins general">
+            <ul>
+                <li>
+                    <a href="#frontend">1. Frontend</a>
+                    <ul>
+                        <li><a href="#culori-font">1.1 Alegerea culorilor si fontului</a></li>
+                        <li><a href="#header">1.2 Header</a></li>
+                        <li><a href="#homepage">1.3 Homepage</a></li>
+                        <li><a href="#wishlist">1.4 Wishlist</a></li>
+                        <li><a href="#newpost">1.5 New Post</a></li>
+                        <li><a href="#post">1.6 Post</a></li>
+                        <li><a href="#postlist">1.7 Post List</a></li>
+                        <li><a href="#adminpanel">1.8 Admin Panel</a></li>
+                        <li><a href="#user-app">1.9 User-app interaction diagram</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#javascript">2. JavaScript</a>
+                    <ul>
+                        <li><a href="#introducere">2.1 Scurta introducere</a></li>
+                        <li><a href="#inregistrarea">2.2 Inregistrarea</a></li>
+                        <li><a href="#logarea">2.3 Logarea</a></li>
+                        <li><a href="#logout">2.4 Logout</a></li>
+                        <li><a href="#resetarea-parolei">2.5 Resetarea parolei</a></li>
+                        <li><a href="#profile-tab">2.6 Profile tab</a></li>
+                        <li><a href="#tickets">2.7 Crearea de tickete</a></li>
+                        <li><a href="#your-posts">2.8 Sectiunea "Your Posts"</a></li>
+                        <li><a href="#filtre-afisare">2.9 Filtrele si afisarea postarilor</a></li>
+                        <li><a href="#postare-noua">2.10 Crearea unei postari</a></li>
+                        <li><a href="#wishlist-js">2.11 Wishlist</a></li>
+                        <li><a href="#postarea">2.12 Pagina postarii</a></li>
+                        <li><a href="#all-about-pets">2.13 Sectiunea All About Pets si PostList</a></li>
+                        <li><a href="#admin-panel">2.14 Admin Panel</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#backend">3. Backend</a>
+                    <ul>
+                        <li><a href="#arhitectura">3.1 Arhitectura aplicatiei + C4</a></li>
+                        <li><a href="#baza-de-date">3.2 Cum functioneaza baza de date</a></li>
+                        <li><a href="#frontend-backend">3.3 Interactiunea frontend-backend</a></li>
+                        <li><a href="#securitate">3.4 Securitatea aplicatiei</a></li>
+                        <li><a href="#functionalitati">3.5 Functionalitati principale</a></li>
+                        <li><a href="#extindere">3.6 Extinderea aplicatiei web</a></li>
+                        <li><a href="#librarii">3.7 Librarii si tehnologii folosite</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#concluzie">4. Concluzii finale + Teste de performanta</a>
+                </li>
+            </ul>
+        </nav>
+
+        <h2 id="frontend">1. Frontend</h2>
+
+        <article id="culori-font" resource="#colorFont" property="schema:hasPart">
+            <h2 property="schema:about">1.1 Alegerea culorilor și fontului</h2>
+            <p property="schema:description">
+                Alegerea bejului si maroului ca culori primare creeaza o atmosfera calda, primitoare si pamanteasca
+                acestea reflecta confort, fiabilitate si grija. Bej-ul ofera un fundal neutru, in timp ce maro-ul adauga
+                profunzime si stabilitate.
+            </p>
+            <p>
+                Fontul Arial a fost ales pentru claritate si accesibilitate → este lizibil pe toate dispozitivele
+                pastreaza atentia utilizatorului pe continutul principal: animalele si povestile lor.
+            </p>
+        </article>
+
+        <article id="header" resource="#headerSection" property="schema:hasPart">
+            <h2 property="schema:about">1.2 Header</h2>
+            <p>Toate paginile aplicației au un header comun structurat astfel:</p>
+            <p>
+                → Dropdown „All about pets” (stânga) → contine categorii de animale<br>
+                → Logo central (mijloc) → buton catre pagina principala<br>
+                → Buton „Login” (dreapta) → logare, înregistrare, resetare parolă<br>
+                → Secțiunea „Account” + Wishlist (inimioară) (dreapta):
+                <br>&emsp;&emsp;→ Wishlist → pagina cu postarile preferate
+                <br>&emsp;&emsp;→ Dropdown:
+                Profile, Admin panel, Post, Your Posts, Create Ticket, Logout
+            </p>
+        </article>
+
+        <article id="homepage" resource="#homepageSection" property="schema:hasPart">
+            <h2 property="schema:about">1.3 Homepage</h2>
+            <p>
+                → Poză de fundal + text de bun venit
+                <br>→ Sectiune de filtre: specie, rasă, vârstă, mărime, sex, oraș + sortare (popularitate/data) + buton
+                aplicare
+                <br>→ Sectiune de postări filtrate
+                <br>→ Cele mai recente postări
+                <br>→ Cele mai populare postări
+            </p>
+        </article>
+
+        <article id="wishlist" resource="#wishlistSection" property="schema:hasPart">
+            <h2 property="schema:about">1.4 Wishlist</h2>
+            <p>
+                → Afișează postările apreciate de utilizator
+                <br>→ Oferă opțiunea de sortare după data creării
+            </p>
+        </article>
+
+        <article id="newpost" resource="#newPostSection" property="schema:hasPart">
+            <h2 property="schema:about">1.5 New Post</h2>
+            <p>
+                → Doar utilizatorii logați pot crea o nouă postare
+                <br>→ General information: Name, Size, Gender, Species, Breed, Birthday, Location
+                <br>→ Description: Descriere, probleme medicale, preferințe alimentare
+                <br>→ Media: Poze/filmulețe + opțiune de ștergere
+                <br>→ Create post: disponibil doar cu toate câmpurile completate și telefon setat
+            </p>
+        </article>
+
+        <article id="post" resource="#postSection" property="schema:hasPart">
+            <h2 property="schema:about">1.6 Post</h2>
+            <p>
+                → Poze și filmulețe
+                <br>→ Informații generale: nume, rasă, specie etc.
+                <br>→ Descriere completă: istoric medical, preferințe alimentare
+                <br>→ Buton "Adopt me!": afișează numărul de telefon
+                <br>→ Buton "Report": opțiune de raportare postare
+            </p>
+        </article>
+
+        <article id="postlist" resource="#postListSection" property="schema:hasPart">
+            <h2 property="schema:about">1.7 Post List</h2>
+            <p>
+                → Afișează o listă de postări
+                <br>→ Căutare după nume + setare număr postări/pagină
+            </p>
+        </article>
+
+        <article id="adminpanel" resource="#adminPanelSection" property="schema:hasPart">
+            <h2 property="schema:headline">1.8 Admin Panel</h2>
+            <p>
+                → Disponibil doar pentru admini
+                <br>→ User Management: căutare, ștergere, promovare/retrogradare
+                <br>→ Delete Post: căutare și ștergere
+                <br>→ Tickets & Reports: filtrare și răspuns la tichete
+                <br>→ Add Breed/Species: adăugare de specii și rase noi
+            </p>
+        </article>
+
+        <article id="adminpanel" resource="#adminPanelSection" property="schema:hasPart">
+            <h2 property="schema:headline">1.9 User-app interaction diagram</h2>
+            <figure typeof="schema:ImageObject">
+                <img src="resources/user_interaction.svg" alt="Diagrama User-app" property="schema:contentUrl">
+            </figure>
+        </article>
+
+        <h2 id="javascript">2. JavaScript</h2>
+
+        <section id="introducere" resource="#introducere">
+            <h2 property="schema:about">2.1 Scurta Introducere</h2>
+            <i>Deoarece fisierele JavaScript prezinta o mare parte a proiectului, am decis sa scriem o sectiune dedicata
+                acestuia, in loc sa scrie despre acesta doar in frontend si sa explicam functionalitatile si ajutorul
+                acestuia in realizarea acestui proiect</i>
+        </section>
+
+        <section id="inregistrarea" resource="#inregistrarea">
+            <h2 property="schema:about">2.2 Inregistrarea</h2>
+            Pentru crearea contului, utilizatorul introduce un email si o parola (de doua ori pentru confirmare).
+            Programul verifica mai intai ca parolele sa fie egale si de lungime minim 6 (se arunca cate o eroare in
+            cazul in care aceste doua conditii nu sunt indeplinite), dupa care se face un call AJAX la baza de date cu
+            respectivele informatii (email si parola) de la care primim un raspuns afirmativ daca contul a fost creat cu
+            success sau negative daca exista deja un cont cu email-ul respective / exista vreo eroare. La crearea cu
+            success al contului, utilizatorului i se afiseaza un mesaj adecvat.
+        </section>
+
+        <section id="logarea" resource="#logarea">
+            <h2 property="schema:about">2.3 Logarea</h2>
+            <strong>1. Cu mail si parola:</strong>
+            Utilizatorul introduce emailul si parola contului in care doreste sa se logheze, iar programul face un call
+            AJAX la baza de date cu respectivele informatii de la care primim un raspuns afirmativ daca exista un cont
+            cu acest email si parola este corecta sau negative daca nu exista un cont cu email-ul dat / parola este
+            gresita. Daca logarea se face cu success, salvam in memoria browser-ului un token care contine id-ul si
+            email-ul contului.
+
+            <br><strong>2. Cu google account:</strong>
+            Utilizatorul are optiunea de a se loga cu un cont google fara a fi nevoit sa introduca o parola. La logarea
+            cu un cont google, aplicatia face un call AJAX cu tokenul de autentificare creeat de api-ul de la google, de
+            la care primim un mesaj pozitiv daca exista un cont cu email-ul respectiv / contul a fost creeat cu success,
+            eventual un mesaj negativ daca a aparut o eroare.
+
+            <br>Pentru aceasta functionalitate, am folosit OAuth 2.0 API de la google.
+
+            <br>Chiar daca pagina este inchisa sau se da refresh, la redeschidere aplicatia verifica daca exista vreun
+            token
+            de identificare in memoria browser-ului si, daca exista un astfel de token, aplicatia logeaza automat contul
+            al carui token apartine.
+
+        </section>
+
+        <section id="logout" resource="#logout">
+            <h2 property="schema:about">2.4 Logout</h2>
+            Utilizatorul are optiunea de a iesi din cont. Logout-ul este efectuat direct in front-end prin stergerea
+            tokenului de identificare din memoria browser-ului.
+        </section>
+
+        <section id="resetarea-parolei" resource="#resetarea-parolei">
+            <h2 property="schema:about">2.5 Resetarea parolei</h2>
+            In cazul in care utilizatorul si-a uitat parola contului, acesta are optiunea de a primi un email cu un cont
+            de resetare a parolei. Atunci cand utilizatorul introduce email-ul, programul face un call AJAX care, in caz
+            de success, v-a trimite email-ul cu link-ul respective. La accesarea link-ului, se introduce o noua parola
+            de doua ori (pentru confirmare) si se verifica sa fie egale si de lungime minim 6, dupa care programul face
+            un alt call AJAX cu noua parola pentru modificarea acesteia in baza de date.
+        </section>
+
+        <section id="profile-tab" resource="#profile-tab">
+            <h2 property="schema:about">2.6 Profile tab</h2>
+            La deschiderea profilului, programul face un call AJAX cu tokenul contului salvat in memoria browser-ului,
+            de la care primim si afisam informatii despre cont precum nume, prenume, email, numar de telefon, oras si
+            data de nastere.
+            <br>Toate aceste informatii (inafara de email) pot fi modificate de catre utilizator. Atunci cand se
+            modifica
+            informatii, la apasarea butonului "Save", programul face un call AJAX pentru schimbarea noilor informatii in
+            baza de date si primim un mesaj pozitiv daca aceasta schimbare a fost efectuata cu success, eventual un
+            mesaj negative daca aparea o eroare.
+        </section>
+
+        <section id="tickets" resource="#tickets">
+            <h2 property="schema:about">2.7 Crearea de tickete</h2>
+            Pentru crearea unui ticket, utilizatorul scrie subiectul si o mica descriere, dupa care aplicatia face un
+            call AJAX si trimite informatiile cu ticket-ul respectiv la baza de date.
+        </section>
+
+        <section id="your-posts" resource="#your-posts">
+            <h2 property="schema:about">2.8 Sectiunea "Your posts"</h2>
+            Aplicatia face un call AJAX cu tokenul de identificare al utilizatorului din memoria browser-ului catre baza
+            de date care returneaza o lista cu postari facute de acesta (utilizator). Aici, user-ul poate sterge anumite
+            postari, printr-un call AJAX cu id-ul postarii catre baza de date pentru a o sterge.
+        </section>
+
+        <section id="filtre-afisare" resource="#filtre-afisare">
+            <h2 property="schema:about">2.9 Filtrele si afisarea postarilor</h2>
+
+            Utilizatorul poate filtra informatii despre animalute precum specia, rasa, varsta, marimea, sex-ul, orasul,
+            iar aplicatia face un call AJAX catre baza de date care ne da, ca raspuns, o lista de postari care respecta
+            filtrele respective. In final, aplicatia afiseaza postarile respective.
+
+            <br>Atunci cand o specie de animale este selectata, programul face un call AJAX si primeste de la baza de
+            date
+            toate rasele speciei respective. Aceste rase sunt afisate ca optiuni de selctare in sectiunea de filtre la
+            "Breed".
+
+            <br>In sectiunea "Recently Added", programul afiseaza automat o lista cu cele mai noi postari facute.
+            <br>In sectiunea "Most Popular", programul afiseaza automat o lista cu cele mai apreciate postari.
+        </section>
+
+        <section id="postare-noua" resource="#postare-noua">
+            <h2 property="schema:about">2.10 Crearea unei postari</h2>
+            Pentru crearea unei nou postari, utilizatorul trebuie sa aiba completat profilul si trebuie sa introduca
+            toate informatiile si detaliile necesare despre animalutul respectiv precum numele, specia, rasa, marimea,
+            varsta etc. Dupa ce aceste informatii sunt completate si utilizatorul apasa pe butonul "Create Post",
+            programul verifica mai intai ca toate campurile sa fie completate (daca aceasta conditie nu este indeplinita
+            se afiseaza o eroare si sunt evidentiate cu rosu toate campurile care trebuie completate) si ca profilul sa
+            fie completat (daca aceasta conditie nu este indeplinita se afiseaza o eroare care exprima acest fapt), dupa
+            care se face un call AJAX cu toate informatiile respective si , daca se primeste un raspuns pozitiv,
+            postarea este creata in baza de date si devine disponibila pentru vizualizare.
+        </section>
+
+        <section id="wishlist-js" resource="#wishlist-js">
+            <h2 property="schema:about">2.11 Wishlist</h2>
+            Utilizatorul are optiunea de a adauga postari la favorite prin apasarea butonului inima. Atunci cand acest
+            buton este apasat se face un call AJAX cu id-ul postarii si al user-ului catre baza de date, unde postarea
+            cu id-ul respectiv este adaugat in pagina de Wishlist al utilizatorului.
+        </section>
+
+        <section id="postarea" resource="#postarea">
+            <h2 property="schema:about">2.12 Pagina postarii</h2>
+            Atunci cand utilizatorul apasa pe o anumita postare, aplicatia face un call AJAX cu id-ul postarii catre
+            baza de date care retuneaza toate informatiile despre postarea respectiva (si informatii despre persoana
+            care a creat postarea precum numarul de telefon) si le afiseaza pe o noua pagina. In aceasta pagina,
+            utilizatorul poate contacta proprietarul animalutului prin butonul "Adopt me!" (care afiseaza numarul de
+            telefon al proprietarului) sau poate da report la postare, care functioneaza ca sistemul de tickete.
+        </section>
+
+        <section id="all-about-pets" resource="#all-about-pets">
+            <h2 property="schema:about">2.13 Sectiunea All about pets si postlist</h2>
+            In acest dropdown, utilizatorul are optiunea de a selecta sa vada doar pisici, doar caini sau toate speciile
+            de animale. La selectarea uneia din cele 3 optiuni, pagina de Postlist este deschisa si utilizatorul poate
+            cauta animale dupa nume, iar programul face un call AJAX cu specia de animale (caini, pisici sau toate) si
+            numele catre baza de date care returneaza o lista de postari care se incadreaza in specia aleasa si care
+            contin numele scris de utilizator. In final, pagina afiseaza postarile respectiva si ofera optiunea de a
+            selecta numar de postari afisate pe pagina.
+        </section>
+
+        <section id="admin-panel" resource="#admin-panel">
+            <h2 property="schema:about">2.14 Admin Panel</h2>
+            Atunci cand un utilizator se logheaza, programul face un call AJAX cu tokenul de identificare catre baza de
+            date care returneaza un mesaj pozitiv in cazul in care este un admin dau negativ daca nu. Daca utilizatorul
+            este un admin, programul v-a afisa in meniul de la "Account" un buton "Admin panel" care, atunci cand este
+            apasat, v-a deschide o noua pagina pentru administrarea aplicatiei. Aici, admin-ul poate face urmatoarele:
+
+            <br>→User Management: admin-ul poate cauta un anumit user dupa nume sau email printr-un call AJAX care
+            primeste
+            de la baza de date o lista de conturi cu datele respective. In aceasta lista, admin-ul poate da / scoate
+            rolul de admin unui user sau poate sterge contul respectiv.
+
+            <br>→Delete Post: admin-ul poate cauta un anumita postare dupa nume printr-un call AJAX care primeste de la
+            baza de date o lista de postari cu datele respective. In aceasta lista, admin-ul poate sterge anumite
+            postari.
+
+            <br>→Tickets & Reports: admin-ul poate cauta anumite tickete in functie de status-ul lor (All, Pending,
+            Resolved, Closed) printr-un call AJAX care primeste de la baza de date o lista de tickete cu status-ul
+            respectiv. In aceasta lista, admin-ul poate vedea/citi tickele si le poate rezolva / inchide.
+
+        </section>
+
+        <h2 id="backend">3. Backend</h2>
+
+        <section id="arhitectura" resource="#arhitectura">
+            <h2 property="schema:about">3.1 Arhitectura aplicatiei + C4</h2>
+            Backend-ul urmeaza o structura de tip MVC (Model-View-Controller). Service-urile (rutele) primesc date de la
+            frontend si le trimit catre un controller specific. Acesta, la randul sau, proceseaza informatiile si
+            interactioneaza cu baza de date pentru stocarea, preluarea sau modificarea datelor. Raspunsul rezultat (daca
+            exista) este transmis inapoi catre service, care il trimite mai departe catre frontend. Backend-ul are rolul
+            principal de a gestiona logica aplicatiei si modelarea datelor.
+            Service-urile sunt apelate din fisierele JavaScript folosind tehnologia AJAX, pentru a permite comunicarea
+            asincrona cu serverul. Aceasta parte este detaliata mai amplu in sectiunea dedicata JavaScript.
+            <figure typeof="schema:ImageObject">
+                <img src="resources/c4_diagram.svg" alt="Diagrama C4" property="schema:contentUrl">
+            </figure>
+        </section>
+
+        <section id="baza-de-date" resource="#baza-de-date">
+            <h2 property="schema:about">3.2 Cum functioneaza baza de date?</h2>
+            Inainte de a explica cum functioneaza baza noastra de date, mai intai vreau sa explic structura acesteia. In
+            prima instanta avem doua tabele centrale: users si posts, aici sunt stocate informatiile esentiale despre o
+            postare sau despre un utilizator. Pentru posts, mai avem tabelele Species, Breeds, Locations care desi sunt
+            legate de posts sunt folosite si de catre user si in alte parti ale site-ului. Pentru un mod mai simplu de a
+            lucra si pentru a evita supra-aglomerarile am decis sa impart tabela posts intr-o tabela de baza si alte
+            tabele pentru a pastra tabelele in 1NF (da am fost atent la cursuri). Iar la Users singura tabela legata de
+            ea este admins care tine minte id-ul utilizatorilor care sunt admini. Singura tabela care nu este neaparat
+            legat de celelalte este ticket, aceasta este folosita doar de catre admini pentru a vedea cererile,
+            raportarile sau pur si simplu mesajele utilizatorilor.
+            <figure typeof="schema:ImageObject">
+                <img src="resources/database_diagram.svg" alt="Diagrama bazei de date" property="schema:contentUrl">
+            </figure>
+            Conectiunea cu baza de date este realizata utilizand o clasa Singleton <strong>Database</strong>, astfel
+            asigurand o
+            singura conexiune ce este reutilizata, pentru a optimiza website-ul. Baza de date este construita folosind
+            PL/SQL, iar in php folosim oci8 pentru a parsa query-uri de PL/SQL si pentru a le rula pe baza de date
+            folosita
+
+            <br>→ <strong>Localhost connection</strong>: Pentru conectiunea cu o baza de date locala, am folosit un cont
+            de sqldeveloper
+            si datele de conectare pentru acesta
+
+            <br>→ <strong>Oracle cloud connection</strong>: In ce consta hostarea website-ului pentru a fi realizata am
+            realizat un cont
+            pe platforma Oracle Cloud si am create o baza de date cu administrare autonoma pentru o mai usoara
+            intretinerea a acesteia
+
+            <br>Pentru fiecare tabel in structura proiectului este creata o clasa Model, unde in constructor este
+            obtinuta o
+            instanta a clasei Singleton <strong>Database</strong> care are ca scop utilizarea unei singure conexiuni,
+            evitand crearea
+            mai multor conexiuni cu baza de date. In fiecare clasa exista o metoda *verifyTable()* ce asigura o
+            utilizare fara probleme a aplicatiei, creand tabelele daca acestea nu exista deja in baza de date, astfel
+            incat daca tabelele nu sunt create, iar pe frontend este apelat un service ce are nevoie de informatii din
+            tabela respectiva, se poate initializa tabela automat.
+
+            <br>Pentru anumite operatii cum ar fi stocarea sau preluarea de date, cat si operatii de tip DML/DDL,
+            utilizam
+            query-uri PL/SQL, aceste query-uri sunt regasite in clasele modelelor si sunt transmise la baza de date,
+            daca nu exista erori.
+        </section>
+
+        <section id="frontend-backend" resource="#frontend-backend">
+            <h2 property="schema:about">3.3 Interactiunea frontend-backend</h2>
+            In fisierele JavaScript sunt apelate serviciile din server-ul scris in PHP, aceestea sunt apelate fie
+            folosind POST sau GET, in general pentru a trimite si un body pentru a fi parsat sau pentru a i se aplica o
+            serie de operatii, sau pentru a obtine informatii din backend(cele mai recente postari, cele mai populare
+            postari, etc.). Pentru o structura mai simpla si mai usor de gestionat aceste servicii apeleaza diverse
+            controller, aceste controllere sunt structurate si organizate in functie de operatiile care se
+            realizeaza(AdminController, PostController & UserController). Fiecare metoda din controller creaza cate un
+            obiect din fiecare model si astfel sunt apelate metodele modelelor, care realizeaza operatii pe baza de
+            date, asa cum este precizat si mai sus. Am ales sa cream obiecte noi pentru fiecare metoda din controller
+            pentru o mai buna optimizare a server-ului php, astfel incat fiecare obiect este dereferientat dupa ce
+            metoda sa se termina de executat.
+
+            <br>Dupa ce metoda modelului isi termina executia cu succes, aceasta poate trimite niste date inapoi la
+            metoda
+            controller, care la randul lui trimite datele inapoi la service. Fiecare service trimite datele prelucrate
+            intr-o maniera JSON inapoi la frontend unde dupa sunt afisate utilizatorului.
+        </section>
+
+        <section id="securitate" resource="#securitate">
+            <h2 property="schema:about">3.4 Securitatea aplicatiei</h2>
+            Securitatea programului este realizata prin maniera de lucru si prin structura proiectului, astfel explicam
+            mai jos cum ne proteja website-ul de atacuri populare:
+            <br>→<strong>SQL Injection</strong>: protectia impotriva atacurilor de tip SQL Injection este realizata
+            chiar folosind
+            maniera de lucru cu oci8, astfel incat noi mai intai scrie query-ul PL/SQL, iar folosind comanda
+            *oci_bind_by_name* parsam informatiile primite in string-uri, astfel incat script-uri rau-intentionate vor
+            fi observate de catre administratorul de baze de date si vazute ca obiecte de tip VARCHAR2, nici de cum
+            aceste script-uri nu vor fi executate.
+
+            <br>→<strong>Cross-Site Scripting</strong>: Desi am rezolvat partea de executare de script-uri rau
+            intentionate executate in
+            baza de date, inca exista o problema de script-uri ce pot fi executate direct in DOM, pentru un astfel de
+            atac, suntem pregatiti astfel incat in loc sa modificam direct continutul DOM-ului folosind *.innerHTML*,
+            noi folosim tehnica manipularii DOM-ului prin crearea unor arbori de elemente, iar fiecare element este un
+            nod, astfel script-ul rau intentionat va fi afisat ca un simplu text si nu va fi executat, noi creand in
+            prealabil obiectul si doar modificand continutul text al acestuia.
+        </section>
+
+        <section id="functionalitati" resource="#functionalitati">
+
+            <h2 property="schema:about">3.5 Functionalitati principale</h2>
+            <i>Desi sunt destul de multe functionalitati, am decis sa vorbesc despre cele mai importante si chiar as
+                putea spune
+                cele mai impresionante si care au durat destul de mult de realizat
+            </i><br>
+            <br>→ Wishlist: Utilizatorii pot avea salva postarile favorite, “in spate” acest sistem se bazeaza pe o
+            tabela
+            in care sunt salvate id-urile atat utilizatorilor cat si postarilor, printr-un sistem de foreign key pe
+            tabelele Users and Posts
+
+            <br>→ Most recent/Most popular: Pentru most recent sunt extrase toate postarile si sortate descrescator in
+            ordinea adaugarii acestora in tabel, in schimb pentru most popular sunt contorizate nr de aparitii ale
+            postarilor in tabela wishlist si sortate descrescator dupa acest contor. In partea de frontend sunt afisate
+            primele 4 pentru o mai buna afisarea a acestora
+
+            <br>→ Login/register/logout: Fiecare utilizator isi poate crea un cont si in tabela users sunt salvate
+            informatiile de conectare, criptand parola. La login folosind biblioteca Firebase cream un token pentru
+            stocarea informatiilor despre un utilizator, iar in final logout-ul distruge token-ul utilizatorului pentru
+            a nu mai putea fi folosit. De asemenea, fiecare utilizator poate sa isi adauge informatii despre acest in
+            sectiunea de profil, astfel putand creea postari. In postari sunt afisate anumite date ale utilizatorului si
+            de aceea este esentiala completarea acelor informatii
+
+            <br>→Search bar: Functionalitatea acestuia este realizata exclusiv in backend folosindu-se de script-uri
+            PL/SQL,
+            searchbar-ul preia input-ul scris de utilizator si este trimis in backend unde folosind LIKE din PL/SQL
+            cautam in diverse locatii ale postarilor daca acele campuri text contin input-ul oferit de utilizator si
+            returnam putine informatii despre postari astfel incat utilizatorul sa isi faca o idee despre ce postari
+            cauta. Daca utilizatorul apasa pe butonul de search o sa ii apara toate postarile care contin inputul
+
+            <br>→Admin: Ca admin ai mai multe functionalitati, poti sterge sau promova/retrograda utilizatori, poti sa
+            rezolvi tickete create de utilizatori, sa adaugi noi specii/rase la cererea utilizatorilor, poti sterge
+            postari care nu respecta regulile sau cu continut rau intentionat si de asemenea, poti exporta postarile in
+            forma JSON pentru diverse intrebuintari
+
+            <br>→Crearea de postari: Este una simpla, aici se adauga in baza de date postarile nu doar in tabela posts
+            cat si in tabelele ajutatoare, organizarea acestora este mentionata mai sus, desi este o functionalitate
+            vitala si chiar foarte importanta aceasta a fost destul de complexa din prisma faptului ca trebuia sa lucram
+            cu mai multe tabele concomitent nu doar cu una singura si in general arhitectura acestei functionalitati a
+            fost schimbata de cateva ori pana la varianta finala
+
+            <br>→Email Service: Functionalitatea aceasta a fost realizata cu ajutorul librariei SendGrid, iar aceasta se
+            imparte in, as putea spune, 2 parti cea de trimitere de email si cea de resetare a parolei, partea de
+            trimitere de email este una simpla caci folosind sendgrid putem trimite email-uri iar in link-ul de resetare
+            a parolei putem include un token care sa ne confirme ca resetam parola contului care trebuie. In a doua
+            parte, cea de resetare a parolei, utilizatorul deschide link-ul primit in email, se verfica autenticitatea
+            acestuia si astfel se poate reseta parola la una noua
+        </section>
+
+        <section id="extindere" resource="#extindere">
+            <h2 property="schema:about">3.6 Extinderea aplicației web</h2>
+            Suntem constienti ca site-ul nostru nu este perfect, insa noua ne-a placut cum a iesit si de asta il
+            prezentam sub aceasta forma, insa ne-am gandit daca ar fi fost sa fie perfect ce functionalitati am mai fi
+            putut adauga sau cum ar fi aratat in varianta sa “perfecta”(varianta finala este in ochii nostri una
+            perfecta si la care s-a muncit enorm urmatoarele functionalitati prezentate ar fi existat intr-o lume ideala
+            in care nu avem termen limita, sesiune si poate chiar un buget mai mare de 0 lei):
+
+            <br>→ Hostarea acestuia: Din pacate acesta nu a putut fi hostat gratuit, desi ne-am dat silinta, ne cerem
+            scuze
+
+            <br>→ Un sistem de chat: Astfel incat utilizatorii sa poata sa converseze unii cu altii in timp real
+
+            <br>→ Editarea postarilor: Creatorii postarilor sa poata sa modifice anumite date ale postarii
+
+            <br>→ Harta interactiva pentru filtrarea locatiilor: Folosind un API de la google maps utilizatorii sa poata
+            filtra locatia postarii si mai mult sa poata sa creeze postari pe o anumita locatie
+        </section>
+
+        <section id="librarii" resource="#librarii">
+            <h2 property="schema:about">3.7 Librarii și tehnologii folosite</h2>
+            Pentru anumite functionalitati si chiar conectiunea cu baza de date ne-am folosit de anumite librarii,
+            astfel mai jos regasim care sunt acestea si utilizarea lor in contextul aplicatie.
+
+            <br>→ <strong>OCI8</strong>: Cea mai importanta librarie, astfel incat conexiunea cu baza de date nu ar
+            putea fi realizata.
+            Fiindca ne-am dorit ca backend-ul sa se foloseasca de script-uri PL/SQL pentru a comunica si realiza
+            operatii, singura optiune a fost sa folosim OCI8, astfel incat aceasta librarie ne ajuta atat cu conexiunea
+            la o baza de date Oracle, cat si executarea acestor script-uri cu usurinta.
+
+            <br>→ <strong>Firebase(JWT)</strong>: Aceasta librarie este folosita pentru a putea tine minte informatii
+            despre utilizatorii
+            conectati cu usurinta si pentru a putea securiza aceste informatii, de asemenea aceasta librarie este
+            folosita pentru generarea de token-uri pentru Email Service(explicat in detaliu mai jos). Folosind acesti
+            tokeni, putem cu usurinta sa pastram un utilizator conectat pe browser-ul acestuia, chiar daca acestia isi
+            inchid browser-ul sau chiar si calculatorul.
+
+            <br><strong>SendGrid</strong>: Aceasta librarie este folosita strict de catre service-ul pentru a primi un
+            email in caz ca
+            un utilizatorul si-a uitat parola si pentru a genera un token(generarea de Token este realizata cu FireBase)
+            pentru a putea confirma ca pentru schimbarea parolei este chiar utilizatorul respectiv, token-ul este pus in
+            link-ul ce este trimis prin email, astfel incat doar utilizatorul cu acces la email-ul respectiv isi poate
+            schimba parola.
+        </section>
+
+    </article>
+
+    <h2 id="concluzie">4. Concluzii finale + teste de performanta</h2>
+    <section id="concluzie-finala" resource="#concluzie-finala">
+        Per ansamblu un proiect la care am muncit din greu si ne-am dat silinta, suntem multumiti de cum a iesit si ce
+        am putut realiza cu timpul pe care l-am avut si cunostintele pe care le-am dobandit pe parcursul lucrului la
+        acest proiect, speram ca acest proiect este la fel de pe placul dumneavoastra cum este si pe placul nostru. Mai
+        jos o sa atasez testele de performanta pe care proiectul nostru le-a obtinut, desi nu putem hosta proiectul, tot
+        am gasit o modalitate pentru a testa paginile
+
+        <h3>Teste Desktop</h3>
+        <ul>
+            <li><a href="resources/Lighthouse Report/Desktop/AdminPage_Desktop.html" target="_blank">Admin Page</a></li>
+            <li><a href="resources/Lighthouse Report/Desktop/HomePage_Desktop.html" target="_blank">Home Page</a></li>
+            <li><a href="resources/Lighthouse Report/Desktop/NewPostPage_Desktop.html" target="_blank">New Post Page</a></li>
+            <li><a href="resources/Lighthouse Report/Desktop/PostListPage_Desktop.html" target="_blank">Post List Page</a></li>
+            <li><a href="resources/Lighthouse Report/Desktop/PostPage_Desktop.html" target="_blank">Post Page</a></li>
+            <li><a href="resources/Lighthouse Report/Desktop/ResetPasswordPage_Desktop.html" target="_blank">Reset Password Page</a></li>
+            <li><a href="resources/Lighthouse Report/Desktop/WishlistPage_Desktop.html" target="_blank">Wishlist Page</a></li>
+        </ul>
+
+        <h3>Teste Mobile</h3>
+        <ul>
+            <li><a href="resources/Lighthouse Report/Mobile/HomePage_Mobile.html" target="_blank">Home Page</a></li>
+            <li><a href="resources/Lighthouse Report/Mobile/NewPostPage_Mobile.html" target="_blank">New Post Page</a></li>
+            <li><a href="resources/Lighthouse Report/Mobile/PostListPage_Mobile.html" target="_blank">Post List Page</a></li>
+            <li><a href="resources/Lighthouse Report/Mobile/PostPage_Mobile.html" target="_blank">Post Page</a></li>
+            <li><a href="resources/Lighthouse Report/Mobile/ResetPasswordPage_Mobile.html" target="_blank">Reset Password Page</a></li>
+            <li><a href="resources/Lighthouse Report/Mobile/WishlistPage_Mobile.html" target="_blank">Wishlist Page</a></li>
+        </ul>
+    </section>
+    
+
+</body>
+
+</html>
