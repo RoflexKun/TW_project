@@ -22,14 +22,14 @@ function getToken() {
 }
 
 // Format date for input field (YYYY-MM-DD)
-    function formatDateForInput(dateString) {
-        if (!dateString) return '';
+function formatDateForInput(dateString) {
+    if (!dateString) return '';
 
-        const parts = dateString.split('-');
-        if (parts.length !== 3) return '';
+    const parts = dateString.split('-');
+    if (parts.length !== 3) return '';
 
-        return `${parts[2]}-${parts[1]}-${parts[0]}`;
-    }
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+}
 
 // Get user data from DB
 async function fetchUserProfile() {
@@ -380,7 +380,7 @@ function createMediaInputBox(container) {
 
     const mediaInput = document.createElement("input");
     mediaInput.type = "file";
-    mediaInput.accept = "image/*,video/*";
+    mediaInput.accept = "image/*,video/*,audio/*";
     mediaInput.className = "file-input";
 
     const mediaBox = document.createElement("div");
@@ -400,6 +400,7 @@ function createMediaInputBox(container) {
 
 function previewUploadedMedia(file, container) {
     container.innerHTML = '';
+
     const fileReader = new FileReader();
 
     fileReader.onload = function (loadEvent) {
@@ -408,11 +409,50 @@ function previewUploadedMedia(file, container) {
             mediaElement = document.createElement("video");
             mediaElement.src = loadEvent.target.result;
             mediaElement.controls = true;
-        } else {
+        } else if (file.type.startsWith("image")) {
             mediaElement = document.createElement("img");
             mediaElement.src = loadEvent.target.result;
+        } else if (file.type.startsWith("audio")) {
+            mediaElement = document.createElement("audio");
+            mediaElement.src = loadEvent.target.result;
+            mediaElement.controls = true;
         }
-        container.appendChild(mediaElement);
+
+        mediaElement.className = "media-preview";
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "media-wrapper";
+
+        const removeBtn = document.createElement("button");
+        removeBtn.innerText = "x";
+        removeBtn.className = "remove-button";
+
+        removeBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            container.innerHTML = '';
+
+            if (container.id === "thumbBox") {
+                mainThumbnailFile = null;
+                container.innerHTML = '';
+            } else {
+                const boxes = Array.from(container.parentElement.querySelectorAll(".upload-box.small"));
+                const index = boxes.indexOf(container);
+                if (index >= 0 && index < additionalMediaFiles.length) {
+                    additionalMediaFiles.splice(index, 1);
+                }
+
+                container.remove();
+
+                const existingBoxes = container.parentElement.querySelectorAll(".upload-box.small").length;
+                if (existingBoxes < 8) {
+                    createMediaInputBox(container.parentElement);
+                }
+            }
+        });
+
+        wrapper.appendChild(mediaElement);
+        wrapper.appendChild(removeBtn);
+        container.appendChild(wrapper);
     };
 
     fileReader.readAsDataURL(file);
@@ -788,7 +828,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         return `${day}-${month}-${year}`;
     }
 
-    
+
 
     // Profile data submision
     profileForm.addEventListener('submit', async function (event) {
