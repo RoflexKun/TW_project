@@ -221,8 +221,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         pagination.innerHTML = "";
         noResults.classList.add('hidden');
 
-        const start = (page - 1) * 8;
-        const end = start + 8;
+        const start = (page - 1) * 9;
+        const end = start + 9;
 
         if (names.length === 0) {
             noResults.classList.remove('hidden');
@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     //Create pagination similar to the one in the post list
     function renderPagination(currentPage) {
         const pagination = document.getElementById('pagination');
-        const totalPages = Math.ceil(names.length / 8);
+        const totalPages = Math.ceil(names.length / 9);
 
         for (let i = 1; i <= totalPages; i++) {
             const btn = document.createElement('button');
